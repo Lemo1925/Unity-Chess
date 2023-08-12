@@ -4,20 +4,9 @@ using UnityEngine;
 public class Pawn : Chess
 {
     public bool isFirstMove;
-
-    private void OnEnable()
+    
+    public override void Start()
     {
-        EventManager.OnGameInitEvent += Init;
-    }
-
-    private void OnDisable()
-    {
-        EventManager.OnGameInitEvent -= Init;
-    }
-
-    protected override void Init()
-    {
-        isSelected = false;
         isFirstMove = true;
     }
     
@@ -51,11 +40,15 @@ public class Pawn : Chess
         if (isFirstMove)
         {
             isFirstMove = false;
-            
+            print("CheckSelect");
+            if (Selection.instance.isSelected)
+            {
+               print(Selection.instance.GetLocation());
+            }
         }
         else
         {
-                        
+            
         }
 
         return targets;

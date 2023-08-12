@@ -3,13 +3,6 @@ using System;
 
 public static class EventManager
 {
-    public static event Action OnGameInitEvent;
-
-    public static void CallOnGameInit()
-    {
-        OnGameInitEvent?.Invoke();
-    }
-
     public static event Action OnGameSwitchedEvent;
 
     public static void CallOnGameSwitched()

@@ -6,6 +6,7 @@ public class ChessBoard : MonoBehaviour
 {
     public static ChessBoard instance;
     public List<GameObject> ChessPosition, Chess;
+    public readonly GameObject[,] ChessBoardTiles = new GameObject[8,8]; 
     public List<Material> materials;
     public GameObject tile;
     private Dictionary<ChessType, List<GameObject>> chessGO;
@@ -35,12 +36,17 @@ public class ChessBoard : MonoBehaviour
         }
 
         float x = Common.BoardSize.x, y = Common.BoardSize.y;    
-
+        
         for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++)
-                Instantiate(tile, new Vector3(-7.5f + j * x, 0.1f, -7.45f + i * y), Quaternion.identity);
-
-
+        for (int j = 0; j < 8; j++)
+        {
+            GameObject ChessBoardTile =
+                Instantiate(tile, 
+                    new Vector3(-7.5f + j * x, 0.1f, -7.45f + i * y), 
+                    Quaternion.identity);
+           
+            ChessBoardTiles[i, j] = ChessBoardTile;
+        }
     }
 
     private void Awake()

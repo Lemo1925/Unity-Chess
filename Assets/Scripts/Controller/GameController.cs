@@ -5,8 +5,7 @@ namespace Controller
 {
     public class GameController : MonoBehaviour
     {
-        [Header("主要物件")]
-        public GameObject ChessBoard;
+        [Header("主要物件")] public GameObject ChessBoard;
         
         [Header("游戏模式")] public static GameModel model = GameModel.SINGLE;
 
@@ -18,16 +17,9 @@ namespace Controller
 
         private void OnEnable()
         {
-            Instantiate(ChessBoard, 
-                transform.localPosition, 
-                Quaternion.identity);
+            Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
         }
-
-        private void Start()
-        {
-            EventManager.CallOnGameInit();
-        }
-
+        
         private void Update()
         {
             RoundType = (Camp)(count % 2);

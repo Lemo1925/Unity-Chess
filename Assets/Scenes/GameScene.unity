@@ -322,6 +322,8 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 512
+  materialIdx: 3
+  oldIndex: 3
 --- !u!4 &1626443631
 Transform:
   m_ObjectHideFlags: 0

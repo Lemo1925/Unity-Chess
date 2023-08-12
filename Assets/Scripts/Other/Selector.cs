@@ -74,12 +74,14 @@ public class Selector : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0) && !select)
                 {
+
                     chessPieces = hitObject;
                     var chess = chessPieces.GetComponent<Chess>();
                     if (chess.camp == GameController.RoundType)
                     {
                         select = true;
                         ChessBoard.instance.SelectPiece(chessPieces);
+                        
                         // 计算可以移动的格子
                         targets = chess.CalculateTarget();
                         // 给格子染色
