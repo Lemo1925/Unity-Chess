@@ -8,7 +8,7 @@ public abstract class Chess : MonoBehaviour
     
     public bool isSelected;
 
-    public Vector2 Location;
+    public Vector2Int Location;
     
     public virtual void Start() => isSelected = false;
 

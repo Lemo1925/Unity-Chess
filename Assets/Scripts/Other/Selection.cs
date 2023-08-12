@@ -18,42 +18,34 @@ public class Selection : MonoBehaviour
         chessCamp = (int)other.GetComponent<Chess>().camp;
     }
 
-    private void OnTriggerStay(Collider collider)
-    {
-        if (collider.CompareTag($"Chess"))
-        {
-            isSelected = collider.gameObject.GetComponent<Chess>().isSelected;
-            if (isSelected)
-            {
-                print("Selected"+collider.transform.position);
-            }
-        }
-    }
-
     private void OnTriggerExit(Collider other)
     {
         chessCamp = 2;
     }
 
-    public Vector2 GetLocation()
+    public Vector2Int GetLocation()
     {
-        if (isSelected)
+        int x = 8, y = 8;
+        for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
         {
-            int x = 8, y = 8;
-            for (int i = 0; i < 7; i++)
-            for (int j = 0; j < 7; j++)
+            if (ChessBoard.instance.ChessSelections[i,j].isSelected)
             {
-                if (ChessBoard.instance.ChessBoardTiles[i, j] == gameObject)
-                {
-                    x = i;
-                    y = j;
-                }
+                x = i; y = j;
             }
-
-            return new Vector2(x, y);
         }
-
-        return default;
+        return new Vector2Int(x, y);
     }
-    
+
+    public static void SetSelectionLocation(int x, int y)
+    {
+        var selections = ChessBoard.instance.ChessSelections;
+        for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+        {
+            selections[i, j].isSelected = false;
+        }
+        
+        selections[x,y].isSelected = true;
+    }
 }

@@ -39,15 +39,23 @@ public class Pawn : Chess
         List<GameObject> targets = new List<GameObject>();
         if (isFirstMove)
         {
-            isFirstMove = false;
-            print("CheckSelect");
-            if (Selection.instance.isSelected)
+            // isFirstMove = false;
+            Selection.SetSelectionLocation(Location.x, Location.y);
+            var curTile = Selection.instance.GetLocation();
+            if (camp == Camp.WHITE)
             {
-               print(Selection.instance.GetLocation());
+                var x = curTile.x;
+                var y = curTile.y;
+                print($"{x},{y - 1}");
+                print($"{x},{y - 2}");
+                targets.Add(ChessBoard.instance.ChessSelections[x, y - 1].gameObject);
+                targets.Add(ChessBoard.instance.ChessSelections[x, y - 2].gameObject);
             }
         }
         else
         {
+            Selection.SetSelectionLocation(Location.x, Location.y);
+            print(Selection.instance.GetLocation());
             
         }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +5,8 @@ public class ChessBoard : MonoBehaviour
 {
     public static ChessBoard instance;
     public List<GameObject> ChessPosition, Chess;
-    public readonly GameObject[,] ChessBoardTiles = new GameObject[8,8]; 
+    public readonly GameObject[,] ChessBoardTiles = new GameObject[8, 8];
+    public readonly Selection[,] ChessSelections = new Selection[8, 8];
     public List<Material> materials;
     public GameObject tile;
     private Dictionary<ChessType, List<GameObject>> chessGO;
@@ -46,6 +46,7 @@ public class ChessBoard : MonoBehaviour
                     Quaternion.identity);
            
             ChessBoardTiles[i, j] = ChessBoardTile;
+            ChessSelections[i, j] = ChessBoardTile.GetComponent<Selection>();
         }
     }
 
@@ -66,36 +67,52 @@ public class ChessBoard : MonoBehaviour
                 {
                     Rock rock = go.AddComponent<Rock>();
                     rock.camp = (int)pair.Key > 0 ? Camp.WHITE : Camp.BLACK;
+                    var row = (int)((int)pair.Key / (float)idx * 3.5f + 3.5f);
+                    var col = pair.Value.IndexOf(go) * 7;
+                    rock.Location = new Vector2Int(col, row);
                     break;
                 }
                 case 2:
                 {
                     Knight knight = go.AddComponent<Knight>();
                     knight.camp = (int)pair.Key > 0 ? Camp.WHITE : Camp.BLACK;
+                    var row = (int)((int)pair.Key / (float)idx * 3.5f + 3.5f);
+                    var col = pair.Value.IndexOf(go) * 5 + 1;
+                    knight.Location = new Vector2Int(col, row);
                     break;
                 }
                 case 3:
                 {
                     Bishop bishop = go.AddComponent<Bishop>();
                     bishop.camp = (int)pair.Key > 0 ? Camp.WHITE : Camp.BLACK;
+                    var row = (int)((int)pair.Key / (float)idx * 3.5f + 3.5f);
+                    var col = pair.Value.IndexOf(go) * 3 + 2;
+                    bishop.Location = new Vector2Int(col, row);
                     break;
                 }
                 case 4:
                 {
                     Queen queen = go.AddComponent<Queen>();
                     queen.camp = (int)pair.Key > 0 ? Camp.WHITE : Camp.BLACK;
+                    var row = (int)((int)pair.Key / (float)idx * 3.5f + 3.5f);
+                    queen.Location = new Vector2Int(3, row);
                     break;
                 }
                 case 5:
                 {
                     King king = go.AddComponent<King>();
                     king.camp = (int)pair.Key > 0 ? Camp.WHITE : Camp.BLACK;
+                    var row = (int)((int)pair.Key / (float)idx * 3.5f + 3.5f);
+                    king.Location = new Vector2Int(4, row);
                     break;
                 }
                 default:
                 {
                     Pawn pawn = go.AddComponent<Pawn>();
                     pawn.camp = (int)pair.Key > 0 ? Camp.WHITE : Camp.BLACK;
+                    var row = (int)((int)pair.Key / (float)idx * 2.5f + 3.5f);
+                    var col = pair.Value.IndexOf(go);
+                    pawn.Location = new Vector2Int(col, row);
                     break;
                 }
             }

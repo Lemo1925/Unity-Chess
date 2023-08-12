@@ -111,6 +111,7 @@ public class Selector : MonoBehaviour
                 target.GetComponent<Renderer>().material = materials[(int)materialIdx];
             }
             select = false;
+            targets.Clear();
         }
     }
 }
