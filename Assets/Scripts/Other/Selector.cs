@@ -9,9 +9,12 @@ public class Selector : MonoBehaviour
 
     public LayerMask mask;
     private GameObject tileHighlight, chessPieces;
+    private List<GameObject> targets = new List<GameObject>();
 
     private bool select;
-    public MaterialIndex materialIdx = MaterialIndex.Default , oldIndex = MaterialIndex.Default;
+    public MaterialIndex 
+        materialIdx = MaterialIndex.Default , 
+        oldIndex = MaterialIndex.Default;
 
     public enum MaterialIndex
     {
@@ -43,11 +46,12 @@ public class Selector : MonoBehaviour
             var hitObject = hit.collider.gameObject;
             if (hitObject.CompareTag($"Board") )
             {
-                if (materialIdx == MaterialIndex.Selected) return;
+                if (materialIdx == MaterialIndex.Selected || 
+                    materialIdx == MaterialIndex.Moved) return;
                 oldIndex = materialIdx;
 
                 tileHighlight = hitObject;
-                materialIdx = (int)MaterialIndex.Selected;
+                materialIdx = MaterialIndex.Selected;
                 tileHighlight.GetComponent<Renderer>().material = materials[(int)materialIdx];
             }
         }
@@ -63,7 +67,6 @@ public class Selector : MonoBehaviour
 
     private void SelectPiece()
     {
-        List<GameObject> targets = new List<GameObject>();
         Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out var hit))
@@ -88,6 +91,7 @@ public class Selector : MonoBehaviour
                         // todo：判断格子上有没有敌方单位
                         foreach (var target in targets)
                         {
+                            // if (materialIdx == MaterialIndex.Moved) return;
                             materialIdx = MaterialIndex.Moved;
                             target.GetComponent<Renderer>().material = materials[(int)materialIdx];
                         }
@@ -107,6 +111,7 @@ public class Selector : MonoBehaviour
             ChessBoard.instance.DeselectPiece(chessPieces);
             foreach (var target in targets)
             {
+                print(target.name);
                 materialIdx = MaterialIndex.Default;
                 target.GetComponent<Renderer>().material = materials[(int)materialIdx];
             }

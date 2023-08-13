@@ -155,6 +155,14 @@ public class ChessBoard : MonoBehaviour
 
     public void MovePiece(GameObject piece, Vector2 gridPoint)
     {
-        piece.transform.position = Geometry.PointFromGrid(gridPoint);
+        var pos = new Vector3(
+            piece.transform.position.x,
+            piece.transform.position.y,
+            piece.transform.position.z);
+        print("cur Pos"+pos);
+        var tarPos = Geometry.PointFromGrid(gridPoint);
+        print("tar Pos"+tarPos);
+        print("SUB" + (tarPos - pos));
+        piece.transform.position = tarPos;
     }
 }
