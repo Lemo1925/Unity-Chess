@@ -1,18 +1,9 @@
-﻿// 单人、多人游戏
-
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum GameModel
 {
     SINGLE = 0,
     MULTIPLE = 1,
-}
-// 游戏状态
-public enum GameState
-{
-    WHITE_TURN = 0,
-    BLACK_TURN = 1,
-    GAME_OVER = 2,
 }
 // 阵营
 public enum Camp

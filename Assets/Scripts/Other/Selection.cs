@@ -1,51 +1,56 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class Selection : MonoBehaviour
 {
-    public int chessCamp = 2;
+    public GridType gridType;
     public bool isSelected;
-    public static Selection instance;
+
+    public Vector2Int Location;
+    
+    public enum GridType
+    {
+        WhiteGrid = 0,
+        BlackGrid = 1,
+        NormalGrid = 2,
+    }
 
     private void Awake()
     {
-        if (instance == null) instance = this;
+        gridType = GridType.NormalGrid;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        chessCamp = (int)other.GetComponent<Chess>().camp;
+        gridType = (GridType)other.GetComponent<Chess>().camp;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        chessCamp = 2;
+        gridType = GridType.NormalGrid;
+    }
+    
+    public void Select(Material material)
+    {
+        MatchManager.Instance.currentSelection = this;
+        GetComponent<Renderer>().material = material;
     }
 
-    public Vector2Int GetLocation()
+    public void Deselect(Material defaultMaterial)
     {
-        int x = 8, y = 8;
-        for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-        {
-            if (ChessBoard.instance.ChessSelections[i,j].isSelected)
-            {
-                x = i; y = j;
-            }
-        }
-        return new Vector2Int(x, y);
+        MatchManager.Instance.currentSelection = null;
+        GetComponent<Renderer>().material = defaultMaterial;
     }
+}
 
-    public static void SetSelectionLocation(int x, int y)
-    {
-        var selections = ChessBoard.instance.ChessSelections;
-        for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-        {
-            selections[i, j].isSelected = false;
-        }
-        
-        selections[x,y].isSelected = true;
-    }
+
+public class MatchManager
+{
+    private static MatchManager instance;
+
+    public static MatchManager Instance => instance ??= new MatchManager();
+
+    public Selection currentSelection;
+
+    public Chess currentChess;
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Controller
 {
@@ -13,13 +12,12 @@ namespace Controller
 
         [Header("游戏回合")] 
         public int count;
-        public static GameState state;
-
+        
         private void OnEnable()
         {
             Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
         }
-        
+
         private void Update()
         {
             RoundType = (Camp)(count % 2);

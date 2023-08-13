@@ -5,57 +5,54 @@ public class Pawn : Chess
 {
     public bool isFirstMove;
     
-    public override void Start()
+    public void Start()
     {
         isFirstMove = true;
     }
     
-    public override void Moveto(Vector2 tarTile, MoveType moveType)
+    public override void Move(Vector2 tarTile, MoveType moveType)
     {
-        if (isSelected)
+        switch (moveType)
         {
-            switch (moveType)
-            {
-                // TODO 移动策略 FirstMove Move Eat En_Pass Promotion
-                case MoveType.Move:
-                    ChessBoard.instance.MovePiece(gameObject, tarTile);
-                    break;
-                case MoveType.Eat:
-                
-                    break;
-                case MoveType.En_Pass:
-                
-                    break;
-                case MoveType.Promotion:
-                
-                    break;
-            }
+            // TODO 移动策略 FirstMove Move Eat En_Pass Promotion
+            case MoveType.Move:
+                MovePiece(tarTile);
+                if (isFirstMove) isFirstMove = false;
+                break;
+            case MoveType.Eat:
+            
+                break;
+            case MoveType.En_Pass:
+            
+                break;
+            case MoveType.Promotion:
+            
+                break;
         }
+        
     }
 
-    public override List<GameObject> CalculateTarget()
+    public override List<Selection> CalculateGrid()
     { 
-        // todo Caculate the move tiles
-        List<GameObject> targets = new List<GameObject>();
+        List<Selection> targets = new List<Selection>();
         if (isFirstMove)
         {
-            // isFirstMove = false;
-            Selection.SetSelectionLocation(Location.x, Location.y);
-            var curTile = Selection.instance.GetLocation();
+            Vector2Int curTile = MatchManager.Instance.currentSelection.Location;
             if (camp == Camp.WHITE)
             {
-                var x = curTile.x;
-                var y = curTile.y;
-                print($"{x},{y - 1}");
-                print($"{x},{y - 2}");
-                targets.Add(ChessBoard.instance.ChessSelections[x, y - 1].gameObject);
-                targets.Add(ChessBoard.instance.ChessSelections[x, y - 2].gameObject);
+                int x = curTile.x, y = curTile.y;
+                targets.Add(ChessBoard.instance.ChessSelections[x, y - 1].gameObject.GetComponent<Selection>());
+                targets.Add(ChessBoard.instance.ChessSelections[x, y - 2].gameObject.GetComponent<Selection>());
+            }
+            else
+            {
+                int x = curTile.x, y = curTile.y;
+                targets.Add(ChessBoard.instance.ChessSelections[x, y + 1].gameObject.GetComponent<Selection>());
+                targets.Add(ChessBoard.instance.ChessSelections[x, y + 2].gameObject.GetComponent<Selection>());
             }
         }
         else
         {
-            Selection.SetSelectionLocation(Location.x, Location.y);
-            print(Selection.instance.GetLocation());
             
         }
 

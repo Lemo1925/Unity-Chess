@@ -5,7 +5,7 @@ using UnityEngine;
 public class Rock : Chess
 {
 
-    public override void Moveto(Vector2 tarTile, MoveType moveType)
+    public override void Move(Vector2 tarTile, MoveType moveType)
     {
         switch (moveType)
         {
@@ -18,7 +18,7 @@ public class Rock : Chess
         }
     }
 
-    public override List<GameObject> CalculateTarget()
+    public override List<Selection> CalculateGrid()
     {
         throw new System.NotImplementedException();
     }

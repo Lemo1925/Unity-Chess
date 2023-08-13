@@ -6,17 +6,15 @@ public class Selector : MonoBehaviour
 {
     [Header("选择材质")]
     public List<Material> materials;
+    public List<Selection> selections = new List<Selection>();
+    private GameObject gridObject, chessPieces;
 
     public LayerMask mask;
-    private GameObject tileHighlight, chessPieces;
-    private List<GameObject> targets = new List<GameObject>();
 
-    private bool select;
-    public MaterialIndex 
-        materialIdx = MaterialIndex.Default , 
-        oldIndex = MaterialIndex.Default;
+    private bool selectStatus;
+    public MaterialList material = MaterialList.Default , oldMaterial = MaterialList.Default;
 
-    public enum MaterialIndex
+    public enum MaterialList
     {
         Selected = 0,
         Moved = 1,
@@ -42,81 +40,77 @@ public class Selector : MonoBehaviour
         Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, 9999f, mask))
         {
-
-            var hitObject = hit.collider.gameObject;
-            if (hitObject.CompareTag($"Board") )
-            {
-                if (materialIdx == MaterialIndex.Selected || 
-                    materialIdx == MaterialIndex.Moved) return;
-                oldIndex = materialIdx;
-
-                tileHighlight = hitObject;
-                materialIdx = MaterialIndex.Selected;
-                tileHighlight.GetComponent<Renderer>().material = materials[(int)materialIdx];
-            }
+            if (material == MaterialList.Selected || material == MaterialList.Moved) return;
+            gridObject = hit.collider.gameObject;
+            oldMaterial = material;
+            material = MaterialList.Selected;
+            gridObject.GetComponent<Selection>().Select(materials[(int)material]);
         }
         else
         {
-            if (tileHighlight != null)
-            {
-                materialIdx = oldIndex;
-                tileHighlight.GetComponent<Renderer>().material = materials[(int)materialIdx];
-            }
+            if (gridObject == null) return;
+            material = oldMaterial;
+            gridObject.GetComponent<Selection>().Deselect(materials[(int)material]);
         }
     }
 
     private void SelectPiece()
     {
         Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
-
         if (Physics.Raycast(ray, out var hit))
         {
             var hitObject = hit.collider.gameObject;
-
             if (hitObject.CompareTag($"Chess"))
             {
-                if (Input.GetMouseButtonDown(0) && !select)
+                if (Input.GetMouseButtonDown(0) && !selectStatus)
                 {
-
                     chessPieces = hitObject;
                     var chess = chessPieces.GetComponent<Chess>();
                     if (chess.camp == GameController.RoundType)
                     {
-                        select = true;
-                        ChessBoard.instance.SelectPiece(chessPieces);
-                        
+                        selectStatus = true;
+                        chess.SelectPiece(materials[(int)MaterialList.Selected]);
                         // 计算可以移动的格子
-                        targets = chess.CalculateTarget();
+                        selections = chess.CalculateGrid();
                         // 给格子染色
-                        // todo：判断格子上有没有敌方单位
-                        foreach (var target in targets)
+                        foreach (var selection in selections)
                         {
-                            // if (materialIdx == MaterialIndex.Moved) return;
-                            materialIdx = MaterialIndex.Moved;
-                            target.GetComponent<Renderer>().material = materials[(int)materialIdx];
+                            if (selection.gridType == Selection.GridType.NormalGrid)
+                            {
+                                material = MaterialList.Moved;
+                                selection.Select(materials[(int)material]);
+                            }
+                            else if ((int)selection.gridType != (int)GameController.RoundType)
+                            {
+                                material = MaterialList.Attack;
+                                selection.Select(materials[(int)material]);
+                            }
                         }
                     }
                 }
             }
             // 移动棋子
-            if (hitObject.CompareTag($"Board") && targets.Contains(hitObject))
+            if (hitObject.CompareTag($"Board"))
             {
-                Vector2 tile = Geometry.GridFromPoint(hitObject.transform.position);
-                chessPieces.GetComponent<Chess>().Moveto(tile, MoveType.Move);
+                var selection = hitObject.GetComponent<Selection>();
+                if (selections.Contains(selection))
+                {
+                    Vector2 tile = Geometry.GridFromPoint(hitObject.transform.position);
+                    chessPieces.GetComponent<Chess>().Move(tile, MoveType.Move);
+                }
             }
         }
         
-        if (Input.GetMouseButtonDown(1) && select)
+        if (Input.GetMouseButtonDown(1) && selectStatus)
         {
-            ChessBoard.instance.DeselectPiece(chessPieces);
-            foreach (var target in targets)
+            chessPieces.GetComponent<Chess>().DeselectPiece();
+            foreach (var selection in selections)
             {
-                print(target.name);
-                materialIdx = MaterialIndex.Default;
-                target.GetComponent<Renderer>().material = materials[(int)materialIdx];
+                material = MaterialList.Default;
+                selection.Select(materials[(int)material]);
             }
-            select = false;
-            targets.Clear();
+            selectStatus = false;
+            selections.Clear();
         }
     }
 }

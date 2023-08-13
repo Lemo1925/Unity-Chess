@@ -4,20 +4,17 @@ using UnityEngine;
 public class ChessBoard : MonoBehaviour
 {
     public static ChessBoard instance;
-    public List<GameObject> ChessPosition, Chess;
-    public readonly GameObject[,] ChessBoardTiles = new GameObject[8, 8];
+    public List<GameObject> ChessPosition;
+    public List<GameObject> ChessPrefab;
+    private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
     public readonly Selection[,] ChessSelections = new Selection[8, 8];
-    public List<Material> materials;
-    public GameObject tile;
+    public GameObject GridPrefab;
     private Dictionary<ChessType, List<GameObject>> chessGO;
-    private Material white, black, selected, defaultMaterial;
+    public List<Material> materials;
 
     private void OnEnable()
     {
         InitChessGO();
-        white = materials[0];
-        black = materials[1]; 
-        selected = materials[2];
 
         foreach (var PosGameObject in ChessPosition)
         {
@@ -26,11 +23,11 @@ public class ChessBoard : MonoBehaviour
                 if(!PosGameObject.name.Contains(pair.Key.ToString())) continue;
 
                 GameObject chessInstance = Instantiate(
-                    Chess[Mathf.Abs((int)pair.Key) - 1], 
-                    PosGameObject.transform.position,
-                    PosGameObject.transform.rotation);
+                    ChessPrefab[Mathf.Abs((int)pair.Key) - 1], 
+                    PosGameObject.transform.position, PosGameObject.transform.rotation);
                 
-                chessInstance.GetComponentInChildren<Renderer>().material = (int)pair.Key > 0 ? white : black;
+                chessInstance.GetComponentInChildren<Renderer>().material = 
+                    (int)pair.Key > 0 ? materials[0] : materials[1];
                 pair.Value.Add(chessInstance);
             }
         }
@@ -41,12 +38,15 @@ public class ChessBoard : MonoBehaviour
         for (int j = 0; j < 8; j++)
         {
             GameObject ChessBoardTile =
-                Instantiate(tile, 
+                Instantiate(GridPrefab, 
                     new Vector3(-7.5f + j * x, 0.1f, -7.45f + i * y), 
                     Quaternion.identity);
            
-            ChessBoardTiles[i, j] = ChessBoardTile;
-            ChessSelections[i, j] = ChessBoardTile.GetComponent<Selection>();
+            ChessBoardGrids[i, j] = ChessBoardTile;
+            Selection selection = ChessBoardTile.GetComponent<Selection>();
+            ChessSelections[i, j] = selection;
+            selection.Location = new Vector2Int(i, j);
+
         }
     }
 
@@ -136,33 +136,5 @@ public class ChessBoard : MonoBehaviour
             { ChessType.BlackKing , new List<GameObject>()},
             { ChessType.BlackPawn , new List<GameObject>()}
         };
-    }
-
-    public void SelectPiece(GameObject piece)
-    {
-        piece.GetComponent<Chess>().isSelected = true;
-        MeshRenderer renderers = piece.GetComponentInChildren<MeshRenderer>();
-        defaultMaterial = renderers.material;
-        renderers.material = selected;
-    }
-
-    public void DeselectPiece(GameObject piece)
-    {
-        piece.GetComponent<Chess>().isSelected = false;
-        MeshRenderer renderers = piece.GetComponentInChildren<MeshRenderer>();
-        renderers.material = defaultMaterial;
-    }
-
-    public void MovePiece(GameObject piece, Vector2 gridPoint)
-    {
-        var pos = new Vector3(
-            piece.transform.position.x,
-            piece.transform.position.y,
-            piece.transform.position.z);
-        print("cur Pos"+pos);
-        var tarPos = Geometry.PointFromGrid(gridPoint);
-        print("tar Pos"+tarPos);
-        print("SUB" + (tarPos - pos));
-        piece.transform.position = tarPos;
     }
 }

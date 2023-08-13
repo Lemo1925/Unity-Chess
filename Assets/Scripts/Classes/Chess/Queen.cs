@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Queen : Chess
 {
-    public override void Moveto(Vector2 tarTile, MoveType moveType)
+    public override void Move(Vector2 tarTile, MoveType moveType)
     {
         throw new System.NotImplementedException();
     }
 
-    public override List<GameObject> CalculateTarget()
+    public override List<Selection> CalculateGrid()
     {
         throw new System.NotImplementedException();
     }

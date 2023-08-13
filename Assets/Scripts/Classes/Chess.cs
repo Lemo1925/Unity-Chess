@@ -6,14 +6,31 @@ public abstract class Chess : MonoBehaviour
 
     public Camp camp;
     
-    public bool isSelected;
-
     public Vector2Int Location;
+
+    public Material defaultMaterial;
+    public abstract void Move(Vector2 tarTile, MoveType moveType);
+
+    public abstract List<Selection> CalculateGrid();
     
-    public virtual void Start() => isSelected = false;
+    public void SelectPiece(Material selectMaterial)
+    {
+        MatchManager.Instance.currentChess = this;
+        MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
+        defaultMaterial = renderers.material;
+        renderers.material = selectMaterial;
+    }
 
-    public abstract void Moveto(Vector2 tarTile, MoveType moveType);
+    public void DeselectPiece()
+    {
+        MatchManager.Instance.currentChess = null;
+        MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
+        renderers.material = defaultMaterial;
+    }
 
-    public abstract List<GameObject> CalculateTarget();
+    public void MovePiece(Vector2 gridPoint)
+    {
+        transform.position = Geometry.PointFromGrid(gridPoint);
+    }
 
 }
