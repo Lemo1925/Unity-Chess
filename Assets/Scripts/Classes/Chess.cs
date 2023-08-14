@@ -9,7 +9,7 @@ public abstract class Chess : MonoBehaviour
     public Vector2Int Location;
 
     public Material defaultMaterial;
-    public abstract void Move(Vector2 tarTile, MoveType moveType);
+    public abstract void Move(MoveType moveType);
 
     public abstract List<Selection> CalculateGrid();
     
@@ -23,14 +23,15 @@ public abstract class Chess : MonoBehaviour
 
     public void DeselectPiece()
     {
+        Location = MatchManager.Instance.currentSelection.Location;
         MatchManager.Instance.currentChess = null;
         MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
         renderers.material = defaultMaterial;
     }
 
-    public void MovePiece(Vector2 gridPoint)
+    protected void MovePiece()
     {
-        transform.position = Geometry.PointFromGrid(gridPoint);
+        transform.position = MatchManager.Instance.currentSelection.transform.position;
     }
 
 }

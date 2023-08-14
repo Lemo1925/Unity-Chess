@@ -40,7 +40,7 @@ public class Selector : MonoBehaviour
         Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, 9999f, mask))
         {
-            if (material == MaterialList.Selected || material == MaterialList.Moved) return;
+            if (material != MaterialList.Default) return;
             gridObject = hit.collider.gameObject;
             oldMaterial = material;
             material = MaterialList.Selected;
@@ -65,14 +65,15 @@ public class Selector : MonoBehaviour
                 if (Input.GetMouseButtonDown(0) && !selectStatus)
                 {
                     chessPieces = hitObject;
-                    var chess = chessPieces.GetComponent<Chess>();
+                    MatchManager.Instance.currentChess = chessPieces.GetComponent<Chess>();
+                    var chess = MatchManager.Instance.currentChess;
                     if (chess.camp == GameController.RoundType)
                     {
                         selectStatus = true;
                         chess.SelectPiece(materials[(int)MaterialList.Selected]);
                         // 计算可以移动的格子
                         selections = chess.CalculateGrid();
-                        // 给格子染色
+                        // todo refactor : 给格子染色
                         foreach (var selection in selections)
                         {
                             if (selection.gridType == Selection.GridType.NormalGrid)
@@ -91,15 +92,9 @@ public class Selector : MonoBehaviour
             }
             // 移动棋子
             if (hitObject.CompareTag($"Board"))
-            {
-                var selection = hitObject.GetComponent<Selection>();
-                if (selections.Contains(selection))
-                {
-                    Vector2 tile = Geometry.GridFromPoint(hitObject.transform.position);
-                    chessPieces.GetComponent<Chess>().Move(tile, MoveType.Move);
-                }
-            }
-        }
+                if (selections.Contains(hitObject.GetComponent<Selection>()))
+                    MatchManager.Instance.currentChess.Move(MoveType.Move);
+        }   
         
         if (Input.GetMouseButtonDown(1) && selectStatus)
         {

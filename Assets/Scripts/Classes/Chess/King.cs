@@ -5,7 +5,7 @@ using UnityEngine;
 public class King : Chess
 {
 
-    public override void Move(Vector2 tarTile, MoveType moveType)
+    public override void Move(MoveType moveType)
     {
         throw new System.NotImplementedException();
     }

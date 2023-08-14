@@ -5,13 +5,24 @@ using UnityEngine;
 public class Bishop:Chess
 {
 
-    public override void Move(Vector2 tarTile, MoveType moveType)
+    public override void Move(MoveType moveType)
     {
-        throw new System.NotImplementedException();
+        switch (moveType)
+        {
+            case MoveType.Move:
+                break;
+            case MoveType.Eat:
+                break;
+        }
     }
 
     public override List<Selection> CalculateGrid()
     {
-        throw new System.NotImplementedException();
+        List<Selection> grids = new List<Selection>();
+        Vector2Int curGrid = MatchManager.Instance.currentSelection.Location;
+        
+        int x = curGrid.x, y = curGrid.y;
+
+        return grids;
     }
 }

@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 public class Pawn : Chess
 {
     public bool isFirstMove;
     
-    public void Start()
-    {
-        isFirstMove = true;
-    }
-    
-    public override void Move(Vector2 tarTile, MoveType moveType)
+    public void Start() => isFirstMove = true;
+
+    public override void Move(MoveType moveType)
     {
         switch (moveType)
         {
-            // TODO 移动策略 FirstMove Move Eat En_Pass Promotion
+            // TODO 移动策略 Move Eat En_Pass Promotion
             case MoveType.Move:
-                MovePiece(tarTile);
-                if (isFirstMove) isFirstMove = false;
+                MovePiece();
+                isFirstMove = false;
                 break;
             case MoveType.Eat:
             
@@ -33,30 +29,23 @@ public class Pawn : Chess
     }
 
     public override List<Selection> CalculateGrid()
-    { 
-        List<Selection> targets = new List<Selection>();
-        if (isFirstMove)
+    {
+        List<Selection> selections = new List<Selection>();
+        Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> MoveSensors = selection.Forward(isFirstMove ? 2 : 1, 0);
+        List<Selection> AttackSensors = selection.Bevel(1, 0);
+        foreach (var sensor in MoveSensors)
         {
-            Vector2Int curTile = MatchManager.Instance.currentSelection.Location;
-            if (camp == Camp.WHITE)
-            {
-                int x = curTile.x, y = curTile.y;
-                targets.Add(ChessBoard.instance.ChessSelections[x, y - 1].gameObject.GetComponent<Selection>());
-                targets.Add(ChessBoard.instance.ChessSelections[x, y - 2].gameObject.GetComponent<Selection>());
-            }
-            else
-            {
-                int x = curTile.x, y = curTile.y;
-                targets.Add(ChessBoard.instance.ChessSelections[x, y + 1].gameObject.GetComponent<Selection>());
-                targets.Add(ChessBoard.instance.ChessSelections[x, y + 2].gameObject.GetComponent<Selection>());
-            }
-        }
-        else
-        {
-            
+            if (sensor.gridType == Selection.GridType.NormalGrid) selections.Add(sensor);
         }
 
-        return targets;
+        foreach (var sensor in AttackSensors)
+        {
+            if (sensor.gridType == (Selection.GridType)camp) continue;
+            if (sensor.gridType == Selection.GridType.NormalGrid) continue;
+            selections.Add(sensor);
+        }
+        return selections;
     }
 
     public void Promotion(ChessType type)

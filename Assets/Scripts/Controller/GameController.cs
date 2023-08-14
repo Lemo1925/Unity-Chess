@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Controller
 {
@@ -22,6 +23,11 @@ namespace Controller
         {
             RoundType = (Camp)(count % 2);
             EventManager.CallOnSelectTurn();
+
+        }
+
+        private void FixedUpdate()
+        {
         }
     }
 }

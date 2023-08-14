@@ -5,15 +5,13 @@ using UnityEngine;
 public class Rock : Chess
 {
 
-    public override void Move(Vector2 tarTile, MoveType moveType)
+    public override void Move(MoveType moveType)
     {
         switch (moveType)
         {
             case MoveType.Move:
-                
                 break;
             case MoveType.Eat:
-                
                 break;
         }
     }
