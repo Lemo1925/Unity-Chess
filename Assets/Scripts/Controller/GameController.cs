@@ -13,7 +13,8 @@ namespace Controller
 
         [Header("游戏回合")] 
         public int count;
-        
+
+        private bool selectButtonListener, deselectButtonListener;
         private void OnEnable()
         {
             Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
@@ -22,12 +23,24 @@ namespace Controller
         private void Update()
         {
             RoundType = (Camp)(count % 2);
-            EventManager.CallOnSelectTurn();
 
+            #region 执棋阶段
+
+            if (Input.GetMouseButtonDown(0)) 
+                selectButtonListener = true;
+
+            if (Input.GetMouseButtonDown(1)) 
+                deselectButtonListener = true;
+
+            #endregion
         }
 
         private void FixedUpdate()
         {
+            EventManager.CallOnSelectTurn();
+            EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
+            selectButtonListener = false;
+            deselectButtonListener = false;
         }
     }
 }

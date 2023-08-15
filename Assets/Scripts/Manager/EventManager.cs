@@ -16,4 +16,11 @@ public static class EventManager
     {
         OnSelectTurnEvent?.Invoke();
     }
+
+    public static event Action<bool, bool> OnSelectActionEvent;
+
+    public static void CallOnSelectAction(bool selectButton, bool deselectButton)
+    {
+        OnSelectActionEvent?.Invoke(selectButton,deselectButton);
+    }
 }

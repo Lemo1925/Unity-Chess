@@ -36,13 +36,19 @@ public class Pawn : Chess
         List<Selection> AttackSensors = selection.Bevel(1, 0);
         foreach (var sensor in MoveSensors)
         {
-            if (sensor.gridType == Selection.GridType.NormalGrid) selections.Add(sensor);
+            if (sensor.occupyType != 
+                Selection.OccupyGridType.NoneOccupyGrid) continue;
+            sensor.MoveSelect();
+            selections.Add(sensor);
         }
 
         foreach (var sensor in AttackSensors)
         {
-            if (sensor.gridType == (Selection.GridType)camp) continue;
-            if (sensor.gridType == Selection.GridType.NormalGrid) continue;
+            if (sensor.occupyType == 
+                (Selection.OccupyGridType)camp) continue;
+            if (sensor.occupyType == 
+                Selection.OccupyGridType.NoneOccupyGrid) continue;
+            sensor.AttackSelect();
             selections.Add(sensor);
         }
         return selections;

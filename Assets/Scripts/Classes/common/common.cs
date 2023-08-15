@@ -37,5 +37,5 @@ public enum MoveType
 }
 public static class Common
 {
-    public static Vector2 BoardSize = new Vector2(2.125f, 2.125f);
+    public static Vector2 BoardSize = new Vector2(2.105f, 2.105f);
 }

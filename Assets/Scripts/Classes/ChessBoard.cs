@@ -39,7 +39,7 @@ public class ChessBoard : MonoBehaviour
         {
             GameObject ChessBoardTile =
                 Instantiate(GridPrefab, 
-                    new Vector3(-7.5f + j * x, 0.001f, -7.45f + i * y), 
+                    new Vector3(-7.37f + j * x, 0.001f, -7.37f + i * y), 
                     Quaternion.identity);
            
             ChessBoardGrids[i, j] = ChessBoardTile;

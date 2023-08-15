@@ -4,126 +4,131 @@ using UnityEngine;
 
 public class Selection : MonoBehaviour
 {
-    public GridType gridType;
+    public OccupyGridType occupyType;
     public Vector2Int Location;
-    
-    // todo change name
-    public enum GridType
+    public List<Material> materials;
+
+    public enum OccupyGridType
     {
-        WhiteGrid = 0,
-        BlackGrid = 1,
-        NormalGrid = 2,
+        WhiteOccupyGrid = 0,
+        BlackOccupyGrid = 1,
+        NoneOccupyGrid = 2,
+    }
+    
+    public enum MaterialList
+    {
+        Default = 0,
+        Selected = 1,
+        Moved = 2,
+        Attack = 3
     }
 
-    private void Awake() => gridType = GridType.NormalGrid;
-    private void OnTriggerEnter(Collider other) => gridType = (GridType)other.GetComponent<Chess>().camp;
-    private void OnTriggerExit(Collider other) => gridType = GridType.NormalGrid;
+    private void Awake()
+    {
+        occupyType = OccupyGridType.NoneOccupyGrid;
+    }
+
+    private void OnTriggerEnter(Collider other) => occupyType = (OccupyGridType)other.GetComponent<Chess>().camp;
+    private void OnTriggerExit(Collider other) => occupyType = OccupyGridType.NoneOccupyGrid;
 
     
-    // todo 越界判断
+    // 越界判断
+    private bool OutOfRangeY(int y) => y <= -1 || y > 7;
+    private bool OutOfRangeX(int x) => x <= -1 || x > 7;
+    // 方向检测
     public List<Selection> Forward(int forward, int back)
     {
         List<Selection> selections = new List<Selection>();
+        int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+
         for (var i = 1; i <= forward; i++)
         {
-            switch (gridType)
-            {
-                case GridType.WhiteGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x, Location.y - i ]);
-                    break;
-                case GridType.BlackGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x, Location.y + i ]);
-                    break;
-            }
+            int Y = Location.y + (i * Dir);
+            if (OutOfRangeY(Y)) break;
+            selections.Add(ChessBoard.instance.ChessSelections[Location.x, Y]);
         }
 
         for (var i = 1; i <= back; i++)
         {
-            switch (gridType)
-            {
-                case GridType.WhiteGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x, Location.y + i]);
-                    break;
-                case GridType.BlackGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x, Location.y - i]);
-                    break;
-            }
+            int Y = Location.y - (i * Dir);
+            if (OutOfRangeY(Y)) break;
+            selections.Add(ChessBoard.instance.ChessSelections[Location.x, Y]);
         }
-        return selections;
-    }
-    public List<Selection> Left(int left, int right)
-    {
-        List<Selection> selections = new List<Selection>();
-        for (var i = 1; i <= left; i++)
-        {
-            switch (gridType)
-            {
-                case GridType.WhiteGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x - i , Location.y]);
-                    break;
-                case GridType.BlackGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x + i , Location.y]);
-                    break;
-            }
-        }
-        for (var i = 1; i <= right; i++)
-        {
-            switch (gridType)
-            {
-                case GridType.WhiteGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x + i , Location.y]);
-                    break;
-                case GridType.BlackGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x - i , Location.y]);
-                    break;
-            }
-        }
-        return selections;
-    }
-    public List<Selection> Bevel(int forwardLength, int backwardLength)
-    {
-        List<Selection> selections = new List<Selection>();
-        for (var i = 1; i <= forwardLength; i++)
-        {
-            switch (gridType)
-            {
-                case GridType.WhiteGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x - i, Location.y - i]);
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x + i, Location.y - i]);
-                    break;
-                case GridType.BlackGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x - i, Location.y + i]);
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x + i, Location.y + i]);
-                    break;
-            }
-        }
-        for (var i = 1; i <= backwardLength; i++)
-        {
-            switch (gridType)
-            {
-                case GridType.WhiteGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x - i, Location.y + i]);
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x + i, Location.y + i]);
-                    break;
-                case GridType.BlackGrid:
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x - i, Location.y - i]);
-                    selections.Add(ChessBoard.instance.ChessSelections[Location.x + i, Location.y - i]);
-                    break;
-            }
-        }
+
         return selections;
     }
 
-    // 判断
-    public void Select(Material material)
+    public List<Selection> Left(int left, int right)
     {
-        MatchManager.Instance.currentSelection = this;
-        GetComponent<Renderer>().material = material;
+        List<Selection> selections = new List<Selection>();
+        int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+
+        for (var i = 1; i <= left; i++)
+        {
+            int X = Location.x + (i * Dir);
+            if (OutOfRangeX(X)) break;
+            selections.Add(ChessBoard.instance.ChessSelections[X, Location.y]);
+        }
+
+        for (var i = 1; i <= right; i++)
+        {
+            int X = Location.x + (i * Dir);
+            if (OutOfRangeX(X)) break;
+            selections.Add(ChessBoard.instance.ChessSelections[X, Location.y]);
+        }
+
+        return selections;
     }
-    public void Deselect(Material defaultMaterial)
+
+    
+    public List<Selection> Bevel(int forwardLength, int backwardLength)
     {
+        List<Selection> selections = new List<Selection>();
+        int XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        int YDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+
+        for (var i = 1; i <= forwardLength; i++)
+        {
+            int X = Location.x + (i * XDir);
+            int Y = Location.y + (i * YDir);
+            int arcX = Location.x - (i * XDir);
+            if (!OutOfRangeX(X) && !OutOfRangeY(Y)) 
+                selections.Add(ChessBoard.instance.ChessSelections[X, Y]);
+            if (!OutOfRangeX(arcX) && !OutOfRangeY(Y)) 
+                selections.Add(ChessBoard.instance.ChessSelections[arcX, Y]);
+        }
+
+        for (var i = 1; i <= backwardLength; i++)
+        {
+            int X = Location.x - (i * XDir);
+            int Y = Location.y - (i * YDir);            
+            int arcX = Location.x - (i * XDir);
+            if (!OutOfRangeX(X) && !OutOfRangeY(Y))
+                selections.Add(ChessBoard.instance.ChessSelections[X, Y]);
+            if (!OutOfRangeX(X) && !OutOfRangeY(Y))
+                selections.Add(ChessBoard.instance.ChessSelections[arcX, Y]);
+        }
+
+        return selections;
+    }
+
+    public void MoveSelect()
+    {
+        GetComponent<Renderer>().material = materials[2];
+    }
+    public void AttackSelect()
+    {
+        GetComponent<Renderer>().material = materials[3];
+    }
+    public void Select()
+    {
+        GetComponent<Renderer>().material = materials[1];
+        MatchManager.Instance.currentSelection = this;
+    }
+    public void Deselect()
+    {
+        GetComponent<Renderer>().material = materials[0];
         MatchManager.Instance.currentSelection = null;
-        GetComponent<Renderer>().material = defaultMaterial;
     }
 }
 
