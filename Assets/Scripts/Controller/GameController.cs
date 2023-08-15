@@ -37,7 +37,6 @@ namespace Controller
 
         private void FixedUpdate()
         {
-            EventManager.CallOnSelectTurn();
             EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
             selectButtonListener = false;
             deselectButtonListener = false;

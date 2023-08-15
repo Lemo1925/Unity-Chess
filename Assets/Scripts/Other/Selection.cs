@@ -8,6 +8,8 @@ public class Selection : MonoBehaviour
     public Vector2Int Location;
     public List<Material> materials;
 
+    public Chess chessPiece;
+    
     public enum OccupyGridType
     {
         WhiteOccupyGrid = 0,
@@ -15,26 +17,29 @@ public class Selection : MonoBehaviour
         NoneOccupyGrid = 2,
     }
     
-    public enum MaterialList
-    {
-        Default = 0,
-        Selected = 1,
-        Moved = 2,
-        Attack = 3
-    }
 
     private void Awake()
     {
         occupyType = OccupyGridType.NoneOccupyGrid;
     }
 
-    private void OnTriggerEnter(Collider other) => occupyType = (OccupyGridType)other.GetComponent<Chess>().camp;
-    private void OnTriggerExit(Collider other) => occupyType = OccupyGridType.NoneOccupyGrid;
+    private void OnTriggerEnter(Collider other)
+    {
+        chessPiece = other.GetComponent<Chess>();
+        occupyType = (OccupyGridType)other.GetComponent<Chess>().camp;
+    }
 
-    
+    private void OnTriggerExit(Collider other)
+    {
+        chessPiece = null;
+        occupyType = OccupyGridType.NoneOccupyGrid;
+    }
+
+
     // 越界判断
     private bool OutOfRangeY(int y) => y <= -1 || y > 7;
     private bool OutOfRangeX(int x) => x <= -1 || x > 7;
+    
     // 方向检测
     public List<Selection> Forward(int forward, int back)
     {
@@ -57,7 +62,6 @@ public class Selection : MonoBehaviour
 
         return selections;
     }
-
     public List<Selection> Left(int left, int right)
     {
         List<Selection> selections = new List<Selection>();
@@ -79,8 +83,6 @@ public class Selection : MonoBehaviour
 
         return selections;
     }
-
-    
     public List<Selection> Bevel(int forwardLength, int backwardLength)
     {
         List<Selection> selections = new List<Selection>();
@@ -112,6 +114,8 @@ public class Selection : MonoBehaviour
         return selections;
     }
 
+    
+    
     public void MoveSelect()
     {
         GetComponent<Renderer>().material = materials[2];

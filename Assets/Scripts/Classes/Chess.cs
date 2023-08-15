@@ -15,22 +15,25 @@ public abstract class Chess : MonoBehaviour
     public void SelectPiece()
     {
         MatchManager.Instance.currentChess = this;
+        
         MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
         defaultMaterial = renderers.material;
-        renderers.material = MatchManager.Instance.currentSelection.materials[1];
+
+        renderers.material = Resources.Load<Material>("Material/Other/Yellow");
     }
 
     public void DeselectPiece()
     {
         Location = MatchManager.Instance.currentSelection.Location;
-        MatchManager.Instance.currentChess = null;
+        
         MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
         renderers.material = defaultMaterial;
+        
+        MatchManager.Instance.currentChess = null;
     }
 
     protected void MovePiece()
     {
         transform.position = MatchManager.Instance.currentSelection.transform.position;
     }
-
 }
