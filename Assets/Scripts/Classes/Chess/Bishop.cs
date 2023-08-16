@@ -1,28 +1,39 @@
 ﻿
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Bishop:Chess
 {
 
     public override void Move(MoveType moveType)
     {
-        switch (moveType)
-        {
-            case MoveType.Move:
-                break;
-            case MoveType.Eat:
-                break;
-        }
+        if (moveType == MoveType.Move) MovePiece();
     }
 
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> grids = new List<Selection>();
-        Vector2Int curGrid = MatchManager.Instance.currentSelection.Location;
-        
-        int x = curGrid.x, y = curGrid.y;
+        List<Selection> selections = new List<Selection>();
+        Selection selection = MatchManager.Instance.currentSelection;
 
-        return grids;
+        var selectCollection = 
+            selection.Bevel(ChessBoard.BoardLocationMax.x, 
+                ChessBoard.BoardLocationMax.y);
+        foreach (var sensor in selectCollection)
+        {
+            if (sensor == null) continue;
+            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid )
+            {
+                sensor.MoveSelect();
+                selections.Add(sensor);
+            }else if (sensor.occupyType == (Selection.OccupyGridType)camp)
+            {
+                
+            }
+            else
+            {
+                sensor.AttackSelect();
+                selections.Add(sensor);
+            }
+        }
+        return selections;
     }
 }

@@ -16,7 +16,6 @@ public class Selection : MonoBehaviour
         BlackOccupyGrid = 1,
         NoneOccupyGrid = 2,
     }
-    
 
     private void Awake()
     {
@@ -37,27 +36,47 @@ public class Selection : MonoBehaviour
 
 
     // 越界判断
-    private bool OutOfRangeY(int y) => y <= -1 || y > 7;
-    private bool OutOfRangeX(int x) => x <= -1 || x > 7;
+    private bool OutOfRangeY(int y) => y < ChessBoard.BoardLocationMin.y || y > ChessBoard.BoardLocationMax.y;
+    private bool OutOfRangeX(int x) => x < ChessBoard.BoardLocationMin.x || x > ChessBoard.BoardLocationMax.y;
     
     // 方向检测
     public List<Selection> Forward(int forward, int back)
     {
         List<Selection> selections = new List<Selection>();
         int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-
+        int X = Location.x;
         for (var i = 1; i <= forward; i++)
         {
-            int Y = Location.y + (i * Dir);
-            if (OutOfRangeY(Y)) break;
-            selections.Add(ChessBoard.instance.ChessSelections[Location.x, Y]);
+            int Y = Location.y + i * Dir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                { 
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
         }
 
         for (var i = 1; i <= back; i++)
         {
-            int Y = Location.y - (i * Dir);
-            if (OutOfRangeY(Y)) break;
-            selections.Add(ChessBoard.instance.ChessSelections[Location.x, Y]);
+            int Y = Location.y - i * Dir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue; 
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                { 
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
         }
 
         return selections;
@@ -66,24 +85,88 @@ public class Selection : MonoBehaviour
     {
         List<Selection> selections = new List<Selection>();
         int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-
+        int Y = Location.y;
         for (var i = 1; i <= left; i++)
         {
-            int X = Location.x + (i * Dir);
-            if (OutOfRangeX(X)) break;
-            selections.Add(ChessBoard.instance.ChessSelections[X, Location.y]);
+            int X = Location.x + i * Dir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                {
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
         }
 
         for (var i = 1; i <= right; i++)
         {
-            int X = Location.x + (i * Dir);
-            if (OutOfRangeX(X)) break;
-            selections.Add(ChessBoard.instance.ChessSelections[X, Location.y]);
+            int X = Location.x - i * Dir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                {
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
         }
 
         return selections;
     }
-    public List<Selection> Bevel(int forwardLength, int backwardLength)
+    private List<Selection> LeftBevel(int forwardLength, int backwardLength)
+    {
+        List<Selection> selections = new List<Selection>();
+        int XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        int YDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+
+        for (int i = 1; i <= forwardLength; i++)
+        {
+            int X = Location.x + i * XDir;
+            int Y = Location.y + i * YDir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                {
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
+        }
+
+        for (int i = 1; i < backwardLength; i++)
+        {
+            int X = Location.x - i * XDir;
+            int Y = Location.y - i * YDir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                {
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
+        }
+        
+        return selections;
+    }
+    private List<Selection> RightBevel(int forwardLength, int backwardLength)
     {
         List<Selection> selections = new List<Selection>();
         int XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
@@ -91,31 +174,58 @@ public class Selection : MonoBehaviour
 
         for (var i = 1; i <= forwardLength; i++)
         {
-            int X = Location.x + (i * XDir);
-            int Y = Location.y + (i * YDir);
-            int arcX = Location.x - (i * XDir);
-            if (!OutOfRangeX(X) && !OutOfRangeY(Y)) 
-                selections.Add(ChessBoard.instance.ChessSelections[X, Y]);
-            if (!OutOfRangeX(arcX) && !OutOfRangeY(Y)) 
-                selections.Add(ChessBoard.instance.ChessSelections[arcX, Y]);
+            int X = Location.x - i * XDir;
+            int Y = Location.y + i * YDir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                {
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
         }
 
         for (var i = 1; i <= backwardLength; i++)
         {
-            int X = Location.x - (i * XDir);
-            int Y = Location.y - (i * YDir);            
-            int arcX = Location.x - (i * XDir);
-            if (!OutOfRangeX(X) && !OutOfRangeY(Y))
-                selections.Add(ChessBoard.instance.ChessSelections[X, Y]);
-            if (!OutOfRangeX(X) && !OutOfRangeY(Y))
-                selections.Add(ChessBoard.instance.ChessSelections[arcX, Y]);
+            int X = Location.x + i * XDir;
+            int Y = Location.y - i * YDir;
+            var selection = GetSelection(X, Y);
+            if (selection == null) continue;
+            if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
+            {
+                if (selection.chessPiece.camp != chessPiece.camp)
+                {
+                    selections.Add(selection);
+                    break;
+                }
+                if (selection.chessPiece.camp == chessPiece.camp) break;
+            }
+            selections.Add(selection);
         }
-
+        
+        return selections;
+    }
+    public List<Selection> Bevel(int forwardLength, int backwardLength)
+    {
+        var selections = new List<Selection>();
+        selections.AddRange(LeftBevel(forwardLength, backwardLength));
+        selections.AddRange(RightBevel(forwardLength, backwardLength));
         return selections;
     }
 
-    
-    
+    public Selection GetSelection(int x , int y)
+    {
+        Selection selection = null;
+        if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
+            selection = ChessBoard.instance.ChessSelections[x, y];
+        return selection;
+    }
+
     public void MoveSelect()
     {
         GetComponent<Renderer>().material = materials[2];

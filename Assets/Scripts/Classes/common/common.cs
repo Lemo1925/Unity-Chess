@@ -35,7 +35,3 @@ public enum MoveType
     En_Pass = 4,
     Promotion = 5
 }
-public static class Common
-{
-    public static Vector2 BoardSize = new Vector2(2.105f, 2.105f);
-}

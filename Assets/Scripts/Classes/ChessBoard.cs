@@ -4,6 +4,9 @@ using UnityEngine;
 public class ChessBoard : MonoBehaviour
 {
     public static ChessBoard instance;
+    public static Vector2Int BoardLocationMin = new Vector2Int(0, 0);
+    public static Vector2Int BoardLocationMax = new Vector2Int(7, 7);
+    private Vector2 BoardSize = new Vector2(2.105f, 2.105f);
     public List<GameObject> ChessPosition;
     public List<GameObject> ChessPrefab;
     private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
@@ -32,7 +35,7 @@ public class ChessBoard : MonoBehaviour
             }
         }
 
-        float x = Common.BoardSize.x, y = Common.BoardSize.y;    
+        float x = BoardSize.x, y = BoardSize.y;    
         
         for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
