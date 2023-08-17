@@ -2,21 +2,17 @@
 
 public class Pawn : Chess
 {
-    public bool isFirstMove;
+    public int moveTimes;
     
-    public void Start() => isFirstMove = true;
+    public void Start() => moveTimes = 0;
 
     public override void Move(MoveType moveType)
     {
         switch (moveType)
         {
-            // TODO 移动策略 Move Eat En_Pass Promotion
             case MoveType.Move:
                 MovePiece();
-                isFirstMove = false;
-                break;
-            case MoveType.Eat:
-            
+                moveTimes++;
                 break;
             case MoveType.En_Pass:
             
@@ -32,7 +28,7 @@ public class Pawn : Chess
     {
         List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
-        List<Selection> MoveSensors = selection.Forward(isFirstMove ? 2 : 1, 0);
+        List<Selection> MoveSensors = selection.ForwardAndBack(moveTimes == 0 ? 2 : 1, 0);
         List<Selection> AttackSensors = selection.Bevel(1, 0);
         foreach (var sensor in MoveSensors)
         {
@@ -54,8 +50,7 @@ public class Pawn : Chess
         return selections;
     }
 
-    public void Promotion(ChessType type)
-    {
-        
-    }
+    public void Promotion(ChessType type) {}
+
+    public void En_Pass(){}
 }

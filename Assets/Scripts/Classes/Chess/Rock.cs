@@ -14,21 +14,18 @@ public class Rock : Chess
         List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
 
-        var selectionCollection = selection.Left(
+        var selectionCollection = selection.LeftAndRight(
             ChessBoard.BoardLocationMax.x, ChessBoard.BoardLocationMax.y);
-        selectionCollection.AddRange(selection.Forward(
+        selectionCollection.AddRange(selection.ForwardAndBack(
             ChessBoard.BoardLocationMax.x, ChessBoard.BoardLocationMax.y));
 
         foreach (var sensor in selectionCollection)
         {
-            if (sensor == null) continue;
+            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
             if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid)
             {
                 sensor.MoveSelect();
                 selections.Add(sensor);
-            }else if (sensor.occupyType == (Selection.OccupyGridType)camp)
-            {
-                
             }
             else
             {

@@ -28,13 +28,11 @@ public class Knight : Chess
         
         foreach (var sensor in selectionCollection)
         {
+            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
             if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid)
             {
                 sensor.MoveSelect();
                 selections.Add(sensor);
-            }else if (sensor.occupyType == (Selection.OccupyGridType)camp)
-            {
-                
             }
             else
             {

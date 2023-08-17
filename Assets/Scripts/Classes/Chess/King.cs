@@ -16,19 +16,16 @@ public class King : Chess
 
         var selectionCollection =
             selection.Bevel(1, 1);
-        selectionCollection.AddRange(selection.Forward(1,1));
-        selectionCollection.AddRange(selection.Left(1, 1));
+        selectionCollection.AddRange(selection.ForwardAndBack(1,1));
+        selectionCollection.AddRange(selection.LeftAndRight(1, 1));
 
         foreach (var sensor in selectionCollection)
         {
-            if (sensor == null) continue;
+            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
             if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid)
             {
                 sensor.MoveSelect();
                 selections.Add(sensor);
-            }else if (sensor.occupyType == (Selection.OccupyGridType)camp)
-            {
-                
             }
             else
             {

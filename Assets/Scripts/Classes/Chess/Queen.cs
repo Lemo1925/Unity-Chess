@@ -13,10 +13,10 @@ public class Queen : Chess
         List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
 
-        var selectionCollection = selection.Forward(
+        var selectionCollection = selection.ForwardAndBack(
             ChessBoard.BoardLocationMax.x, ChessBoard.BoardLocationMax.y
         );
-        selectionCollection.AddRange(selection.Left(
+        selectionCollection.AddRange(selection.LeftAndRight(
             ChessBoard.BoardLocationMax.x, ChessBoard.BoardLocationMax.y
         ));
         selectionCollection.AddRange(selection.Bevel(
@@ -25,14 +25,11 @@ public class Queen : Chess
 
         foreach (var sensor in selectionCollection)
         {
-            if (sensor == null) continue;
+            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
             if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid)
             {
                 sensor.MoveSelect();
                 selections.Add(sensor);
-            }else if (sensor.occupyType == (Selection.OccupyGridType)camp)
-            {
-                
             }
             else
             {

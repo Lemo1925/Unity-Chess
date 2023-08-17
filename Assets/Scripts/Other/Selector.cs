@@ -1,17 +1,18 @@
 using System.Collections.Generic;
-using Controller;
 using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
     private List<Selection> selections = new List<Selection>();
-    private Selection gridSelection;
-    private RaycastHit raycastHit;
-    
+    public Selection gridSelection;
+    private RaycastHit raycastHit; 
+    private Selection lastSelect;
+
     private bool selectStatus;
     
     private void OnEnable() => EventManager.OnSelectActionEvent += SelectPiece;
     private void OnDisable() => EventManager.OnSelectActionEvent -= SelectPiece;
+    
 
     private void SelectPiece(bool SelectButtonClick, bool DeselectButtonClick)
     {
@@ -24,12 +25,29 @@ public class Selector : MonoBehaviour
             selections = chess.CalculateGrid();
         }
         // 移动棋子
-        if (selections.Contains(gridSelection)) 
+        if (selections.Contains(gridSelection))
+        {
             MatchManager.Instance.currentChess.Move(MoveType.Move);
+        }
         // 取消选择
         if (DeselectButtonClick && selectStatus)
         {
-            var chess = gridSelection.chessPiece;
+            var chess = MatchManager.Instance.currentChess;
+            var select = MatchManager.Instance.currentSelection;
+            if (select.gridType == Selection.GridType.Attack || 
+                select.gridType == Selection.GridType.Normal)
+            {
+                for (var index = 0; index < select.chessList.Count; index++)
+                {
+                    var chessPiece = select.chessList[index];
+                    if (chessPiece.camp != chess.camp)
+                    {
+                        select.chessList.Remove(chessPiece);
+                        chessPiece.DestroyPiece();
+                    }
+                }
+            }
+
             chess.DeselectPiece();
             foreach (var selection in selections) selection.Deselect();
             selectStatus = false;
@@ -39,13 +57,18 @@ public class Selector : MonoBehaviour
         Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out raycastHit, 9999f, LayerMask.GetMask("Selection")))
         {
-            if (gridSelection == raycastHit.collider.GetComponent<Selection>()) return;
+            var hitSelection = raycastHit.collider.GetComponent<Selection>();
+            if (gridSelection == hitSelection) return;
             if (gridSelection != null) gridSelection.Deselect();
-            gridSelection = raycastHit.collider.GetComponent<Selection>();
+            gridSelection = hitSelection;
             if (selectStatus)
             {
                 if (selections.Contains(gridSelection))
+                {
                     gridSelection.Select();
+                    lastSelect = gridSelection;
+                }
+                else lastSelect.Select();
             }
             else gridSelection.Select();
         }

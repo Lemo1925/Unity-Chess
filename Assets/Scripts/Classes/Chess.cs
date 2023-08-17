@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public abstract class Chess : MonoBehaviour
 {
-    public Player player;
-
     public Camp camp;
     
     public Vector2Int Location;
@@ -24,8 +22,11 @@ public abstract class Chess : MonoBehaviour
 
     public void DeselectPiece()
     {
-        Location = MatchManager.Instance.currentSelection.Location;
-        
+        if (MatchManager.Instance.currentSelection != null)
+        {
+            Location = MatchManager.Instance.currentSelection.Location;
+        }
+
         MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
         renderers.material = defaultMaterial;
         
@@ -35,5 +36,10 @@ public abstract class Chess : MonoBehaviour
     protected void MovePiece()
     {
         transform.position = MatchManager.Instance.currentSelection.transform.position;
+    }
+
+    public void DestroyPiece()
+    {
+        Destroy(gameObject);
     }
 }

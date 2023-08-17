@@ -11,11 +11,10 @@ GameObject:
   - component: {fileID: 814013683208900238}
   - component: {fileID: 7983039019195038708}
   - component: {fileID: 8324306663579278606}
-  - component: {fileID: 6213992902884024133}
-  - component: {fileID: -1344834511396130832}
-  m_Layer: 9
-  m_Name: Selection
-  m_TagString: Board
+  - component: {fileID: 5872408891088322885}
+  m_Layer: 0
+  m_Name: Selection-Green
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 8352505189865252522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.001, z: 0}
-  m_LocalScale: {x: 0.21, y: 1, z: 0.21}
+  m_LocalScale: {x: 0.15, y: 1, z: 0.15}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -61,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7f4422fe303306f43a18f2a3a2946c01, type: 2}
+  - {fileID: 2100000, guid: 285a410b873a20b4da6a62c158145181, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,39 +82,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6213992902884024133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8352505189865252522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b429abe359d94df5a17feec81a4987cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  occupyType: 0
-  gridType: 0
-  Location: {x: 0, y: 0}
-  materials:
-  - {fileID: 2100000, guid: 7f4422fe303306f43a18f2a3a2946c01, type: 2}
-  - {fileID: 2100000, guid: b862c0186a47f884b8380904c3a4f74e, type: 2}
-  - {fileID: 2100000, guid: c1f1465f27389e14fbe07f119e02ba95, type: 2}
-  - {fileID: 2100000, guid: dd514039e88cb5f44b8a014195487631, type: 2}
-  - {fileID: 2100000, guid: 285a410b873a20b4da6a62c158145181, type: 2}
-  chessPiece: {fileID: 0}
-  chessList: []
---- !u!65 &-1344834511396130832
-BoxCollider:
+--- !u!64 &5872408891088322885
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8352505189865252522}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10, y: 2.220446e-16, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
