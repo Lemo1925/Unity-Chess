@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviour
     
     
     
-    private System.Collections.IEnumerator ScaleAnimation(Button button)
+    private IEnumerator ScaleAnimation(Button button)
     {
         Vector3 originalScale = button.transform.localScale;
 

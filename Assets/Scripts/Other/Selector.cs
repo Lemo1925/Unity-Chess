@@ -16,43 +16,65 @@ public class Selector : MonoBehaviour
 
     private void SelectPiece(bool SelectButtonClick, bool DeselectButtonClick)
     {
-        // 选择棋子并计算可移动格子
-        if (SelectButtonClick && !selectStatus && gridSelection.chessPiece != null)
+        if (gridSelection != null)
         {
-            var chess = gridSelection.chessPiece;
-            chess.SelectPiece();
-            selectStatus = true;
-            selections = chess.CalculateGrid();
-        }
-        // 移动棋子
-        if (selections.Contains(gridSelection))
-        {
-            MatchManager.Instance.currentChess.Move(MoveType.Move);
-        }
-        // 取消选择
-        if (DeselectButtonClick && selectStatus)
-        {
-            var chess = MatchManager.Instance.currentChess;
-            var select = MatchManager.Instance.currentSelection;
-            if (select.gridType == Selection.GridType.Attack || 
-                select.gridType == Selection.GridType.Normal)
+            // 选择棋子并计算可移动格子
+            if (SelectButtonClick && !selectStatus && gridSelection.chessPiece != null)
             {
-                for (var index = 0; index < select.chessList.Count; index++)
+                var chess = gridSelection.chessPiece;
+                chess.SelectPiece();
+                selectStatus = true;
+                selections = chess.CalculateGrid();
+            }
+            // 移动棋子
+            if (selections.Contains(gridSelection))
+            {
+                MatchManager.Instance.currentChess.Move(MoveType.Move);
+            }
+            // 取消选择
+            if (DeselectButtonClick && selectStatus)
+            {
+                var chess = gridSelection.chessPiece;
+                var select = MatchManager.Instance.currentSelection;    
+                if (select.gridType == Selection.GridType.Attack || 
+                    select.gridType == Selection.GridType.Normal)
                 {
-                    var chessPiece = select.chessList[index];
-                    if (chessPiece.camp != chess.camp)
+                    for (var index = 0; index < select.chessList.Count; index++)
                     {
-                        select.chessList.Remove(chessPiece);
-                        chessPiece.DestroyPiece();
+                        var chessPiece = select.chessList[index];
+                        if (chessPiece.camp != chess.camp)
+                        {
+                            select.chessList.Remove(chessPiece);
+                            chessPiece.DestroyPiece();
+                        }
                     }
                 }
-            }
 
-            chess.DeselectPiece();
-            foreach (var selection in selections) selection.Deselect();
-            selectStatus = false;
-            selections.Clear();
+                if (select.gridType == Selection.GridType.Special)
+                {
+                    var pawn = chess.GetComponent<Pawn>();
+                
+                    for (var index = 0; index < select.chessList.Count; index++)
+                    {
+                        var chessPiece = select.chessList[index];
+                        if (chessPiece.camp != chess.camp)
+                        {
+                            select.chessList.Remove(chessPiece);
+                            chessPiece.DestroyPiece();
+                        }
+                    }
+                    if (select.Location.y == 0 || select.Location.y == 7)
+                        pawn.Promotion();
+                }
+            
+                chess.DeselectPiece();
+                foreach (var selection in selections) selection.Deselect();
+                selectStatus = false;
+                lastSelect = null;
+                selections.Clear();
+            }
         }
+
         // Selection光标
         Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out raycastHit, 9999f, LayerMask.GetMask("Selection")))
@@ -60,17 +82,22 @@ public class Selector : MonoBehaviour
             var hitSelection = raycastHit.collider.GetComponent<Selection>();
             if (gridSelection == hitSelection) return;
             if (gridSelection != null) gridSelection.Deselect();
-            gridSelection = hitSelection;
             if (selectStatus)
             {
-                if (selections.Contains(gridSelection))
+                if (selections.Contains(hitSelection))
                 {
+                    gridSelection = hitSelection;
                     gridSelection.Select();
                     lastSelect = gridSelection;
                 }
-                else lastSelect.Select();
+                else if (lastSelect != null) lastSelect.Select();
             }
-            else gridSelection.Select();
-        }
+            else
+            {
+                gridSelection = hitSelection;
+                gridSelection.Select();
+            }
+        }else if (gridSelection != null && !selectStatus) 
+            gridSelection.Deselect();
     }
 }

@@ -12,7 +12,7 @@ public class ChessBoard : MonoBehaviour
     private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
     public readonly Selection[,] ChessSelections = new Selection[8, 8];
     public GameObject GridPrefab;
-    private Dictionary<ChessType, List<GameObject>> chessGO;
+    public Dictionary<ChessType, List<GameObject>> chessGO;
     public List<Material> materials;
 
     private void OnEnable()

@@ -302,4 +302,6 @@ public class MatchManager
     public Selection currentSelection;
 
     public Chess currentChess;
+
+    public ChessType promotionType;
 }

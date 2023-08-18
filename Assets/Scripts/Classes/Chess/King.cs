@@ -14,8 +14,7 @@ public class King : Chess
         List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
 
-        var selectionCollection =
-            selection.Bevel(1, 1);
+        var selectionCollection = selection.Bevel(1, 1);
         selectionCollection.AddRange(selection.ForwardAndBack(1,1));
         selectionCollection.AddRange(selection.LeftAndRight(1, 1));
 
