@@ -73,7 +73,7 @@ public class ChessBoard : MonoBehaviour
     private static List<Vector2Int> GetLocation()
     {
         List<Vector2Int> list = new List<Vector2Int>();
-        int[] row = { 7, 6, 1, 0 };
+        int[] row = { 7, 6, 0, 1 };
         int[] col = { 0, 7, 1, 6, 2, 5, 3, 4 };
         foreach (var y in row)
         foreach (var x in col)

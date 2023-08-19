@@ -8,10 +8,6 @@ public class Pawn : Chess
     public bool isFirstMove;
     public void Start() => isFirstMove = true;
 
-    private void OnEnable() => EventManager.PromotionClickEvent += PromotionLogic;
-
-    private void OnDisable() => EventManager.PromotionClickEvent -= PromotionLogic;
-
     public override void Move(MoveType moveType) => MovePiece();
 
     // todo: is first move and moveturn
@@ -25,7 +21,7 @@ public class Pawn : Chess
         foreach (var sensor in MoveSensors)
         {
             if (sensor.occupyType != Selection.OccupyGridType.NoneOccupyGrid) continue;
-            if (sensor.Location.y == 0 || selection.Location.y == 7) sensor.SpecialSelect();
+            if (sensor.Location.y == 0 || sensor.Location.y == 7) sensor.SpecialSelect();
             else sensor.MoveSelect();
             selections.Add(sensor);
         }
@@ -33,7 +29,7 @@ public class Pawn : Chess
         {
             if (sensor.occupyType == (Selection.OccupyGridType)camp ||
                 sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
-            if (sensor.Location.y == 0 || selection.Location.y == 7) sensor.SpecialSelect();
+            if (sensor.Location.y == 0 || sensor.Location.y == 7) sensor.SpecialSelect();
             else sensor.AttackSelect();
             selections.Add(sensor);
         }
@@ -59,16 +55,15 @@ public class Pawn : Chess
         base.DeselectPiece();
         if (isMove)
         {
-            // print("Move");
             isFirstMove = false;
             moveTurn = GameController.count;
         }
     }
 
     // 显示升变选择面板
-    public void Promotion() => EventManager.CallOnPromotion(true);
+    public void Promotion() => EventManager.CallOnPromotion(this,true);
     
-    private void PromotionLogic(ChessType chessType)
+    public void PromotionLogic(ChessType chessType)
     {
         var chessGameObject = Instantiate(
             ChessBoard.instance.ChessPrefab[Mathf.Abs((int)chessType) - 1],

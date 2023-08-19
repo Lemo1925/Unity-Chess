@@ -43,11 +43,9 @@ public class Selector : MonoBehaviour
                 else if (select.gridType == Selection.GridType.Special && 
                          chess.GetComponent<Pawn>() != null)
                 {
-                    // Pawn Special
                     var pawn = chess.GetComponent<Pawn>();
                     if (select.Location.y == 0 || select.Location.y == 7)
                     {
-                        // Promotion
                         if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
                             chess.EatPiece(select);
 
@@ -55,7 +53,6 @@ public class Selector : MonoBehaviour
                     }
                     else
                     {
-                        // EnPass
                         pawn.En_Pass();
                     }
                 }
@@ -75,21 +72,18 @@ public class Selector : MonoBehaviour
         {
             var hitSelection = raycastHit.collider.GetComponent<Selection>();
             if (gridSelection == hitSelection) return;
-            if (gridSelection != null) gridSelection.Deselect();
             if (selectStatus)
             {
                 if (selections.Contains(hitSelection))
                 {
-                    gridSelection = hitSelection;
-                    gridSelection.Select();
+                    RaySelect(hitSelection);
                     lastSelect = gridSelection;
                 }
                 else if (lastSelect != null) lastSelect.Select();
             }
             else
             {
-                gridSelection = hitSelection;
-                gridSelection.Select();
+                RaySelect(hitSelection);
             }
         }else if (gridSelection != null && !selectStatus)
         {
@@ -98,5 +92,10 @@ public class Selector : MonoBehaviour
         }
     }
 
-    
+    private void RaySelect(Selection hitSelection)
+    {
+        if (gridSelection != null) gridSelection.Deselect();
+        gridSelection = hitSelection;
+        gridSelection.Select();
+    }
 }

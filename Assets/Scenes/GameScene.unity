@@ -1025,7 +1025,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChessBoard: {fileID: 5181488058727767806, guid: c73ae37b9649b5f48b04fc1114f37b33, type: 3}
-  count: 0
 --- !u!1 &1766278177
 GameObject:
   m_ObjectHideFlags: 0

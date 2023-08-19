@@ -290,7 +290,6 @@ public class Selection : MonoBehaviour
     }
     public void Select()
     {
-        print($"Select:{Location}");
         GetComponent<Renderer>().material = materials[1];
         MatchManager.Instance.currentSelection = this;
     }

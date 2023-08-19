@@ -10,7 +10,10 @@ public abstract class Chess : MonoBehaviour
 
     public virtual List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection> { Selection.GetSelection(Location) };
+        List<Selection> selections = new List<Selection>
+        {
+            Selection.GetSelection(Location)
+        };
         selections[0].MoveSelect();
 
         return selections;
@@ -20,7 +23,6 @@ public abstract class Chess : MonoBehaviour
     {
         MatchManager.Instance.currentChess = this;
         isMove = false;
-        // print(Location);
         lastLocation = Location;
 
         MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
@@ -32,15 +34,9 @@ public abstract class Chess : MonoBehaviour
     {
         if (MatchManager.Instance.currentSelection != null)
         {
-            print("Update Location");
             Location = MatchManager.Instance.currentSelection.Location;
         }
-        // print($"{Location}:{lastLocation}");
-        if (lastLocation == Location)
-        {
-            isMove = false;
-        }
-        else isMove = true;
+        isMove = lastLocation != Location;
 
         GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
         MatchManager.Instance.currentChess = null;
