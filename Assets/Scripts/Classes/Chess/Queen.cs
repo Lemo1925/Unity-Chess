@@ -10,8 +10,8 @@ public class Queen : Chess
 
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> selections = base.CalculateGrid();
 
         var selectionCollection = selection.ForwardAndBack(
             ChessBoard.BoardLocationMax.x, ChessBoard.BoardLocationMax.y

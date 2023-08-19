@@ -17,8 +17,8 @@ public class Pawn : Chess
     // todo: is first move and moveturn
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> selections = base.CalculateGrid();
         List<Selection> MoveSensors = selection.ForwardAndBack(isFirstMove ? 2 : 1, 0);
         List<Selection> AttackSensors = selection.Bevel(1, 0);
         List<Selection> EnPassSensors = selection.LeftAndRight(1, 1);
@@ -29,7 +29,6 @@ public class Pawn : Chess
             else sensor.MoveSelect();
             selections.Add(sensor);
         }
-
         foreach (var sensor in AttackSensors)
         {
             if (sensor.occupyType == (Selection.OccupyGridType)camp ||
@@ -38,7 +37,6 @@ public class Pawn : Chess
             else sensor.AttackSelect();
             selections.Add(sensor);
         }
-
         foreach (var sensor in EnPassSensors)
         {
             if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid || 
@@ -53,8 +51,18 @@ public class Pawn : Chess
             }
         }
         
-        moveTurn = GameController.count;
         return selections;
+    }
+
+    public override void DeselectPiece()
+    {
+        base.DeselectPiece();
+        if (isMove)
+        {
+            // print("Move");
+            isFirstMove = false;
+            moveTurn = GameController.count;
+        }
     }
 
     // 显示升变选择面板

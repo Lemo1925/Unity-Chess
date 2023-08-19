@@ -48,10 +48,25 @@ public class Selection : MonoBehaviour
 
 
     // 越界判断
-    private bool OutOfRangeY(int y) => y < ChessBoard.BoardLocationMin.y || y > ChessBoard.BoardLocationMax.y;
-    private bool OutOfRangeX(int x) => x < ChessBoard.BoardLocationMin.x || x > ChessBoard.BoardLocationMax.y;
+    private static bool OutOfRangeY(int y) => y < ChessBoard.BoardLocationMin.y || y > ChessBoard.BoardLocationMax.y;
+    private static bool OutOfRangeX(int x) => x < ChessBoard.BoardLocationMin.x || x > ChessBoard.BoardLocationMax.y;
     
     // 方向检测
+    public Selection GetSelection(int x , int y)
+    {
+        Selection selection = null;
+        if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
+            selection = ChessBoard.instance.ChessSelections[x, y];
+        return selection;
+    }
+    public static Selection GetSelection(Vector2Int Location)
+    {
+        int x = Location.x, y = Location.y;
+        Selection selection = null;
+        if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
+            selection = ChessBoard.instance.ChessSelections[x, y];
+        return selection;
+    }
     private List<Selection> Forward(int steps)
     {
         List<Selection> selections = new List<Selection>();
@@ -100,13 +115,6 @@ public class Selection : MonoBehaviour
 
         return selections;
     }
-    public List<Selection> ForwardAndBack(int forward, int back)
-    {
-        List<Selection> selections = new List<Selection>();
-        selections.AddRange(Forward(forward));
-        selections.AddRange(Back(back));
-        return selections;
-    }
     private List<Selection> Left(int steps)
     {
         List<Selection> selections = new List<Selection>();
@@ -153,13 +161,6 @@ public class Selection : MonoBehaviour
             selections.Add(selection);
         }
 
-        return selections;
-    }
-    public List<Selection> LeftAndRight(int left, int right)
-    {
-        List<Selection> selections = new List<Selection>();
-        selections.AddRange(Left(left));
-        selections.AddRange(Right(right));
         return selections;
     }
     private List<Selection> LeftBevel(int forwardLength, int backwardLength)
@@ -250,27 +251,26 @@ public class Selection : MonoBehaviour
         
         return selections;
     }
+    public List<Selection> ForwardAndBack(int forward, int back)
+    {
+        List<Selection> selections = new List<Selection>();
+        selections.AddRange(Forward(forward));
+        selections.AddRange(Back(back));
+        return selections;
+    }
+    public List<Selection> LeftAndRight(int left, int right)
+    {
+        List<Selection> selections = new List<Selection>();
+        selections.AddRange(Left(left));
+        selections.AddRange(Right(right));
+        return selections;
+    }
     public List<Selection> Bevel(int forwardLength, int backwardLength)
     {
         var selections = new List<Selection>();
         selections.AddRange(LeftBevel(forwardLength, backwardLength));
         selections.AddRange(RightBevel(forwardLength, backwardLength));
         return selections;
-    }
-    public Selection GetSelection(int x , int y)
-    {
-        Selection selection = null;
-        if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
-            selection = ChessBoard.instance.ChessSelections[x, y];
-        return selection;
-    }
-    public Selection GetSelection(Vector2Int Location)
-    {
-        int x = Location.x, y = Location.y;
-        Selection selection = null;
-        if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
-            selection = ChessBoard.instance.ChessSelections[x, y];
-        return selection;
     }
 
     public void MoveSelect()
@@ -290,6 +290,7 @@ public class Selection : MonoBehaviour
     }
     public void Select()
     {
+        print($"Select:{Location}");
         GetComponent<Renderer>().material = materials[1];
         MatchManager.Instance.currentSelection = this;
     }
@@ -306,8 +307,8 @@ public class MatchManager
 {
     private static MatchManager instance;
     public static MatchManager Instance => instance ??= new MatchManager();
-
+    
     public Selection currentSelection;
-
+    
     public Chess currentChess;
 }

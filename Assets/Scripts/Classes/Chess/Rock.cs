@@ -11,8 +11,8 @@ public class Rock : Chess
 
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> selections = base.CalculateGrid();
 
         var selectionCollection = selection.LeftAndRight(
             ChessBoard.BoardLocationMax.x, ChessBoard.BoardLocationMax.y);

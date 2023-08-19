@@ -20,10 +20,13 @@ namespace Controller
 
         private void Update()
         {
-            RoundType = (Camp)(count % 2);
+            RoundType = count % 2;
 
             #region 执棋阶段
-
+            
+            if (MatchManager.Instance.currentSelection != null)
+                print(MatchManager.Instance.currentSelection.Location);
+            
             if (Input.GetMouseButtonDown(0)) 
                 selectButtonListener = true;
 

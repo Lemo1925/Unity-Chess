@@ -59,21 +59,30 @@ public class ChessBoard : MonoBehaviour
 
     private void Start()
     {
+        var LocationList = GetLocation();
+        var i = 0;
         foreach (var pair in chessGO)
         foreach (var go in pair.Value)
         {
-            int index = (int)pair.Key;
-            int[] row = { 7, 6, 1, 0 };
-            int[] col = { 0, 7, 1, 6, 2, 5, 3, 4 };
-            foreach (var y in row)
-            foreach (var x in col)
-            {
-                var Location = new Vector2Int(x, y);
-                InitChessComponents(go, index, Location);
-            }
+            var index = (int)pair.Key;
+            InitChessComponents(go, index, LocationList[i++]);
         }
     }
 
+    private static List<Vector2Int> GetLocation()
+    {
+        List<Vector2Int> list = new List<Vector2Int>();
+        int[] row = { 7, 6, 1, 0 };
+        int[] col = { 0, 7, 1, 6, 2, 5, 3, 4 };
+        foreach (var y in row)
+        foreach (var x in col)
+        {
+            list.Add(new Vector2Int(x, y));
+        }
+
+        return list;
+    }
+    
     private void InitChessGO()
     {
         chessGO = new Dictionary<ChessType, List<GameObject>>

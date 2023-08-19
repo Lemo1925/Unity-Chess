@@ -11,8 +11,8 @@ public class Bishop:Chess
 
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> selections = base.CalculateGrid();
 
         var selectCollection = 
             selection.Bevel(ChessBoard.BoardLocationMax.x, 

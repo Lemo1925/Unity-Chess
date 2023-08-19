@@ -11,8 +11,8 @@ public class Knight : Chess
 
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> selections = base.CalculateGrid();
         List<Selection> selectionCollection = new List<Selection>();
         
         int[] deltaX = {1, 1, -1, -1, 2, 2, -2, -2};

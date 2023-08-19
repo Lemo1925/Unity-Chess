@@ -11,8 +11,8 @@ public class King : Chess
 
     public override List<Selection> CalculateGrid()
     {
-        List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
+        List<Selection> selections = base.CalculateGrid();
 
         var selectionCollection = selection.Bevel(1, 1);
         selectionCollection.AddRange(selection.ForwardAndBack(1,1));
@@ -39,5 +39,11 @@ public class King : Chess
     public void Castling()
     {
         
+    }
+
+    public override void DestroyPiece()
+    {
+        base.DestroyPiece();
+        print(camp == Camp.BLACK ? "White Winner" : "Black Winner");
     }
 }
