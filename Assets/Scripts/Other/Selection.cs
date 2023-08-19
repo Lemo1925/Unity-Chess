@@ -264,6 +264,14 @@ public class Selection : MonoBehaviour
             selection = ChessBoard.instance.ChessSelections[x, y];
         return selection;
     }
+    public Selection GetSelection(Vector2Int Location)
+    {
+        int x = Location.x, y = Location.y;
+        Selection selection = null;
+        if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
+            selection = ChessBoard.instance.ChessSelections[x, y];
+        return selection;
+    }
 
     public void MoveSelect()
     {
@@ -302,6 +310,4 @@ public class MatchManager
     public Selection currentSelection;
 
     public Chess currentChess;
-
-    public ChessType promotionType;
 }

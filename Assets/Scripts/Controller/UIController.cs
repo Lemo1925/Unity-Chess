@@ -35,37 +35,7 @@ public class UIController : MonoBehaviour
         Queen.onClick.AddListener(QueenPromotion);
     }
 
-    private void setPromotionPanel(bool visible) => promotionPanel.gameObject.SetActive(visible);
-
-    private void RookPromotion()
-    {
-        StartCoroutine(ScaleAnimation(Rook));
-        MatchManager.Instance.promotionType =
-            GameController.RoundType == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock;
-    }
-
-    private void KnightPromotion()
-    {
-        StartCoroutine(ScaleAnimation(Knight));
-        MatchManager.Instance.promotionType =
-            GameController.RoundType == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight;
-    }
-
-    private void BishopPromotion()
-    {
-        StartCoroutine(ScaleAnimation(Bishop));
-        MatchManager.Instance.promotionType =
-            GameController.RoundType == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop;
-    }
-
-    private void QueenPromotion()
-    {
-        StartCoroutine(ScaleAnimation(Queen));
-        MatchManager.Instance.promotionType =
-            GameController.RoundType == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen;
-    }
-    
-    private IEnumerator ScaleAnimation(Button button)
+    private IEnumerator ScaleAnimation(Component button)
     {
         Vector3 originalScale = button.transform.localScale;
         // 缩小按钮
@@ -75,4 +45,43 @@ public class UIController : MonoBehaviour
         // 恢复按钮原始大小
         LeanTween.scale(button.gameObject, originalScale, animationDuration);
     }
+
+    private void setPromotionPanel(bool visible) 
+        => promotionPanel.gameObject.SetActive(visible);
+
+    private void RookPromotion()
+    {
+        StartCoroutine(ScaleAnimation(Rook));
+        EventManager.CallOnPromotionClick( 
+            GameController.RoundType == Camp.WHITE ? 
+                ChessType.WhiteRock : ChessType.BlackRock);
+        setPromotionPanel(false);
+    }
+
+    private void KnightPromotion()
+    {
+        StartCoroutine(ScaleAnimation(Knight));
+        EventManager.CallOnPromotionClick( 
+            GameController.RoundType == Camp.WHITE ? 
+                ChessType.WhiteKnight : ChessType.BlackKnight);
+        setPromotionPanel(false);
+    }
+
+    private void BishopPromotion()
+    {
+        StartCoroutine(ScaleAnimation(Bishop));
+        EventManager.CallOnPromotionClick( 
+            GameController.RoundType == Camp.WHITE ? 
+                ChessType.WhiteBishop : ChessType.BlackBishop);
+        setPromotionPanel(false);
+    }
+
+    private void QueenPromotion()
+    {
+        StartCoroutine(ScaleAnimation(Queen));
+        EventManager.CallOnPromotionClick( 
+            GameController.RoundType == Camp.WHITE ? 
+                ChessType.WhiteQueen : ChessType.BlackQueen);
+        setPromotionPanel(false);
+    } 
 }

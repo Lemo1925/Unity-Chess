@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Controller
 {
@@ -11,8 +10,7 @@ namespace Controller
 
         [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE;
 
-        [Header("游戏回合")] 
-        public int count;
+        [Header("游戏回合")] public const int count = 0;
 
         private bool selectButtonListener, deselectButtonListener;
         private void OnEnable()

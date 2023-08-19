@@ -35,42 +35,36 @@ public class Selector : MonoBehaviour
             if (DeselectButtonClick && selectStatus)
             {
                 var chess = gridSelection.chessPiece;
-                var select = MatchManager.Instance.currentSelection;    
-                if (select.gridType == Selection.GridType.Attack || 
-                    select.gridType == Selection.GridType.Normal)
+                var select = MatchManager.Instance.currentSelection;
+                if (select.gridType == Selection.GridType.Attack || select.gridType == Selection.GridType.Normal)
                 {
-                    for (var index = 0; index < select.chessList.Count; index++)
+                    chess.EatPiece(select);
+                }
+                else if (select.gridType == Selection.GridType.Special && 
+                         chess.GetComponent<Pawn>() != null)
+                {
+                    // Pawn Special
+                    var pawn = chess.GetComponent<Pawn>();
+                    if (select.Location.y == 0 || select.Location.y == 7)
                     {
-                        var chessPiece = select.chessList[index];
-                        if (chessPiece.camp != chess.camp)
-                        {
-                            select.chessList.Remove(chessPiece);
-                            chessPiece.DestroyPiece();
-                        }
+                        // Promotion
+                        if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
+                            chess.EatPiece(select);
+
+                        pawn.Promotion();
+                    }
+                    else
+                    {
+                        // EnPass
+                        pawn.En_Pass();
                     }
                 }
 
-                if (select.gridType == Selection.GridType.Special)
-                {
-                    var pawn = chess.GetComponent<Pawn>();
-                
-                    for (var index = 0; index < select.chessList.Count; index++)
-                    {
-                        var chessPiece = select.chessList[index];
-                        if (chessPiece.camp != chess.camp)
-                        {
-                            select.chessList.Remove(chessPiece);
-                            chessPiece.DestroyPiece();
-                        }
-                    }
-                    if (select.Location.y == 0 || select.Location.y == 7)
-                        pawn.Promotion();
-                }
-            
                 chess.DeselectPiece();
                 foreach (var selection in selections) selection.Deselect();
                 selectStatus = false;
                 lastSelect = null;
+                gridSelection = null;
                 selections.Clear();
             }
         }
@@ -97,7 +91,12 @@ public class Selector : MonoBehaviour
                 gridSelection = hitSelection;
                 gridSelection.Select();
             }
-        }else if (gridSelection != null && !selectStatus) 
+        }else if (gridSelection != null && !selectStatus)
+        {
             gridSelection.Deselect();
+            gridSelection = null;
+        }
     }
+
+    
 }

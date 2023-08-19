@@ -1,101 +1,81 @@
 ﻿using System.Collections.Generic;
+using Controller;
 using UnityEngine;
 
 public class Pawn : Chess
 {
-    public int moveTimes;
-    bool isPromotion;
-    public void Start() => moveTimes = 0;
+    public int moveTurn = -1;
+    public bool isFirstMove;
+    public void Start() => isFirstMove = true;
 
-    public override void Move(MoveType moveType)
-    {
-        MovePiece();
-        moveTimes++;
-    }
+    private void OnEnable() => EventManager.PromotionClickEvent += PromotionLogic;
 
+    private void OnDisable() => EventManager.PromotionClickEvent -= PromotionLogic;
+
+    public override void Move(MoveType moveType) => MovePiece();
+
+    // todo: is first move and moveturn
     public override List<Selection> CalculateGrid()
     {
         List<Selection> selections = new List<Selection>();
         Selection selection = MatchManager.Instance.currentSelection;
-        List<Selection> MoveSensors = selection.ForwardAndBack(moveTimes == 0 ? 2 : 1, 0);
+        List<Selection> MoveSensors = selection.ForwardAndBack(isFirstMove ? 2 : 1, 0);
         List<Selection> AttackSensors = selection.Bevel(1, 0);
+        List<Selection> EnPassSensors = selection.LeftAndRight(1, 1);
         foreach (var sensor in MoveSensors)
         {
             if (sensor.occupyType != Selection.OccupyGridType.NoneOccupyGrid) continue;
-            if (sensor.Location.y == 0 || selection.Location.y == 7)
-                sensor.SpecialSelect();
+            if (sensor.Location.y == 0 || selection.Location.y == 7) sensor.SpecialSelect();
             else sensor.MoveSelect();
             selections.Add(sensor);
         }
 
         foreach (var sensor in AttackSensors)
         {
-            if (sensor.occupyType == (Selection.OccupyGridType)camp) continue;
-            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
+            if (sensor.occupyType == (Selection.OccupyGridType)camp ||
+                sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
             if (sensor.Location.y == 0 || selection.Location.y == 7) sensor.SpecialSelect();
             else sensor.AttackSelect();
             selections.Add(sensor);
         }
+
+        foreach (var sensor in EnPassSensors)
+        {
+            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid || 
+                sensor.occupyType == (Selection.OccupyGridType)camp) continue;
+            var pawn = sensor.chessPiece.GetComponent<Pawn>();
+            if (pawn != null && pawn.moveTurn == GameController.count)
+            {
+                var EnPassSelection = sensor.GetSelection(pawn.Location.x, pawn.Location.y);
+                var targetGrid = EnPassSelection.ForwardAndBack(0,1)[0];
+                targetGrid.SpecialSelect();
+                selections.Add(targetGrid);
+            }
+        }
+        
+        moveTurn = GameController.count;
         return selections;
     }
+
+    // 显示升变选择面板
+    public void Promotion() => EventManager.CallOnPromotion(true);
     
-    public void Promotion()
+    private void PromotionLogic(ChessType chessType)
     {
-        isPromotion = true;
-        if (isPromotion)
-        {
-            EventManager.CallOnPromotion(isPromotion);
-            var chessIdx = (int)MatchManager.Instance.promotionType;
-
-            if (chessIdx == 0) return;
-            GameObject chessInstance = Instantiate(
-                ChessBoard.instance.ChessPrefab[Mathf.Abs((int)MatchManager.Instance.promotionType) - 1],
-                transform.position, transform.rotation);
-                
-            chessInstance.GetComponent<Renderer>().material =
-                (int)MatchManager.Instance.promotionType > 0
-                    ? ChessBoard.instance.materials[0]
-                    : ChessBoard.instance.materials[1];
-                
-            ChessBoard.instance.chessGO[MatchManager.Instance.promotionType].Add(chessInstance);
-                
-            switch (Mathf.Abs(chessIdx))
-            {
-                case 1:
-                {
-                    Rock rock = chessInstance.AddComponent<Rock>();
-                    rock.camp = chessIdx > 0 ? Camp.WHITE : Camp.BLACK;
-                    rock.Location = Location;
-                    break;
-                }
-                case 2:
-                {
-                    Knight knight = chessInstance.AddComponent<Knight>();
-                    knight.camp = chessIdx > 0 ? Camp.WHITE : Camp.BLACK;
-                    knight.Location = Location;
-                    break;
-                }
-                case 3:
-                {
-                    Bishop bishop = chessInstance.AddComponent<Bishop>();
-                    bishop.camp = chessIdx > 0 ? Camp.WHITE : Camp.BLACK;
-                    bishop.Location = Location;
-                    break;
-                }
-                case 4:
-                {
-                    Queen queen = chessInstance.AddComponent<Queen>();
-                    queen.camp = chessIdx > 0 ? Camp.WHITE : Camp.BLACK;
-                    queen.Location = Location;
-                    break;
-                }
-            }
-
-            isPromotion = false;
-            DestroyPiece();
-        }
-        else EventManager.CallOnPromotion(isPromotion);
+        var chessGameObject = Instantiate(
+            ChessBoard.instance.ChessPrefab[Mathf.Abs((int)chessType) - 1],
+            transform.position, transform.rotation);
+        
+        chessGameObject.GetComponentInChildren<Renderer>().material = (int)chessType > 0 ? 
+            ChessBoard.instance.materials[0] : ChessBoard.instance.materials[1];
+        
+        ChessBoard.instance.chessGO[chessType].Add(chessGameObject);
+        ChessBoard.InitChessComponents(chessGameObject, (int)chessType, Location);
+        DestroyPiece();
     }
-
-    public void En_Pass(){}
+    
+    public void En_Pass()
+    {
+        MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0].chessPiece.DestroyPiece();
+    }
 }

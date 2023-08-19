@@ -38,6 +38,17 @@ public abstract class Chess : MonoBehaviour
         transform.position = MatchManager.Instance.currentSelection.transform.position;
     }
 
+    public void EatPiece(Selection select)
+    {
+        for (var index = 0; index < select.chessList.Count; index++)
+        {
+            var chessPiece = select.chessList[index];
+            if (chessPiece.camp == camp) continue;
+            select.chessList.Remove(chessPiece);
+            chessPiece.DestroyPiece();
+        }
+    }
+    
     public void DestroyPiece()
     {
         Destroy(gameObject);
