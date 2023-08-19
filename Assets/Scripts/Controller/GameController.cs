@@ -24,9 +24,6 @@ namespace Controller
 
             #region 执棋阶段
             
-            if (MatchManager.Instance.currentSelection != null)
-                print(MatchManager.Instance.currentSelection.Location);
-            
             if (Input.GetMouseButtonDown(0)) 
                 selectButtonListener = true;
 

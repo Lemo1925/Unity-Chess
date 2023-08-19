@@ -70,7 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 228231235}
   m_Layer: 0
-  m_Name: WhitePawn3
+  m_Name: WhitePawn5
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &235770125
 GameObject:
@@ -130,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 248300159}
   m_Layer: 0
-  m_Name: BlackPawn7
+  m_Name: BlackPawn3
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,7 +148,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 31
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &271944773
 GameObject:
@@ -160,7 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 271944774}
   m_Layer: 0
-  m_Name: WhitePawn2
+  m_Name: WhitePawn3
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,7 +178,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &273930247
 GameObject:
@@ -190,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 273930248}
   m_Layer: 0
-  m_Name: BlackPawn5
+  m_Name: BlackPawn7
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -208,7 +208,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 29
+  m_RootOrder: 31
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &287163802
 GameObject:
@@ -250,7 +250,7 @@ GameObject:
   m_Component:
   - component: {fileID: 445573977}
   m_Layer: 0
-  m_Name: WhitePawn4
+  m_Name: WhitePawn7
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -268,7 +268,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 12
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &486492900
 GameObject:
@@ -280,7 +280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 486492901}
   m_Layer: 0
-  m_Name: BlackPawn2
+  m_Name: BlackPawn4
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -298,7 +298,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 26
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &544577350
 GameObject:
@@ -310,7 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 544577351}
   m_Layer: 0
-  m_Name: BlackPawn4
+  m_Name: BlackPawn8
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -328,7 +328,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 28
+  m_RootOrder: 32
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &636488780
 GameObject:
@@ -430,7 +430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 806304560}
   m_Layer: 0
-  m_Name: WhitePawn5
+  m_Name: WhitePawn8
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -448,7 +448,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 13
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &862596387
 GameObject:
@@ -460,7 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 862596388}
   m_Layer: 0
-  m_Name: BlackPawn6
+  m_Name: BlackPawn5
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -478,7 +478,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 30
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &929687664
 GameObject:
@@ -550,7 +550,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1100476020}
   m_Layer: 0
-  m_Name: WhitePawn8
+  m_Name: WhitePawn2
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -568,7 +568,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 16
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1295550213
 GameObject:
@@ -670,7 +670,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1669529538}
   m_Layer: 0
-  m_Name: BlackPawn8
+  m_Name: BlackPawn1
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -688,7 +688,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 32
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1669653313
 GameObject:
@@ -700,7 +700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1669653314}
   m_Layer: 0
-  m_Name: WhitePawn7
+  m_Name: WhitePawn4
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -718,7 +718,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 15
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1727696007
 GameObject:
@@ -850,7 +850,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2005392202}
   m_Layer: 0
-  m_Name: BlackPawn3
+  m_Name: BlackPawn6
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -868,7 +868,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 27
+  m_RootOrder: 30
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &2044852477
 GameObject:
@@ -880,7 +880,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2044852478}
   m_Layer: 0
-  m_Name: BlackPawn1
+  m_Name: BlackPawn2
   m_TagString: Chess
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -898,7 +898,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6524160314723573524}
-  m_RootOrder: 25
+  m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &2061851492
 GameObject:
@@ -1081,13 +1081,13 @@ Transform:
   - {fileID: 1422252745}
   - {fileID: 124637345}
   - {fileID: 636488781}
+  - {fileID: 1100476020}
   - {fileID: 271944774}
+  - {fileID: 1669653314}
   - {fileID: 228231235}
+  - {fileID: 1607147502}
   - {fileID: 445573977}
   - {fileID: 806304560}
-  - {fileID: 1607147502}
-  - {fileID: 1669653314}
-  - {fileID: 1100476020}
   - {fileID: 670554631}
   - {fileID: 1955667119}
   - {fileID: 2061851493}
@@ -1096,14 +1096,14 @@ Transform:
   - {fileID: 287163803}
   - {fileID: 23003514}
   - {fileID: 1860348137}
-  - {fileID: 2044852478}
-  - {fileID: 486492901}
-  - {fileID: 2005392202}
-  - {fileID: 544577351}
-  - {fileID: 273930248}
-  - {fileID: 862596388}
-  - {fileID: 248300159}
   - {fileID: 1669529538}
+  - {fileID: 2044852478}
+  - {fileID: 248300159}
+  - {fileID: 486492901}
+  - {fileID: 862596388}
+  - {fileID: 2005392202}
+  - {fileID: 273930248}
+  - {fileID: 544577351}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1129,13 +1129,13 @@ MonoBehaviour:
   - {fileID: 1422252744}
   - {fileID: 124637344}
   - {fileID: 636488780}
+  - {fileID: 1100476019}
   - {fileID: 271944773}
+  - {fileID: 1669653313}
   - {fileID: 228231234}
+  - {fileID: 1607147501}
   - {fileID: 445573976}
   - {fileID: 806304559}
-  - {fileID: 1607147501}
-  - {fileID: 1669653313}
-  - {fileID: 1100476019}
   - {fileID: 1955667118}
   - {fileID: 670554630}
   - {fileID: 1865375388}
@@ -1145,13 +1145,13 @@ MonoBehaviour:
   - {fileID: 23003513}
   - {fileID: 1860348136}
   - {fileID: 1669529537}
+  - {fileID: 2044852477}
   - {fileID: 248300158}
+  - {fileID: 486492900}
   - {fileID: 862596387}
+  - {fileID: 2005392201}
   - {fileID: 273930247}
   - {fileID: 544577350}
-  - {fileID: 2005392201}
-  - {fileID: 486492900}
-  - {fileID: 2044852477}
   ChessPrefab:
   - {fileID: 6074660688994128696, guid: 8bd286a6c7a8fe04ab442f3cbfc194af, type: 3}
   - {fileID: 4964325053867334774, guid: b571f8e56d67d3141a05a9449db99223, type: 3}

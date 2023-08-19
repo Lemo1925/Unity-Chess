@@ -67,6 +67,7 @@ public class ChessBoard : MonoBehaviour
             var index = (int)pair.Key;
             InitChessComponents(go, index, LocationList[i++]);
         }
+        
     }
 
     private static List<Vector2Int> GetLocation()
