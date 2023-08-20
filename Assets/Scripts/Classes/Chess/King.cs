@@ -1,8 +1,14 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class King : Chess
 {
+    // 是否被将军
+    private bool isCheckmate;
+    // 是否移动过
+    private bool firstMove;
+    // 是否能易位
+    private bool castling;
 
     public override void Move(MoveType moveType)
     {
@@ -36,9 +42,23 @@ public class King : Chess
         return selections;
     }
 
+    public override void DeselectPiece()
+    {
+        base.DeselectPiece();
+        if (isMoved)
+        {
+            firstMove = false;
+        }    
+    }
+
     public void Castling()
     {
-        
+        for (int i = 0; i < 7; i++)
+        {
+            var selection = Selection.GetSelection(new Vector2Int(i, 7));
+            var chess = selection.chessPiece;
+            
+        }
     }
 
     public override void DestroyPiece()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class Rock : Chess
 {
+    public bool firstMove{ get; set; }
 
     public override void Move(MoveType moveType)
     {
@@ -35,5 +36,11 @@ public class Rock : Chess
         }
 
         return selections;
+    }
+
+    public override void DeselectPiece()
+    {
+        base.DeselectPiece();
+        firstMove = false;
     }
 }

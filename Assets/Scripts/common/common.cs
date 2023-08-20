@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public enum GameModel
+﻿public enum GameModel
 {
     SINGLE = 0,
     MULTIPLE = 1,

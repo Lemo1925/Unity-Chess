@@ -12,11 +12,7 @@ public class ScenesManager : MonoBehaviour
     
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-
+        if (instance == null) instance = this;
         fadeGroup = GameObject.Find("FadeCanvas").GetComponentInChildren<CanvasGroup>();
     }
 
@@ -30,10 +26,7 @@ public class ScenesManager : MonoBehaviour
         yield return StartCoroutine(Fade(1));
         yield return SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Additive);
 
-        if (currentScene != string.Empty)
-        {
-            yield return SceneManager.UnloadSceneAsync(currentScene);
-        }
+        if (currentScene != string.Empty) yield return SceneManager.UnloadSceneAsync(currentScene);
         //激活新场景
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);

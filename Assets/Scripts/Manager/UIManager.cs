@@ -44,7 +44,6 @@ public class UIManager : MonoBehaviour
     public void MultiBtn_Click(Button button)
     {
         StartCoroutine(ScaleAnimation(button));
-        
     }
 
     public void ExitBtn_Click(Button button)
