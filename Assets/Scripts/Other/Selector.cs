@@ -28,7 +28,7 @@ public class Selector : MonoBehaviour
             // 移动棋子
             if (selections.Contains(gridSelection))
             {
-                MatchManager.Instance.currentChess.Move(MoveType.Move);
+                MatchManager.Instance.currentChess.Move();
             }
             // 取消选择
             if (DeselectButtonClick && selectStatus)
@@ -39,18 +39,31 @@ public class Selector : MonoBehaviour
                 {
                     chess.EatPiece(select);
                 }
-                else if (select.gridType == Selection.GridType.Special && 
-                         chess.GetComponent<Pawn>() != null)
+                else if (select.gridType == Selection.GridType.Special)
                 {
-                    var pawn = chess.GetComponent<Pawn>();
-                    if (select.Location.y == 0 || select.Location.y == 7)
+                    if (chess.GetComponent<Pawn>() != null)
                     {
-                        if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
-                            chess.EatPiece(select);
+                        var pawn = chess.GetComponent<Pawn>();
+                        if (select.Location.y == 0 || select.Location.y == 7)
+                        {
+                            if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
+                                chess.EatPiece(select);
 
-                        pawn.Promotion();
+                            pawn.Promotion();
+                        }
+                        else pawn.En_Pass();
+                    }else
+                    {
+                        var king = chess.GetComponent<King>();
+                        if (select.Location.x == 2)
+                        {
+                            king.LongCastling();
+                        }
+                        else
+                        {
+                            king.ShortCastling();
+                        }
                     }
-                    else pawn.En_Pass();
                 }
 
                 chess.DeselectPiece();

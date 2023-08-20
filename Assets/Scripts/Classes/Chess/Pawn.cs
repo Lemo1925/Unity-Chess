@@ -7,7 +7,7 @@ public class Pawn : Chess
     public int firstMoveStep;
     public int moveTurn = -1;
     public void Start() => isFirstMove = true;
-    public override void Move(MoveType moveType) => MovePiece();
+    public override void Move() => MovePiece();
     public override List<Selection> CalculateGrid()
     {
         Selection selection = MatchManager.Instance.currentSelection;
@@ -28,6 +28,8 @@ public class Pawn : Chess
                 sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
             if (sensor.Location.y == 0 || sensor.Location.y == 7) sensor.SpecialSelect();
             else sensor.AttackSelect();
+            var king = sensor.chessPiece.GetComponent<King>();
+            if (king != null) king.isCheckmate = true;
             selections.Add(sensor);
         }
         foreach (var sensor in EnPassSensors)

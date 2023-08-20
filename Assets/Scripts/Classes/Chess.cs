@@ -6,8 +6,8 @@ public abstract class Chess : MonoBehaviour
     public Vector2Int Location, lastLocation;
     public Material defaultMaterial;
     public static bool isMoved { get; set; }
+    public abstract void Move();
 
-    public abstract void Move(MoveType moveType);
     public virtual List<Selection> CalculateGrid()
     {
         var selections = new List<Selection> { Selection.GetSelection(Location) };
@@ -34,6 +34,12 @@ public abstract class Chess : MonoBehaviour
         MatchManager.Instance.currentChess = null;
     }
     protected void MovePiece() => transform.position = MatchManager.Instance.currentSelection.transform.position;
+
+    public void MovePiece(int x, int y)
+    {
+        transform.position = ChessBoard.instance.ChessSelections[x, y].transform.position;
+    }
+    
     public void EatPiece(Selection select)
     {
         for (var index = 0; index < select.chessList.Count; index++)

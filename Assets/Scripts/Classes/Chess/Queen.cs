@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Queen : Chess
 {
-    public override void Move(MoveType moveType)
+    public override void Move()
     {
         MovePiece();
     }
@@ -34,6 +34,8 @@ public class Queen : Chess
             else
             {
                 sensor.AttackSelect();
+                var king = sensor.chessPiece.GetComponent<King>();
+                if (king != null) king.isCheckmate = true;
                 selections.Add(sensor);
             }
         }

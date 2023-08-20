@@ -25,11 +25,3 @@ public enum ChessType
     BlackKing = -5,
     BlackPawn = -6,
 }
-public enum MoveType
-{
-    Move = 1,
-    Eat = 2,
-    Castling = 3,
-    En_Pass = 4,
-    Promotion = 5
-}

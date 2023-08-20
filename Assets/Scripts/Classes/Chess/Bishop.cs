@@ -4,9 +4,9 @@ using System.Collections.Generic;
 public class Bishop:Chess
 {
 
-    public override void Move(MoveType moveType)
+    public override void Move()
     {
-        if (moveType == MoveType.Move) MovePiece();
+        MovePiece();
     }
 
     public override List<Selection> CalculateGrid()
@@ -28,6 +28,8 @@ public class Bishop:Chess
             else
             {
                 sensor.AttackSelect();
+                var king = sensor.chessPiece.GetComponent<King>();
+                if (king != null) king.isCheckmate = true;
                 selections.Add(sensor);
             }
         }

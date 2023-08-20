@@ -1,15 +1,16 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 public class Rock : Chess
 {
-    public bool firstMove{ get; set; }
+    public bool hasMove{ get; set; }
 
-    public override void Move(MoveType moveType)
+    private void Start() => hasMove = false;
+    public override void Move()
     {
-        if (moveType == MoveType.Move) MovePiece();
+        MovePiece();
     }
-
     public override List<Selection> CalculateGrid()
     {
         Selection selection = MatchManager.Instance.currentSelection;
@@ -31,6 +32,8 @@ public class Rock : Chess
             else
             {
                 sensor.AttackSelect();
+                var king = sensor.chessPiece.GetComponent<King>();
+                if (king != null) king.isCheckmate = true;
                 selections.Add(sensor);
             }
         }
@@ -41,6 +44,6 @@ public class Rock : Chess
     public override void DeselectPiece()
     {
         base.DeselectPiece();
-        firstMove = false;
+        hasMove = true;
     }
 }
