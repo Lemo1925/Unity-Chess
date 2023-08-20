@@ -1,43 +1,45 @@
 ﻿using UnityEngine;
 
-namespace Controller
+public class GameController : MonoBehaviour
 {
-    public class GameController : MonoBehaviour
+    [Header("主要物件")] public GameObject ChessBoard;
+    
+    [Header("游戏模式")] public static GameModel model = GameModel.SINGLE;
+
+    [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE;
+
+    [Header("游戏回合")] public static int count;
+
+    private bool selectButtonListener, deselectButtonListener;
+    private void OnEnable() => Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
+
+    private void Update()
     {
-        [Header("主要物件")] public GameObject ChessBoard;
+        RoundType = (Camp)(count % 2);
+
+        #region 执棋阶段
         
-        [Header("游戏模式")] public static GameModel model = GameModel.SINGLE;
+        if (Input.GetMouseButtonDown(0)) selectButtonListener = true;
+        if (Input.GetMouseButtonDown(1)) deselectButtonListener = true;
 
-        [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE;
+        #endregion
 
-        [Header("游戏回合")] public const int count = 0;
+        #region 移动结束
 
-        private bool selectButtonListener, deselectButtonListener;
-        private void OnEnable()
+        if (Chess.isMoved)
         {
-            Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
+            count++;
+            Chess.isMoved = false;
+            EventManager.CallOnGameSwitched();
         }
+        
+        #endregion
+    }
 
-        private void Update()
-        {
-            RoundType = count % 2;
-
-            #region 执棋阶段
-            
-            if (Input.GetMouseButtonDown(0)) 
-                selectButtonListener = true;
-
-            if (Input.GetMouseButtonDown(1)) 
-                deselectButtonListener = true;
-
-            #endregion
-        }
-
-        private void FixedUpdate()
-        {
-            EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
-            selectButtonListener = false;
-            deselectButtonListener = false;
-        }
+    private void FixedUpdate()
+    {
+        EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
+        selectButtonListener = false;
+        deselectButtonListener = false;
     }
 }

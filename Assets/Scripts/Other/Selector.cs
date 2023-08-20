@@ -3,23 +3,22 @@ using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
-    private List<Selection> selections = new List<Selection>();
     public Selection gridSelection;
+    
+    private List<Selection> selections = new List<Selection>();
     private RaycastHit raycastHit; 
     private Selection lastSelect;
-
     private bool selectStatus;
     
     private void OnEnable() => EventManager.OnSelectActionEvent += SelectPiece;
     private void OnDisable() => EventManager.OnSelectActionEvent -= SelectPiece;
-    
-
     private void SelectPiece(bool SelectButtonClick, bool DeselectButtonClick)
     {
         if (gridSelection != null)
         {
             // 选择棋子并计算可移动格子
-            if (SelectButtonClick && !selectStatus && gridSelection.chessPiece != null)
+            if (SelectButtonClick && !selectStatus && gridSelection.chessPiece != null 
+                && gridSelection.chessPiece.camp == GameController.RoundType)
             {
                 var chess = gridSelection.chessPiece;
                 chess.SelectPiece();
@@ -51,10 +50,7 @@ public class Selector : MonoBehaviour
 
                         pawn.Promotion();
                     }
-                    else
-                    {
-                        pawn.En_Pass();
-                    }
+                    else pawn.En_Pass();
                 }
 
                 chess.DeselectPiece();
@@ -81,17 +77,14 @@ public class Selector : MonoBehaviour
                 }
                 else if (lastSelect != null) lastSelect.Select();
             }
-            else
-            {
-                RaySelect(hitSelection);
-            }
-        }else if (gridSelection != null && !selectStatus)
+            else RaySelect(hitSelection);
+        }
+        else if (gridSelection != null && !selectStatus)
         {
             gridSelection.Deselect();
             gridSelection = null;
         }
     }
-
     private void RaySelect(Selection hitSelection)
     {
         if (gridSelection != null) gridSelection.Deselect();

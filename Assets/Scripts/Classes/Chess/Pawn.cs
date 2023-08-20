@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using Controller;
 using UnityEngine;
 
 public class Pawn : Chess
 {
-    public int moveTurn = -1;
     public bool isFirstMove;
+    public int firstMoveStep;
+    public int moveTurn = -1;
     public void Start() => isFirstMove = true;
-
     public override void Move(MoveType moveType) => MovePiece();
-
-    // todo: is first move and moveturn
     public override List<Selection> CalculateGrid()
     {
         Selection selection = MatchManager.Instance.currentSelection;
@@ -35,34 +32,29 @@ public class Pawn : Chess
         }
         foreach (var sensor in EnPassSensors)
         {
+            if (Location.y != 3 && Location.y != 4) break;
             if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid || 
                 sensor.occupyType == (Selection.OccupyGridType)camp) continue;
             var pawn = sensor.chessPiece.GetComponent<Pawn>();
-            if (pawn != null && pawn.moveTurn == GameController.count)
-            {
-                var EnPassSelection = sensor.GetSelection(pawn.Location.x, pawn.Location.y);
-                var targetGrid = EnPassSelection.ForwardAndBack(0,1)[0];
-                targetGrid.SpecialSelect();
-                selections.Add(targetGrid);
-            }
+            if (pawn == null || pawn.moveTurn != GameController.count - 1 || pawn.firstMoveStep != 2) continue;
+            var EnPassSelection = sensor.GetSelection(pawn.Location.x, pawn.Location.y).ForwardAndBack(0,1)[0];
+            EnPassSelection.SpecialSelect();
+            selections.Add(EnPassSelection);
         }
         
         return selections;
     }
-
     public override void DeselectPiece()
     {
         base.DeselectPiece();
-        if (isMove)
-        {
+        if (isMoved)
+        {           
+            firstMoveStep = Mathf.Abs(lastLocation.y - Location.y);
             isFirstMove = false;
             moveTurn = GameController.count;
         }
     }
-
-    // 显示升变选择面板
     public void Promotion() => EventManager.CallOnPromotion(this,true);
-    
     public void PromotionLogic(ChessType chessType)
     {
         var chessGameObject = Instantiate(
@@ -76,9 +68,10 @@ public class Pawn : Chess
         ChessBoard.InitChessComponents(chessGameObject, (int)chessType, Location);
         DestroyPiece();
     }
-    
     public void En_Pass()
     {
-        MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0].chessPiece.DestroyPiece();
+        Selection EnPassSelect = MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0];
+        EnPassSelect.chessPiece.DestroyPiece();
+        EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
     }
 }
