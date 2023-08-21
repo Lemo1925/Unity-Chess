@@ -1,38 +1,41 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 public class Bishop:Chess
 {
+    private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
+    
+    private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
-    public override void Move()
+    public override void Move() => MovePiece();
+    
+    private List<Selection> MoveGrid() => 
+        CalculateMove().Where(select => 
+            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
+
+    private List<Selection> AttackGrid() => 
+        CalculateMove().Where(select => 
+            select.occupyType != (Selection.OccupyGridType)camp && 
+            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+
+    private List<Selection> CalculateMove()
     {
-        MovePiece();
+        var selection = Selection.GetSelection(Location);
+        return selection.Bevel(7, 7);
     }
 
     public override List<Selection> CalculateGrid()
     {
-        Selection selection = MatchManager.Instance.currentSelection;
-        List<Selection> selections = base.CalculateGrid();
+        var selections = base.CalculateGrid();
 
-        var selectCollection = 
-            selection.Bevel(ChessBoard.BoardLocationMax.x, 
-                ChessBoard.BoardLocationMax.y);
-        foreach (var sensor in selectCollection)
-        {
-            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
-            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid )
-            {
-                sensor.MoveSelect();
-                selections.Add(sensor);
-            }
-            else
-            {
-                sensor.AttackSelect();
-                var king = sensor.chessPiece.GetComponent<King>();
-                if (king != null) king.isCheckmate = true;
-                selections.Add(sensor);
-            }
-        }
+        MoveGrid().ForEach(s => { s.MoveSelect(); });
+        AttackGrid().ForEach(s => { s.AttackSelect(); });
+        
+        selections.AddRange(MoveGrid());
+        selections.AddRange(AttackGrid());
+        
         return selections;
     }
+
+    private void Checkmate() => CallCheck(AttackGrid());
 }

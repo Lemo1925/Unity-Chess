@@ -19,12 +19,12 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.OnGameSwitchedEvent += CameraBtn_Click;
+        EventManager.OnTurnEndEvent += CameraBtn_Click;
     }
 
     private void OnDisable()
     {
-        EventManager.OnGameSwitchedEvent -= CameraBtn_Click;
+        EventManager.OnTurnEndEvent -= CameraBtn_Click;
     }
 
     private void Awake()

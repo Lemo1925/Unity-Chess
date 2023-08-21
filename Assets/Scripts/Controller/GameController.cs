@@ -16,21 +16,27 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         RoundType = (Camp)(count % 2);
-
-        #region 执棋阶段
+        
+        #region 开始阶段
+        
+        #endregion
+        
+        
+        #region 移动阶段
         
         if (Input.GetMouseButtonDown(0)) selectButtonListener = true;
         if (Input.GetMouseButtonDown(1)) deselectButtonListener = true;
 
         #endregion
 
-        #region 移动结束
+        #region 结束阶段
 
         if (Chess.isMoved)
         {
             count++;
             Chess.isMoved = false;
-            EventManager.CallOnGameSwitched();
+            MatchManager.Instance.checkmate = -1;
+            EventManager.CallOnTurnEnd();
         }
         
         #endregion

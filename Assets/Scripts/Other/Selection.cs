@@ -8,7 +8,7 @@ public class Selection : MonoBehaviour
     public GridType gridType;
     public Vector2Int Location;
     public List<Material> materials;
-
+    
     public Chess chessPiece;
     public List<Chess> chessList;
     public enum OccupyGridType
@@ -310,4 +310,6 @@ public class MatchManager
     public Selection currentSelection;
     
     public Chess currentChess;
+
+    public int checkmate = -1;
 }

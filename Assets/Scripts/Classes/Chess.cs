@@ -5,7 +5,9 @@ public abstract class Chess : MonoBehaviour
     public Camp camp;
     public Vector2Int Location, lastLocation;
     public Material defaultMaterial;
+    
     public static bool isMoved { get; set; }
+    
     public abstract void Move();
 
     public virtual List<Selection> CalculateGrid()
@@ -15,6 +17,7 @@ public abstract class Chess : MonoBehaviour
 
         return selections;
     }
+
     public void SelectPiece()
     {
         MatchManager.Instance.currentChess = this;
@@ -25,21 +28,7 @@ public abstract class Chess : MonoBehaviour
         defaultMaterial = renderers.material;
         renderers.material = Resources.Load<Material>("Material/Other/Yellow");
     }
-    public virtual void DeselectPiece()
-    {
-        if (MatchManager.Instance.currentSelection != null) Location = MatchManager.Instance.currentSelection.Location;
-        isMoved = lastLocation != Location;
-        
-        GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
-        MatchManager.Instance.currentChess = null;
-    }
-    protected void MovePiece() => transform.position = MatchManager.Instance.currentSelection.transform.position;
 
-    public void MovePiece(int x, int y)
-    {
-        transform.position = ChessBoard.instance.ChessSelections[x, y].transform.position;
-    }
-    
     public void EatPiece(Selection select)
     {
         for (var index = 0; index < select.chessList.Count; index++)
@@ -50,5 +39,35 @@ public abstract class Chess : MonoBehaviour
             chessPiece.DestroyPiece();
         }
     }
+
+    public virtual void DeselectPiece()
+    {
+        if (MatchManager.Instance.currentSelection != null) Location = MatchManager.Instance.currentSelection.Location;
+        isMoved = lastLocation != Location;
+        
+        GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
+        MatchManager.Instance.currentChess = null;
+    }
+
+    protected void MovePiece() => 
+        transform.position = MatchManager.Instance.currentSelection.transform.position;
+
+    public void MovePiece(int x, int y) => 
+        transform.position = ChessBoard.instance.ChessSelections[x, y].transform.position;
+
     public virtual void DestroyPiece() => Destroy(gameObject);
+
+    protected void CallCheck(List<Selection> selections)
+    {
+        foreach (var selection in selections)
+        {
+            if (selection.chessPiece.GetComponent<King>() == null) continue;
+            var king = (King)selection.chessPiece;
+            if (king != null && king.camp != camp)
+            {
+                MatchManager.Instance.checkmate = (int)king.camp;
+                return;
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class King : Chess
@@ -10,56 +11,60 @@ public class King : Chess
     public bool isCheckmate;
     
     public List<Chess> chessList = new List<Chess>();
+
+    private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
+    private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
+
     private void Start()
     {
         hasMove = false; 
         isCheckmate = false;
     }
 
-    public override void Move()
+    public override void Move() => MovePiece();
+
+    private List<Selection> AttackGrid() => 
+        CalculateMove().Where(select => 
+            select.occupyType != (Selection.OccupyGridType)camp && 
+            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+
+    private List<Selection> MoveGrid() => 
+        CalculateMove().Where(select => 
+            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
+
+    private List<Selection> SpecialGrid()
     {
-        MovePiece();
+        var selections = new List<Selection>();
+        var selection = MatchManager.Instance.currentSelection;
+
+        if (CanLongCastling()) selections.Add(selection.GetSelection(Location.x - 2, Location.y));
+        if (CanShortCastling()) selections.Add(selection.GetSelection(Location.x + 2, Location.y));
+
+        return selections;
+    }
+
+    private List<Selection> CalculateMove()
+    {
+        var selection = Selection.GetSelection(Location);
+
+        var collection = selection.Bevel(1, 1);
+        collection.AddRange(selection.ForwardAndBack(1, 1));
+        collection.AddRange(selection.LeftAndRight(1, 1));
+
+        return collection;
     }
 
     public override List<Selection> CalculateGrid()
     {
-        Selection selection = MatchManager.Instance.currentSelection;
-        List<Selection> selections = base.CalculateGrid();
+        var selections = base.CalculateGrid();
+        
+        AttackGrid().ForEach(s => { s.AttackSelect(); });
+        MoveGrid().ForEach(s => { s.MoveSelect(); });
+        SpecialGrid().ForEach(s => { s.SpecialSelect(); });
 
-        var selectionCollection = selection.Bevel(1, 1);
-        selectionCollection.AddRange(selection.ForwardAndBack(1,1));
-        selectionCollection.AddRange(selection.LeftAndRight(1, 1));
-
-        foreach (var sensor in selectionCollection)
-        {
-            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
-            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid)
-            {
-                sensor.MoveSelect();
-                selections.Add(sensor);
-            }
-            else
-            {
-                sensor.AttackSelect();
-                var king = sensor.chessPiece.GetComponent<King>();
-                if (king != null) king.isCheckmate = true;
-                selections.Add(sensor);
-            }
-        }
-
-        if (CanLongCastling())
-        {
-            var sensor = selection.GetSelection(Location.x - 2, Location.y);
-            sensor.SpecialSelect();
-            selections.Add(sensor);
-        }
-
-        if (CanShortCastling())
-        {
-            var sensor = selection.GetSelection(Location.x + 2, Location.y);
-            sensor.SpecialSelect();
-            selections.Add(sensor);
-        }
+        selections.AddRange(MoveGrid());
+        selections.AddRange(AttackGrid());
+        selections.AddRange(SpecialGrid());
 
         return selections;
     }
@@ -80,18 +85,20 @@ public class King : Chess
         print(camp == Camp.BLACK ? "White Winner" : "Black Winner");
     }
 
+    #region 王车易位
+
     private List<Chess> InitChessList()
     {
-        List<Chess> list = new List<Chess>();
+        var list = new List<Chess>();
 
         for (int i = 0; i < 8; i++) 
             list.Add(Selection.GetSelection(new Vector2Int(i, Location.y)).chessPiece);
 
         return list;
     }
-
     private bool CanLongCastling()
     {
+        isCheckmate = MatchManager.Instance.checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
         chessList = InitChessList();
         if (chessList[0] != null)
@@ -105,12 +112,11 @@ public class King : Chess
                 return true;
             }
         }
-
         return false;
     }
-
     private bool CanShortCastling()
     {
+        isCheckmate = MatchManager.Instance.checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
         chessList = InitChessList();
         if (chessList[7] != null)
@@ -126,16 +132,18 @@ public class King : Chess
         }
         return false;
     }
-
     public void LongCastling()
     {
         chessList[0].Location = new Vector2Int(3, Location.y);
         chessList[0].MovePiece(3, Location.y);
     }
-
     public void ShortCastling()
     {
         chessList[7].Location = new Vector2Int(5, Location.y);
         chessList[7].MovePiece(5, Location.y);
     }
+
+    #endregion
+   
+    private void Checkmate() => CallCheck(AttackGrid());
 }

@@ -1,48 +1,52 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 public class Knight : Chess
 {
+    public override void Move() => MovePiece();
 
-    public override void Move()
-    {
-        MovePiece();
-    }
+    private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
+    
+    private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
+    
+    private List<Selection> MoveGrid() => 
+        CalculateMove().Where(select => 
+            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
 
-    public override List<Selection> CalculateGrid()
+    private List<Selection> AttackGrid() => 
+        CalculateMove().Where(select => 
+            select.occupyType != (Selection.OccupyGridType)camp && 
+            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+
+    private List<Selection> CalculateMove()
     {
-        Selection selection = MatchManager.Instance.currentSelection;
-        List<Selection> selections = base.CalculateGrid();
-        List<Selection> selectionCollection = new List<Selection>();
-        
+        var selection = Selection.GetSelection(Location);
+        var collection = new List<Selection>();
         int[] deltaX = {1, 1, -1, -1, 2, 2, -2, -2};
         int[] deltaY = {2, -2, 2, -2, 1, -1, 1, -1};
 
         for (int i = 0; i < deltaX.Length; i++)
         {
-            int newX = Location.x + deltaX[i];
-            int newY = Location.y + deltaY[i];
-            if (selection.GetSelection(newX, newY) != null)
-                selectionCollection.Add(selection.GetSelection(newX, newY));
+            int X = Location.x + deltaX[i], Y = Location.y + deltaY[i];
+            if (selection.GetSelection(X, Y) != null)
+                collection.Add(selection.GetSelection(X, Y));
         }
+
+        return collection;
+    }
+
+    public override List<Selection> CalculateGrid()
+    {
+        var selections = base.CalculateGrid();
+
+        MoveGrid().ForEach(s => { s.MoveSelect(); });
+        AttackGrid().ForEach(s => { s.AttackSelect(); });
         
-        foreach (var sensor in selectionCollection)
-        {
-            if (sensor == null || sensor.occupyType == (Selection.OccupyGridType)camp) continue;
-            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid)
-            {
-                sensor.MoveSelect();
-                selections.Add(sensor);
-            }
-            else
-            {
-                sensor.AttackSelect();
-                var king = sensor.chessPiece.GetComponent<King>();
-                if (king != null) king.isCheckmate = true;
-                selections.Add(sensor);
-            }
-        }
+        selections.AddRange(MoveGrid());
+        selections.AddRange(AttackGrid());
         
         return selections;
     }
+    
+    private void Checkmate() => CallCheck(AttackGrid());
 }

@@ -6,46 +6,89 @@ public class Pawn : Chess
     public bool isFirstMove;
     public int firstMoveStep;
     public int moveTurn = -1;
+    
     public void Start() => isFirstMove = true;
+    
     public override void Move() => MovePiece();
-    public override List<Selection> CalculateGrid()
+    private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
+    private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
+
+    private List<Selection> MoveGrid()
     {
-        Selection selection = MatchManager.Instance.currentSelection;
-        List<Selection> selections = base.CalculateGrid();
-        List<Selection> MoveSensors = selection.ForwardAndBack(isFirstMove ? 2 : 1, 0);
-        List<Selection> AttackSensors = selection.Bevel(1, 0);
-        List<Selection> EnPassSensors = selection.LeftAndRight(1, 1);
-        foreach (var sensor in MoveSensors)
+        var selections = new List<Selection>();
+        var selection = MatchManager.Instance.currentSelection;
+
+        var collection = selection.ForwardAndBack(isFirstMove ? 2 : 1, 0);
+
+        foreach (var select in collection)
         {
-            if (sensor.occupyType != Selection.OccupyGridType.NoneOccupyGrid) continue;
-            if (sensor.Location.y == 0 || sensor.Location.y == 7) sensor.SpecialSelect();
-            else sensor.MoveSelect();
-            selections.Add(sensor);
-        }
-        foreach (var sensor in AttackSensors)
-        {
-            if (sensor.occupyType == (Selection.OccupyGridType)camp ||
-                sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
-            if (sensor.Location.y == 0 || sensor.Location.y == 7) sensor.SpecialSelect();
-            else sensor.AttackSelect();
-            var king = sensor.chessPiece.GetComponent<King>();
-            if (king != null) king.isCheckmate = true;
-            selections.Add(sensor);
-        }
-        foreach (var sensor in EnPassSensors)
-        {
-            if (Location.y != 3 && Location.y != 4) break;
-            if (sensor.occupyType == Selection.OccupyGridType.NoneOccupyGrid || 
-                sensor.occupyType == (Selection.OccupyGridType)camp) continue;
-            var pawn = sensor.chessPiece.GetComponent<Pawn>();
-            if (pawn == null || pawn.moveTurn != GameController.count - 1 || pawn.firstMoveStep != 2) continue;
-            var EnPassSelection = sensor.GetSelection(pawn.Location.x, pawn.Location.y).ForwardAndBack(0,1)[0];
-            EnPassSelection.SpecialSelect();
-            selections.Add(EnPassSelection);
+            if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) continue;
+            selections.Add(select);
         }
         
         return selections;
     }
+
+    private List<Selection> AttackGrid()
+    {
+        var selections = new List<Selection>();
+        var selection = Selection.GetSelection(Location);
+
+        var collection = selection.Bevel(1, 0);
+
+        foreach (var select in collection)
+        {
+            if (select.occupyType == (Selection.OccupyGridType)camp ||
+                select.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
+            selections.Add(select);
+        }
+        
+        return selections;
+    }
+
+    private List<Selection> EnPassGrid()
+    {
+        var selections = new List<Selection>();
+        var selection = MatchManager.Instance.currentSelection;
+
+        var collection = selection.LeftAndRight(1,1);
+        
+        foreach (var select in collection)
+        {
+            if (Location.y != 3 && Location.y != 4) break;
+            
+            if (select.occupyType == (Selection.OccupyGridType)camp || 
+                select.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
+            
+            var pawn = (Pawn)select.chessPiece;
+            if (pawn == null || pawn.moveTurn != GameController.count - 1 || pawn.firstMoveStep != 2) continue;
+            
+            var EnPassSelection = select.GetSelection(pawn.Location.x, pawn.Location.y).ForwardAndBack(0,1)[0];
+            selections.Add(EnPassSelection);
+        }
+
+        return selections;
+    }
+
+    public override List<Selection> CalculateGrid()
+    {
+        var selections = base.CalculateGrid();
+
+        MoveGrid().ForEach(s => { s.MoveSelect(); });
+        AttackGrid().ForEach(s => { s.AttackSelect(); });
+        EnPassGrid().ForEach(s => { s.SpecialSelect(); });
+        
+        selections.AddRange(MoveGrid());
+        selections.AddRange(AttackGrid());
+        selections.AddRange(EnPassGrid());
+        
+        foreach (var select in selections)
+            if (select.Location.y == 0 || select.Location.y == 7)
+                select.SpecialSelect();
+
+        return selections;
+    }
+    
     public override void DeselectPiece()
     {
         base.DeselectPiece();
@@ -56,7 +99,9 @@ public class Pawn : Chess
             moveTurn = GameController.count;
         }
     }
+    
     public void Promotion() => EventManager.CallOnPromotion(this,true);
+    
     public void PromotionLogic(ChessType chessType)
     {
         var chessGameObject = Instantiate(
@@ -70,10 +115,13 @@ public class Pawn : Chess
         ChessBoard.InitChessComponents(chessGameObject, (int)chessType, Location);
         DestroyPiece();
     }
+    
     public void En_Pass()
     {
-        Selection EnPassSelect = MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0];
+        var EnPassSelect = MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0];
         EnPassSelect.chessPiece.DestroyPiece();
         EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
     }
+    
+    private void Checkmate() => CallCheck(AttackGrid());
 }
