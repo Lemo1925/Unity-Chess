@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -10,8 +11,9 @@ public class UIManager : MonoBehaviour
     public float animationDuration = 0.2f;
 
     private AudioSource source;
-    
+
     [Header("按钮列表")]
+    public List<Button> buttons = new List<Button>();
     public List<GameObject> tableList = new List<GameObject>();
 
     [Header("背景音乐按钮设置")]
@@ -23,8 +25,21 @@ public class UIManager : MonoBehaviour
     {
         source = GameObject.Find("AudioSource").GetComponent<AudioSource>();
         source.loop = true;
+        
+        buttons[0].onClick.AddListener(SingleBtn_Click);
+        buttons[1].onClick.AddListener(MultiBtn_Click);
+        buttons[2].onClick.AddListener(ExitBtn_Click);
+        buttons[3].onClick.AddListener(MasterBtn_Click);
+        buttons[4].onClick.AddListener(SlavesBtn_Click);
+        buttons[5].onClick.AddListener(tb1BackBtn_Click);
+        buttons[6].onClick.AddListener(WhiteBtn_Click);
+        buttons[7].onClick.AddListener(BlackBtn_Click);
+        buttons[8].onClick.AddListener(tb2BackBtn_Click);
+        buttons[9].onClick.AddListener(JoinBtn_Click);
+        buttons[10].onClick.AddListener(tb3BackBtn_Click);
+        
     }
-
+    
     public void SoundBtn_Click(Button button)
     {
         Image BtnImg = button.GetComponent<Image>();
@@ -39,71 +54,51 @@ public class UIManager : MonoBehaviour
             source.Play();
         }
     }
-
     
-    public void SingleBtn_Click(Button button)
+    private void SingleBtn_Click()
     {
-        StartCoroutine(ScaleAnimation(button));
+        StartCoroutine(ScaleAnimation(buttons[0]));
         ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
     }
 
-    public void MultiBtn_Click(Button button)
+    private void ExitBtn_Click()
     {
-        StartCoroutine(ScaleAnimation(button));
-        tableList[0].SetActive(false);
-        tableList[1].SetActive(true);
-    }
-
-    public void MasterBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-        tableList[1].SetActive(false);
-        tableList[2].SetActive(true);
-    }
-
-    public void SlavesBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-        tableList[1].SetActive(false);
-        tableList[3].SetActive(true);
-    }
-
-    public void tb1BackBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-        tableList[1].SetActive(false);
-        tableList[0].SetActive(true);
-    }
-
-    public void tb2BackBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-        tableList[2].SetActive(false);
-        tableList[3].SetActive(false);
-        tableList[1].SetActive(true);
-    }
-
-    public void WhiteBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-    }
-
-    public void BlackBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-    }
-
-    public void JoinBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
-    }
-    
-    public void ExitBtn_Click(Button button)
-    {
-        StartCoroutine(ScaleAnimation(button));
+        StartCoroutine(ScaleAnimation(buttons[2]));
         Application.Quit();
     }
 
+    private void MultiBtn_Click() => StartCoroutine(ChangeList(buttons[1], tableList[0],tableList[1]));
+    private void MasterBtn_Click() => StartCoroutine(ChangeList(buttons[3],tableList[1],tableList[2]));
+    private void SlavesBtn_Click() => StartCoroutine(ChangeList(buttons[4], tableList[1], tableList[3]));
+    private void tb1BackBtn_Click() => StartCoroutine(ChangeList(buttons[5], tableList[1], tableList[0]));
+    private void tb2BackBtn_Click() => StartCoroutine(ChangeList(buttons[8], tableList[2], tableList[1]));
+    private void tb3BackBtn_Click() => StartCoroutine(ChangeList(buttons[10],tableList[3],tableList[1]));
+
+    private void WhiteBtn_Click()
+    {
+        StartCoroutine(ScaleAnimation(buttons[6]));
+    }
+    
+    private void BlackBtn_Click()
+    {
+        StartCoroutine(ScaleAnimation(buttons[7]));
+    }
+
+    private void JoinBtn_Click()
+    {
+        StartCoroutine(ScaleAnimation(buttons[9]));
+    }
+
+    private IEnumerator ChangeList(Button button, GameObject tb1, GameObject tb2)
+    {
+
+        StartCoroutine(ScaleAnimation(button));
+
+        yield return new WaitForSeconds(animationDuration * 2);
+
+        tb1.SetActive(false);
+        tb2.SetActive(true);
+    }
 
     private IEnumerator ScaleAnimation(Button button)
     {

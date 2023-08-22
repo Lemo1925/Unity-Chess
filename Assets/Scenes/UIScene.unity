@@ -322,19 +322,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 150948649}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: MultiBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 150948648}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &150948649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,19 +586,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 445802012}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: BlackBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 445802011}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &445802012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,19 +998,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 504159392}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: MasterBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 504159391}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &504159392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1313,19 +1277,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 604378165}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: tb2BackBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 604378164}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &604378165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1753,7 +1705,7 @@ MonoBehaviour:
     m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
@@ -1848,19 +1800,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1027038728}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: tb1BackBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1027038727}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1027038728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2243,19 +2183,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1106061841}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: SingleBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1106061840}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1106061841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2650,19 +2578,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1380084940}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: WhiteBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1380084939}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1380084940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2783,19 +2699,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1541891970}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: tb2BackBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1541891969}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1541891970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2916,19 +2820,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1735913824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ExitBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1735913823}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1735913824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3128,19 +3020,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1794853567}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: JoinBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1794853566}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1794853567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3396,6 +3276,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleAmount: 0.8
   animationDuration: 0.2
+  buttons:
+  - {fileID: 1106061840}
+  - {fileID: 150948648}
+  - {fileID: 1735913823}
+  - {fileID: 504159391}
+  - {fileID: 2147247215}
+  - {fileID: 1027038727}
+  - {fileID: 1380084939}
+  - {fileID: 445802011}
+  - {fileID: 1541891969}
+  - {fileID: 1794853566}
+  - {fileID: 604378164}
   tableList:
   - {fileID: 2060990807}
   - {fileID: 94494354}
@@ -3669,19 +3561,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2147247216}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1926815868}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: SlavesBtn_Click
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 2147247215}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2147247216
 MonoBehaviour:
   m_ObjectHideFlags: 0
