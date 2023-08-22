@@ -11,6 +11,7 @@ public class Selection : MonoBehaviour
     
     public Chess chessPiece;
     public List<Chess> chessList;
+    
     public enum OccupyGridType
     {
         WhiteOccupyGrid = 0,
@@ -48,8 +49,8 @@ public class Selection : MonoBehaviour
 
 
     // 越界判断
-    private static bool OutOfRangeY(int y) => y < ChessBoard.BoardLocationMin.y || y > ChessBoard.BoardLocationMax.y;
-    private static bool OutOfRangeX(int x) => x < ChessBoard.BoardLocationMin.x || x > ChessBoard.BoardLocationMax.y;
+    private static bool OutOfRangeY(int y) => y < 0 || y > 7;
+    private static bool OutOfRangeX(int x) => x < 0 || x > 7;
     
     // 方向检测
     public Selection GetSelection(int x , int y)
@@ -69,23 +70,26 @@ public class Selection : MonoBehaviour
     }
     private List<Selection> Forward(int steps)
     {
-        List<Selection> selections = new List<Selection>();
-        int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-        int X = Location.x;
+        var selections = new List<Selection>();
+        var Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var X = Location.x;
+        
         for (var i = 1; i <= steps; i++)
         {
-            int Y = Location.y + i * Dir;
+            var Y = Location.y + i * Dir;
             var selection = GetSelection(X, Y);
+        
             if (selection == null) continue;
+            
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
             {
                 if (selection.chessPiece.camp != chessPiece.camp)
                 { 
-                    selections.Add(selection);
-                    break;
+                    selections.Add(selection); break;
                 }
                 if (selection.chessPiece.camp == chessPiece.camp) break;
             }
+            
             selections.Add(selection);
         }
 
@@ -93,12 +97,12 @@ public class Selection : MonoBehaviour
     }
     private List<Selection> Back(int steps)
     {
-        List<Selection> selections = new List<Selection>();
-        int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-        int X = Location.x;
+        var selections = new List<Selection>();
+        var Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var X = Location.x;
         for (var i = 1; i <= steps; i++)
         {
-            int Y = Location.y - i * Dir;
+            var Y = Location.y - i * Dir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue; 
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -117,12 +121,12 @@ public class Selection : MonoBehaviour
     }
     private List<Selection> Left(int steps)
     {
-        List<Selection> selections = new List<Selection>();
-        int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-        int Y = Location.y;
+        var selections = new List<Selection>();
+        var Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var Y = Location.y;
         for (var i = 1; i <= steps; i++)
         {
-            int X = Location.x + i * Dir;
+            var X = Location.x + i * Dir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue;
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -141,12 +145,12 @@ public class Selection : MonoBehaviour
     }
     private List<Selection> Right(int steps)
     {
-        List<Selection> selections = new List<Selection>();
-        int Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-        int Y = Location.y;
+        var selections = new List<Selection>();
+        var Dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var Y = Location.y;
         for (var i = 1; i <= steps; i++)
         {
-            int X = Location.x - i * Dir;
+            var X = Location.x - i * Dir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue;
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -165,14 +169,13 @@ public class Selection : MonoBehaviour
     }
     private List<Selection> LeftBevel(int forwardLength, int backwardLength)
     {
-        List<Selection> selections = new List<Selection>();
-        int XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-        int YDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var selections = new List<Selection>();
+        var XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var YDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
 
-        for (int i = 1; i <= forwardLength; i++)
+        for (var i = 1; i <= forwardLength; i++)
         {
-            int X = Location.x + i * XDir;
-            int Y = Location.y + i * YDir;
+            int X = Location.x + i * XDir, Y = Location.y + i * YDir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue;
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -187,10 +190,9 @@ public class Selection : MonoBehaviour
             selections.Add(selection);
         }
 
-        for (int i = 1; i < backwardLength; i++)
+        for (var i = 1; i < backwardLength; i++)
         {
-            int X = Location.x - i * XDir;
-            int Y = Location.y - i * YDir;
+            int X = Location.x - i * XDir, Y = Location.y - i * YDir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue;
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -209,14 +211,13 @@ public class Selection : MonoBehaviour
     }
     private List<Selection> RightBevel(int forwardLength, int backwardLength)
     {
-        List<Selection> selections = new List<Selection>();
-        int XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
-        int YDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var selections = new List<Selection>();
+        var XDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
+        var YDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1;
 
         for (var i = 1; i <= forwardLength; i++)
         {
-            int X = Location.x - i * XDir;
-            int Y = Location.y + i * YDir;
+            int X = Location.x - i * XDir, Y = Location.y + i * YDir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue;
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -233,8 +234,7 @@ public class Selection : MonoBehaviour
 
         for (var i = 1; i <= backwardLength; i++)
         {
-            int X = Location.x + i * XDir;
-            int Y = Location.y - i * YDir;
+            int X = Location.x + i * XDir, Y = Location.y - i * YDir;
             var selection = GetSelection(X, Y);
             if (selection == null) continue;
             if (selection.occupyType != OccupyGridType.NoneOccupyGrid)
@@ -253,14 +253,14 @@ public class Selection : MonoBehaviour
     }
     public List<Selection> ForwardAndBack(int forward, int back)
     {
-        List<Selection> selections = new List<Selection>();
+        var selections = new List<Selection>();
         selections.AddRange(Forward(forward));
         selections.AddRange(Back(back));
         return selections;
     }
     public List<Selection> LeftAndRight(int left, int right)
     {
-        List<Selection> selections = new List<Selection>();
+        var selections = new List<Selection>();
         selections.AddRange(Left(left));
         selections.AddRange(Right(right));
         return selections;

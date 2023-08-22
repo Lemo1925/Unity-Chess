@@ -8,7 +8,7 @@ public abstract class Chess : MonoBehaviour
     
     public static bool isMoved { get; set; }
     
-    public abstract void Move();
+    public void Move() => MovePiece();
 
     public virtual List<Selection> CalculateGrid()
     {

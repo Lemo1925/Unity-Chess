@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,11 +11,16 @@ public class UIManager : MonoBehaviour
     public float animationDuration = 0.2f;
 
     private AudioSource source;
+    
+    [Header("按钮列表")]
+    public List<Button> buttons = new List<Button>();
+    
+    
     [Header("背景音乐按钮设置")]
     public Sprite highlightsSprite;
     public Sprite defaultSprite;
 
-    
+
     private void OnEnable()
     {
         source = GameObject.Find("AudioSource").GetComponent<AudioSource>();
@@ -35,6 +42,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    
     public void SingleBtn_Click(Button button)
     {
         StartCoroutine(ScaleAnimation(button));
@@ -44,6 +52,7 @@ public class UIManager : MonoBehaviour
     public void MultiBtn_Click(Button button)
     {
         StartCoroutine(ScaleAnimation(button));
+
     }
 
     public void ExitBtn_Click(Button button)
@@ -51,9 +60,8 @@ public class UIManager : MonoBehaviour
         StartCoroutine(ScaleAnimation(button));
         Application.Quit();
     }
-    
-    
-    
+
+
     private IEnumerator ScaleAnimation(Button button)
     {
         Vector3 originalScale = button.transform.localScale;
