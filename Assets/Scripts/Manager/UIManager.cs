@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,9 +12,8 @@ public class UIManager : MonoBehaviour
     private AudioSource source;
     
     [Header("按钮列表")]
-    public List<Button> buttons = new List<Button>();
-    
-    
+    public List<GameObject> tableList = new List<GameObject>();
+
     [Header("背景音乐按钮设置")]
     public Sprite highlightsSprite;
     public Sprite defaultSprite;
@@ -52,9 +50,54 @@ public class UIManager : MonoBehaviour
     public void MultiBtn_Click(Button button)
     {
         StartCoroutine(ScaleAnimation(button));
-
+        tableList[0].SetActive(false);
+        tableList[1].SetActive(true);
     }
 
+    public void MasterBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+        tableList[1].SetActive(false);
+        tableList[2].SetActive(true);
+    }
+
+    public void SlavesBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+        tableList[1].SetActive(false);
+        tableList[3].SetActive(true);
+    }
+
+    public void tb1BackBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+        tableList[1].SetActive(false);
+        tableList[0].SetActive(true);
+    }
+
+    public void tb2BackBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+        tableList[2].SetActive(false);
+        tableList[3].SetActive(false);
+        tableList[1].SetActive(true);
+    }
+
+    public void WhiteBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+    }
+
+    public void BlackBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+    }
+
+    public void JoinBtn_Click(Button button)
+    {
+        StartCoroutine(ScaleAnimation(button));
+    }
+    
     public void ExitBtn_Click(Button button)
     {
         StartCoroutine(ScaleAnimation(button));
