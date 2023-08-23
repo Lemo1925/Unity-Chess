@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -59,6 +58,7 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(ScaleAnimation(buttons[0]));
         ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+        GameController.model = GameModel.SINGLE;
     }
 
     private void ExitBtn_Click()
@@ -77,16 +77,25 @@ public class UIManager : MonoBehaviour
     private void WhiteBtn_Click()
     {
         StartCoroutine(ScaleAnimation(buttons[6]));
+        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+        GameController.model = GameModel.MULTIPLE;
+        GameController.master.camp = Camp.WHITE;
     }
     
     private void BlackBtn_Click()
     {
         StartCoroutine(ScaleAnimation(buttons[7]));
+        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+        GameController.model = GameModel.MULTIPLE;
+        GameController.master.camp = Camp.BLACK;
     }
 
     private void JoinBtn_Click()
     {
         StartCoroutine(ScaleAnimation(buttons[9]));
+        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+        GameController.model = GameModel.MULTIPLE;
+        
     }
 
     private IEnumerator ChangeList(Button button, GameObject tb1, GameObject tb2)

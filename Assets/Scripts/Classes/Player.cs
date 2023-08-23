@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Net;
 
-public abstract class Player : MonoBehaviour
+public abstract class Player
 {
     public Camp camp;
+    public IPAddress playerIPAddress;
 }
