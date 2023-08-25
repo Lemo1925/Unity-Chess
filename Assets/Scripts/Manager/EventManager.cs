@@ -3,9 +3,13 @@ using System;
 
 public static class EventManager
 {
-    public static event Action OnTurnStartEvent;
+    public static event Action<string> OnGameOverEvent;
 
-    public static void CallOnTurnStart() => OnTurnStartEvent?.Invoke();
+    public static void CallOnGameOver(string text) => OnGameOverEvent?.Invoke(text);
+    
+    public static event Action OnGameResetEvent;
+
+    public static void CallOnGameReset() => OnGameResetEvent?.Invoke();
     
     public static event Action<bool, bool> OnSelectActionEvent;
     

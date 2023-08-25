@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
-    private void MultiBtn_Click() => StartCoroutine(ChangeList(buttons[1], tableList[0],tableList[1]));
+    private void MultiBtn_Click() => StartCoroutine(ChangeList(buttons[1], tableList[0], tableList[1]));
     private void MasterBtn_Click() => StartCoroutine(ChangeList(buttons[3],tableList[1],tableList[2]));
     private void SlavesBtn_Click() => StartCoroutine(ChangeList(buttons[4], tableList[1], tableList[3]));
     private void tb1BackBtn_Click() => StartCoroutine(ChangeList(buttons[5], tableList[1], tableList[0]));
@@ -77,23 +77,25 @@ public class UIManager : MonoBehaviour
     private void WhiteBtn_Click()
     {
         StartCoroutine(ScaleAnimation(buttons[6]));
-        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+        
         GameController.model = GameModel.MULTIPLE;
-        GameController.master.camp = Camp.WHITE;
+        GameController.masterCamp = Camp.WHITE;
+        GameController.slavesCamp = Camp.BLACK;
     }
     
     private void BlackBtn_Click()
     {
         StartCoroutine(ScaleAnimation(buttons[7]));
-        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+
         GameController.model = GameModel.MULTIPLE;
-        GameController.master.camp = Camp.BLACK;
+        GameController.masterCamp = Camp.BLACK;
+        GameController.slavesCamp = Camp.WHITE;
     }
 
     private void JoinBtn_Click()
     {
         StartCoroutine(ScaleAnimation(buttons[9]));
-        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+
         GameController.model = GameModel.MULTIPLE;
         
     }

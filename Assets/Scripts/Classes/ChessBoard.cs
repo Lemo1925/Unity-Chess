@@ -5,6 +5,7 @@ public class ChessBoard : MonoBehaviour
 {
     public static ChessBoard instance;
     public GameObject GridPrefab;
+    public Transform ChessCollection, SelectionCollection;
     public List<Material> materials;
     public List<GameObject> ChessPosition;
     public List<GameObject> ChessPrefab;
@@ -12,9 +13,14 @@ public class ChessBoard : MonoBehaviour
     private Vector2 BoardSize = new Vector2(2.105f, 2.105f);
     private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
     public readonly Selection[,] ChessSelections = new Selection[8, 8];
-
-    private void OnEnable()
+    
+    private void Awake()
     {
+        if (instance == null) instance = this;
+
+        ChessCollection = GameObject.Find("ChessCollection").transform;
+        SelectionCollection = GameObject.Find("SelectionCollection").transform;
+        
         InitChessGO();
 
         foreach (var PosGameObject in ChessPosition)
@@ -25,7 +31,7 @@ public class ChessBoard : MonoBehaviour
 
                 GameObject chessInstance = Instantiate(
                     ChessPrefab[Mathf.Abs((int)pair.Key) - 1], 
-                    PosGameObject.transform.position, PosGameObject.transform.rotation);
+                    PosGameObject.transform.position, PosGameObject.transform.rotation,ChessCollection);
                 
                 chessInstance.GetComponentInChildren<Renderer>().material = 
                     (int)pair.Key > 0 ? materials[0] : materials[1];
@@ -40,7 +46,7 @@ public class ChessBoard : MonoBehaviour
         {
             Vector3 position = new Vector3(-7.37f + j * x, 0.001f, -7.37f + i * y);
 
-            GameObject ChessBoardTile = Instantiate(GridPrefab, position, Quaternion.identity);
+            GameObject ChessBoardTile = Instantiate(GridPrefab, position, Quaternion.identity,SelectionCollection);
            
             ChessBoardGrids[i, j] = ChessBoardTile;
             Selection selection = ChessBoardTile.GetComponent<Selection>();
@@ -48,11 +54,6 @@ public class ChessBoard : MonoBehaviour
             selection.Location = new Vector2Int(i, j);
 
         }
-    }
-
-    private void Awake()
-    {
-        if (instance == null) instance = this;
     }
 
     private void Start()

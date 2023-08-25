@@ -1,7 +1,9 @@
-﻿using System.Net;
-
-public abstract class Player
+﻿public class Player
 {
-    public Camp camp;
-    public IPAddress playerIPAddress;
+    private Camp camp;
+
+    public Player(Camp camp)
+    {
+        this.camp = camp;
+    }
 }

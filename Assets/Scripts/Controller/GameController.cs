@@ -4,19 +4,36 @@ public class GameController : MonoBehaviour
 {
     [Header("主要物件")] public GameObject ChessBoard;
     
-    [Header("游戏模式")] public static GameModel model = GameModel.SINGLE;
+    [Header("游戏模式")] public static GameModel model;
+    public static bool isOver;
 
-    [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE;
+    [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE, masterCamp, slavesCamp;
 
     [Header("游戏回合")] public static int count;
 
-    [Header("玩家")] public static Player master, slave;
+    [Header("玩家")] public Player master, slaves;
     
     private bool selectButtonListener, deselectButtonListener;
-    private void OnEnable() => Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
+
+    private void OnEnable()
+    {
+        EventManager.OnGameResetEvent += ResetGame;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnGameResetEvent -= ResetGame;
+    }
+
+    private void Awake()
+    {
+        Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
+        isOver = false;
+    }
 
     private void Update()
     {
+        if (isOver) return;
         if (model == GameModel.SINGLE)
         {
             #region 开始阶段
@@ -46,19 +63,9 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            // var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            // while (true)
-            // {
-            //     // Accept
-            //     var connect = socket.Accept();
-            //     // Recv
-            //     var readBuff = new byte[1024];
-            //     int count = connect.Receive(readBuff);
-            //     string s = System.Text.Encoding.UTF8.GetString(readBuff,0,count); 
-            //     // Send
-            //     byte[] bytes = System.Text.Encoding.Default.GetBytes(s);
-            //     connect.Send(bytes);
-            // }
+            master = new Player(masterCamp); slaves = new Player(slavesCamp);
+            // TODO : 多人模块   
+            
         }
     }
 
@@ -67,5 +74,14 @@ public class GameController : MonoBehaviour
         EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
         selectButtonListener = false;
         deselectButtonListener = false;
+    }
+
+    public void ResetGame()
+    {
+        MatchManager.Instance.currentSelection = null;
+        MatchManager.Instance.currentChess = null;
+        MatchManager.Instance.checkmate = -1;
+        count = 0;
+
     }
 }

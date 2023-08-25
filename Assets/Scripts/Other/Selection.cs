@@ -275,6 +275,7 @@ public class Selection : MonoBehaviour
 
     public void MoveSelect()
     {
+        print(this);
         gridType = GridType.Move;
         GetComponent<Renderer>().material = materials[2];
     }

@@ -80,7 +80,7 @@ public class King : Chess
     public override void DestroyPiece()
     {
         base.DestroyPiece();
-        print(camp == Camp.BLACK ? "White Winner" : "Black Winner");
+        EventManager.CallOnGameOver(camp == Camp.BLACK ? "White Win" : "Black Win");
     }
 
     #region 王车易位
