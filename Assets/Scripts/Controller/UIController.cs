@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
@@ -17,7 +15,6 @@ public class UIController : MonoBehaviour
     public List<Button> buttons;
     
     [Header("相机控制")] 
-    public new GameObject camera;
     public Button cameraButton;
     public Sprite WhitePic;
     public Sprite BlackPic;
@@ -30,9 +27,7 @@ public class UIController : MonoBehaviour
 
     private static Pawn promotionChess { set; get; }
     
-    [Header("按钮特效")]
-    public float scaleAmount = 0.8f;
-    public float animationDuration = 0.2f;
+   
     
     private void OnEnable()
     {
@@ -50,14 +45,7 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
-        Scene targetScene = SceneManager.GetSceneByBuildIndex(0);
-        foreach (var rootGameObject in targetScene.GetRootGameObjects())
-        {
-            if (rootGameObject.CompareTag("MainCamera"))
-            {
-                camera = rootGameObject;
-            }
-        }
+        
 
         promotionPanel.gameObject.SetActive(false);
         WinUpPanel.gameObject.SetActive(false);
@@ -92,16 +80,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private IEnumerator ScaleAnimation(Component button)
-    {
-        Vector3 originalScale = button.transform.localScale;
-        // 缩小按钮
-        LeanTween.scale(button.gameObject, originalScale * scaleAmount, animationDuration);
-        // 等待一段时间
-        yield return new WaitForSeconds(animationDuration);
-        // 恢复按钮原始大小
-        LeanTween.scale(button.gameObject, originalScale, animationDuration);
-    }
+   
 
     private void setPromotionPanel(Pawn chess, bool visible)
     {
@@ -111,28 +90,28 @@ public class UIController : MonoBehaviour
 
     private void RookPromotion()
     {
-        StartCoroutine(ScaleAnimation(Rook));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(Rook));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
         setPromotionPanel(null,false);
     }
 
     private void KnightPromotion()
     {
-        StartCoroutine(ScaleAnimation(Knight));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(Knight));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
         setPromotionPanel(null,false);
     }
 
     private void BishopPromotion()
     {
-        StartCoroutine(ScaleAnimation(Bishop));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(Bishop));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
         setPromotionPanel(null,false);
     }
 
     private void QueenPromotion()
     {
-        StartCoroutine(ScaleAnimation(Queen));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(Queen));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
         setPromotionPanel(null,false);
     }
@@ -147,13 +126,14 @@ public class UIController : MonoBehaviour
     // TODO: Reset The Game 
     private void OnceAgain()
     {
-        StartCoroutine(ScaleAnimation(AgainButton));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
+        EventManager.CallOnGameReset();
         ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
     }
 
     private void BackToMenu()
     {
-        StartCoroutine(ScaleAnimation(MenuButton));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
         EventManager.CallOnGameReset();
         ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
     }
@@ -176,7 +156,7 @@ public class UIController : MonoBehaviour
     
     private void CameraTransition(Transform target)
     {
-        LeanTween.move(camera, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);
-        LeanTween.rotate(camera, target.rotation.eulerAngles, 0.5f).setEase(LeanTweenType.easeInOutQuad);
+        LeanTween.move(Camera.main.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);
+        LeanTween.rotate(Camera.main.gameObject, target.rotation.eulerAngles, 0.5f).setEase(LeanTweenType.easeInOutQuad);
     }
 }

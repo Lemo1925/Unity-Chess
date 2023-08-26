@@ -1,36 +1,30 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviourPun
 {
-    [Header("主要物件")] public GameObject ChessBoard;
     
-    [Header("游戏模式")] public static GameModel model;
+    [Header("游戏模式")] 
+    public static GameModel model;
     public static bool isOver;
 
-    [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE, masterCamp, slavesCamp;
+    [Header("玩家棋子")] public static Camp RoundType = Camp.WHITE;
 
     [Header("游戏回合")] public static int count;
 
-    [Header("玩家")] public Player master, slaves;
     
     private bool selectButtonListener, deselectButtonListener;
 
-    private void OnEnable()
-    {
-        EventManager.OnGameResetEvent += ResetGame;
-    }
+    private void OnEnable() => EventManager.OnGameResetEvent += ResetGame;
 
-    private void OnDisable()
-    {
-        EventManager.OnGameResetEvent -= ResetGame;
-    }
+    private void OnDisable() => EventManager.OnGameResetEvent -= ResetGame;
 
     private void Awake()
     {
-        Instantiate(ChessBoard, transform.localPosition, Quaternion.identity);
         isOver = false;
+        count = 0;
     }
-
+    
     private void Update()
     {
         if (isOver) return;
@@ -63,7 +57,6 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            master = new Player(masterCamp); slaves = new Player(slavesCamp);
             // TODO : 多人模块   
             
         }
@@ -76,12 +69,11 @@ public class GameController : MonoBehaviour
         deselectButtonListener = false;
     }
 
-    public void ResetGame()
+    private void ResetGame()
     {
         MatchManager.Instance.currentSelection = null;
         MatchManager.Instance.currentChess = null;
         MatchManager.Instance.checkmate = -1;
         count = 0;
-
     }
 }

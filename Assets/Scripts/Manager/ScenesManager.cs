@@ -12,6 +12,10 @@ public class ScenesManager : MonoBehaviour
     
     private void Awake()
     {
+        Scene scene = SceneManager.GetActiveScene();
+        if (!scene.isLoaded) 
+            SceneManager.LoadScene("Scenes/UIScene", LoadSceneMode.Additive);
+
         if (instance == null) instance = this;
         fadeGroup = GameObject.Find("FadeCanvas").GetComponentInChildren<CanvasGroup>();
     }

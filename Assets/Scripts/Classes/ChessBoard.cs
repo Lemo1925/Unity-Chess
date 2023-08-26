@@ -21,6 +21,11 @@ public class ChessBoard : MonoBehaviour
         ChessCollection = GameObject.Find("ChessCollection").transform;
         SelectionCollection = GameObject.Find("SelectionCollection").transform;
         
+    }
+
+    private void Start()
+    {
+        
         InitChessGO();
 
         foreach (var PosGameObject in ChessPosition)
@@ -54,15 +59,13 @@ public class ChessBoard : MonoBehaviour
             selection.Location = new Vector2Int(i, j);
 
         }
-    }
-
-    private void Start()
-    {
+        
+        
         var LocationList = GetLocation();
-        var i = 0;
+        var index = 0;
         foreach (var pair in chessGO)
         foreach (var go in pair.Value)
-            InitChessComponents(go, (int)pair.Key, LocationList[i++]);
+            InitChessComponents(go, (int)pair.Key, LocationList[index++]);
 
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
-    public Selection gridSelection;
+    private Selection gridSelection;
     
     private List<Selection> selections = new List<Selection>();
     private RaycastHit raycastHit; 
@@ -48,8 +48,8 @@ public class Selector : MonoBehaviour
                         {
                             if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
                                 chess.EatPiece(select);
-
-                            pawn.Promotion();
+                            if (!GameController.isOver) 
+                                pawn.Promotion();
                         }
                         else pawn.En_Pass();
                     }else
