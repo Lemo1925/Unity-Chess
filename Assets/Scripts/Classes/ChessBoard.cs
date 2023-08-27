@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class ChessBoard : MonoBehaviour
+public class ChessBoard : MonoBehaviourPun
 {
     public static ChessBoard instance;
     public GameObject GridPrefab;
@@ -50,7 +51,7 @@ public class ChessBoard : MonoBehaviour
         for (int j = 0; j < 8; j++)
         {
             Vector3 position = new Vector3(-7.37f + j * x, 0.001f, -7.37f + i * y);
-
+            
             GameObject ChessBoardTile = Instantiate(GridPrefab, position, Quaternion.identity,SelectionCollection);
            
             ChessBoardGrids[i, j] = ChessBoardTile;

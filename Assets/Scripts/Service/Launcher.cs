@@ -10,6 +10,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public Button joinButton;
     public Button backButton;
     public InputField roomName;
+    
+    
     public static void  LauncherON() => PhotonNetwork.ConnectUsingSettings();
 
     public override void OnConnectedToMaster()
@@ -21,11 +23,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void OnJoinOrCreatButtonClick()
     {
-        var roomNameText = roomName.text;
         var options = new RoomOptions { MaxPlayers = 2 };
-        if (roomNameText.Length < 2) return;
+        if (roomName.text.Length < 2) return;
         StartCoroutine(EffectTool.Instance.ScaleAnimation(joinButton));
-        PhotonNetwork.JoinOrCreateRoom(roomNameText, options, default);
+        PhotonNetwork.JoinOrCreateRoom(roomName.text, options, default);
         loginGameObject.SetActive(false);
     }
 
@@ -39,6 +40,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     
     public override void OnJoinedRoom()
     {
+        PhotonNetwork.MasterClient.NickName = "Master";
+        if (PhotonNetwork.PlayerListOthers.Length > 0)
+        {
+            PhotonNetwork.PlayerListOthers[0].NickName = "Slaves";
+        }
         GameController.model = GameModel.MULTIPLE;
         PhotonNetwork.LoadLevel(2);
     }

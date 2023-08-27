@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
 
-public class UIController : MonoBehaviour
+public class UIController : MonoBehaviourPunCallbacks
 {
     [Header("结算面板")] 
     public Image WinUpPanel;
@@ -19,24 +21,31 @@ public class UIController : MonoBehaviour
     public Sprite WhitePic;
     public Sprite BlackPic;
     public Transform WhiteTransform, BlackTransform;
-
+    
+    [Header("准备面板")]
+    public GameObject waitPanel;
+    public Button ReadyButton; 
+    
     private bool cameraFlag = true;
 
     private Button Rook, Knight, Bishop, Queen;
-    
 
+
+    public static UIController Instance;
+    
+    
+    
     private static Pawn promotionChess { set; get; }
-    
-   
-    
-    private void OnEnable()
+
+
+    public override void OnEnable()
     {
         EventManager.OnTurnEndEvent += ChangeCameraPos;
         EventManager.OnPromotionEvent += setPromotionPanel;
         EventManager.OnGameOverEvent += WinUp;
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
         EventManager.OnTurnEndEvent -= ChangeCameraPos;
         EventManager.OnPromotionEvent -= setPromotionPanel;
@@ -45,7 +54,10 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
-        
+        if (Instance == null)
+        {
+            Instance = this;
+        }
 
         promotionPanel.gameObject.SetActive(false);
         WinUpPanel.gameObject.SetActive(false);
@@ -63,6 +75,8 @@ public class UIController : MonoBehaviour
         AgainButton.onClick.AddListener(OnceAgain);
         MenuButton.onClick.AddListener(BackToMenu);
         
+        ReadyButton.onClick.AddListener(Ready);
+        
         Rook.onClick.AddListener(RookPromotion);
         Knight.onClick.AddListener(KnightPromotion);
         Bishop.onClick.AddListener(BishopPromotion);
@@ -77,6 +91,11 @@ public class UIController : MonoBehaviour
         {
             cameraFlag = false;
             CameraTransition(BlackTransform);
+        }
+
+        if (PhotonNetwork.IsConnected)
+        {
+            waitPanel.SetActive(true);
         }
     }
 
@@ -123,7 +142,12 @@ public class UIController : MonoBehaviour
         GameController.isOver = true;
     }
 
-    // TODO: Reset The Game 
+    public void UpdateUI()
+    {
+        waitPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+
+    }
+    
     private void OnceAgain()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
@@ -136,6 +160,19 @@ public class UIController : MonoBehaviour
         StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
         EventManager.CallOnGameReset();
         ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
+    }
+
+    private void Ready()
+    {
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(ReadyButton));
+        ReadyButton.GetComponentInChildren<Text>().text = "已准备";
+        ReadyButton.enabled = false;
+        ReadyButton.interactable = false;
+    }
+
+    public void isReady()
+    {
+        waitPanel.SetActive(false);
     }
     
     private void ChangeCameraPos()
@@ -156,6 +193,7 @@ public class UIController : MonoBehaviour
     
     private void CameraTransition(Transform target)
     {
+        Debug.Assert(Camera.main != null, "Camera.main != null");
         LeanTween.move(Camera.main.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);
         LeanTween.rotate(Camera.main.gameObject, target.rotation.eulerAngles, 0.5f).setEase(LeanTweenType.easeInOutQuad);
     }
