@@ -40,14 +40,14 @@ public class UIController : MonoBehaviourPunCallbacks
 
     public override void OnEnable()
     {
-        EventManager.OnTurnEndEvent += ChangeCameraPos;
+        EventManager.OnCameraChangedEvent += ChangeCameraPos;
         EventManager.OnPromotionEvent += setPromotionPanel;
         EventManager.OnGameOverEvent += WinUp;
     }
 
     public override void OnDisable()
     {
-        EventManager.OnTurnEndEvent -= ChangeCameraPos;
+        EventManager.OnCameraChangedEvent -= ChangeCameraPos;
         EventManager.OnPromotionEvent -= setPromotionPanel;
         EventManager.OnGameOverEvent -= WinUp;
     }
@@ -139,7 +139,7 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         winText.text = text;
         WinUpPanel.gameObject.SetActive(true);
-        GameController.isOver = true;
+        GameStatus.instance.isOver = true;
     }
 
     public void UpdateUI()
@@ -191,7 +191,7 @@ public class UIController : MonoBehaviourPunCallbacks
         cameraFlag = !cameraFlag;
     }
     
-    private void CameraTransition(Transform target)
+    public static void CameraTransition(Transform target)
     {
         Debug.Assert(Camera.main != null, "Camera.main != null");
         LeanTween.move(Camera.main.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);

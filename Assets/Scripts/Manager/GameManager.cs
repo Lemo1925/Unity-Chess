@@ -1,20 +1,32 @@
 ﻿using Photon.Pun;
+using UnityEngine;
 
-public class GameManager : MonoBehaviourPun,IPunObservable
+public class GameManager : MonoBehaviourPun
 {
     public static int ready;
-
-    
-    private void Start()
+    public static GameObject player;
+    public Transform white, black;
+    private void Awake()
     {
-        if (PhotonNetwork.IsConnected)
+        var PhotonView = GetComponent<PhotonView>();
+        if (GameController.model == GameModel.MULTIPLE && PhotonView == null)
         {
+            PhotonView view = gameObject.AddComponent<PhotonView>();
+            view.ViewID = 1;
+        }
+
+        if (GameController.model == GameModel.SINGLE && PhotonView != null)
+        {
+            Destroy(PhotonView);
         }
     }
 
     public void OnReadyButtonClick()
     {
         photonView.RPC("Ready", RpcTarget.All);
+        player = PhotonNetwork.IsMasterClient ? 
+            PhotonNetwork.Instantiate("Player", white.position, white.rotation) : 
+            PhotonNetwork.Instantiate("Player", black.position, black.rotation);
     }
 
     [PunRPC] public void Ready()
@@ -23,9 +35,4 @@ public class GameManager : MonoBehaviourPun,IPunObservable
         UIController.Instance.UpdateUI();
     }
     
-
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-    }
 }

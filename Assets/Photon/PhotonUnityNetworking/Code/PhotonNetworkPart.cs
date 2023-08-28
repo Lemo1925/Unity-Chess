@@ -284,7 +284,7 @@ namespace Photon.Pun
         /// Cleans up anything that was instantiated in-game (not loaded with the scene). Resets views that are not destroyed.
         /// </summary>
         // TODO: This method name no longer matches is function. It also resets room object's views.
-        internal static void LocalCleanupAnythingInstantiated(bool destroyInstantiatedGameObjects)
+        public static void LocalCleanupAnythingInstantiated(bool destroyInstantiatedGameObjects)
         {
             //if (tempInstantiationData.Count > 0)
             //{

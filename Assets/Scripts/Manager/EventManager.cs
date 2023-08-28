@@ -1,5 +1,6 @@
 ﻿
 using System;
+using UnityEngine;
 
 public static class EventManager
 {
@@ -22,4 +23,9 @@ public static class EventManager
     public static event Action OnTurnEndEvent;
     
     public static void CallOnTurnEnd() => OnTurnEndEvent?.Invoke();
+
+    public static event Action OnCameraChangedEvent;
+    
+    public static void CallOnCameraChanged() => OnCameraChangedEvent?.Invoke();
+    
 }

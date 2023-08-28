@@ -3,15 +3,24 @@
     SINGLE = 0,
     MULTIPLE = 1,
 }
-// 阵营
+
+public enum GameState
+{
+    // 游戏状态
+    Init = -1,
+    StandBy = 0,
+    Action = 1,
+    End = 2
+}
 public enum Camp
 {
+    // 阵营
     WHITE = 0,
     BLACK = 1,
 }
-// 棋子类型
 public enum ChessType
 {
+    // 棋子类型
     WhiteRock = 1,
     WhiteKnight = 2,
     WhiteBishop = 3,

@@ -60,7 +60,7 @@ public class Pawn : Chess
                 select.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
             
             var pawn = select.chessPiece.GetComponent<Pawn>();
-            if (pawn == null || pawn.moveTurn != GameController.count - 1 || pawn.firstMoveStep != 2) continue;
+            if (pawn == null || pawn.moveTurn != GameStatus.instance.count - 1 || pawn.firstMoveStep != 2) continue;
             
             var EnPassSelection = select.GetSelection(pawn.Location.x, pawn.Location.y).ForwardAndBack(0,1)[0];
             selections.Add(EnPassSelection);
@@ -95,7 +95,7 @@ public class Pawn : Chess
         {           
             firstMoveStep = Mathf.Abs(lastLocation.y - Location.y);
             isFirstMove = false;
-            moveTurn = GameController.count;
+            moveTurn = GameStatus.instance.count;
         }
     }
 

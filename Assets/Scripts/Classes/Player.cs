@@ -1,9 +1,6 @@
-﻿public class Player
-{
-    private Camp camp;
+﻿using Photon.Pun;
 
-    public Player(Camp camp)
-    {
-        this.camp = camp;
-    }
+public class Player : MonoBehaviourPun
+{
+    
 }
