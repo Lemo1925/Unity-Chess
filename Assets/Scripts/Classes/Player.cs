@@ -12,7 +12,5 @@ public class Player : MonoBehaviourPun
 
         camp = PhotonNetwork.IsMasterClient ? Camp.WHITE : Camp.BLACK;
     }
-
-   
     
 }

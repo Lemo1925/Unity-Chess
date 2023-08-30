@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameStatus : MonoBehaviourPun
 {
     public static GameStatus instance;
-    public bool isOver, sync;
+    public bool isOver;
     public int count;
     public Chess selectChess;
     public Vector2 current, target;
@@ -96,12 +96,14 @@ public class GameStatus : MonoBehaviourPun
     {
         var currentSelection = Selection.GetSelection(new Vector2Int((int)current.x, (int)current.y));
         var targetSelection = Selection.GetSelection(new Vector2Int((int)target.x, (int)target.y));
-        
+
         Chess chess = currentSelection.GetPiece();
+        if (targetSelection.GetPiece() != null)
+        {
+            chess.EatPiece(targetSelection);
+        }
         chess.MovePiece(targetSelection.Location);
         chess.Location = targetSelection.Location;
-        
-        
         count++;
     }
 }
