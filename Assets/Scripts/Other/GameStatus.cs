@@ -4,10 +4,11 @@ using UnityEngine;
 public class GameStatus : MonoBehaviourPun
 {
     public static GameStatus instance;
-    public bool isOver;
+    public bool isOver, sync;
     public int count;
-
-    
+    public Chess selectChess;
+    public Vector2 current, target;
+    public string movetype;
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -23,40 +24,83 @@ public class GameStatus : MonoBehaviourPun
     {
         if (GameController.model == GameModel.MULTIPLE)
         {
-            print(GameManager.ready);
             if (GameManager.ready == 2)
             {
                 UIController.Instance.isReady();
                 Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
                 UIController.CameraTransition(GameManager.player.transform);
-                GameController.state++;
+                GameController.state = GameState.StandBy;
             }    
         }
         else
         {
             Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
-            GameController.state++;
+            GameController.state = GameState.StandBy;
         }
     }
 
     public void StandBy()
     {
+        // checkmate检测
+        EventManager.CallOnTurnEnd();
+
         if (isOver) return;
         GameController.RoundType = (Camp)(count % 2);
+      
+        if (GameController.model == GameModel.MULTIPLE)
+        {
+            sync = false;
+            while (Player.instance.camp == GameController.RoundType)
+            {
+                GameController.state = GameState.Action;
+                break;
+            }
+        }
     }
 
     public void Action(ref bool select, ref bool deselect)
     {
         if (Input.GetMouseButtonDown(0)) select = true;
         if (Input.GetMouseButtonDown(1)) deselect = true;
+        if (selectChess != null)
+        {
+            current = new Vector2(selectChess.lastLocation.x, selectChess.lastLocation.y);
+            target =  new Vector2(selectChess.Location.x, selectChess.Location.y);
+        }
+
+        if (Chess.isMoved)
+        {
+            GameController.state = GameState.End;
+        }
     }
     
     public void End()
     {
-        count++; 
-        Chess.isMoved = false; 
-        MatchManager.Instance.checkmate = -1; 
-        EventManager.CallOnTurnEnd();
-        EventManager.CallOnCameraChanged();
+        count++;
+        Chess.isMoved = false;
+        MatchManager.Instance.checkmate = -1;
+
+        if (GameController.model == GameModel.SINGLE)
+        {
+            EventManager.CallOnCameraChanged();
+            GameController.state = GameState.StandBy;
+        }
+        else
+        {
+            photonView.RPC("SyncMove", RpcTarget.Others, current, target);
+            if (sync) GameController.state = GameState.StandBy;
+        }
+
+    }
+    
+    [PunRPC] public void SyncMove(Vector2 current, Vector2 target)
+    {
+        var currentSelection = Selection.GetSelection(new Vector2Int((int)current.x, (int)current.y));
+        var targetSelection = Selection.GetSelection(new Vector2Int((int)target.x, (int)target.y));
+        currentSelection.GetPiece().MovePiece(targetSelection.Location);
+        if (targetSelection.chessList.Count > 0)
+            currentSelection.GetPiece().EatPiece(targetSelection);
+        count++;
+        sync = true;
     }
 }

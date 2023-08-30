@@ -22,7 +22,6 @@ public class GameController : MonoBehaviour
     
     private void Update()
     {
-        state = (GameState)((int)state % 3);
         switch (state)
         {
             case GameState.Init:
@@ -30,14 +29,13 @@ public class GameController : MonoBehaviour
                 break;
             case GameState.StandBy:
                 GameStatus.instance.StandBy();
-                state++; break;
+                break;
             case GameState.Action:
                 GameStatus.instance.Action(ref selectButtonListener, ref deselectButtonListener);
-                if (Chess.isMoved) state++;
                 break;
             case GameState.End:
                 GameStatus.instance.End();
-                state++; break;
+                break;
         }
     }
 

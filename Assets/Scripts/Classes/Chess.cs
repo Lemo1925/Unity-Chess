@@ -14,13 +14,14 @@ public abstract class Chess : MonoBehaviour
     {
         var selections = new List<Selection> { Selection.GetSelection(Location) };
         selections[0].MoveSelect();
-
+        
         return selections;
     }
 
     public void SelectPiece()
     {
         MatchManager.Instance.currentChess = this;
+        GameStatus.instance.selectChess = this;
         isMoved = false;
         lastLocation = Location;
 
@@ -49,11 +50,13 @@ public abstract class Chess : MonoBehaviour
         MatchManager.Instance.currentChess = null;
     }
 
-    protected void MovePiece() => 
+    private void MovePiece() => 
         transform.position = MatchManager.Instance.currentSelection.transform.position;
 
     public void MovePiece(int x, int y) => 
         transform.position = ChessBoard.instance.ChessSelections[x, y].transform.position;
+
+    public void MovePiece(Vector2Int location) => transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;
 
     public virtual void DestroyPiece() => Destroy(gameObject);
 

@@ -52,17 +52,14 @@ public class Selector : MonoBehaviour
                                 pawn.Promotion();
                         }
                         else pawn.En_Pass();
-                    }else
+                    }
+                    else
                     {
                         var king = chess.GetComponent<King>();
                         if (select.Location.x == 2)
-                        {
                             king.LongCastling();
-                        }
                         else
-                        {
                             king.ShortCastling();
-                        }
                     }
                 }
 
