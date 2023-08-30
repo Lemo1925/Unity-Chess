@@ -47,7 +47,7 @@ public class Selection : MonoBehaviour
         occupyType = OccupyGridType.NoneOccupyGrid;
     }
 
-    public Chess GetPiece() => chessList[0] == null ? null : chessList[0];
+    public Chess GetPiece() => chessList.Count == 0 ? null : chessList[0];
 
 
     // 越界判断

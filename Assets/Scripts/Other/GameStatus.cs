@@ -41,16 +41,13 @@ public class GameStatus : MonoBehaviourPun
 
     public void StandBy()
     {
-        // checkmate检测
-        EventManager.CallOnTurnEnd();
-
+        
         if (isOver) return;
+        
         GameController.RoundType = (Camp)(count % 2);
-      
         if (GameController.model == GameModel.MULTIPLE)
         {
-            sync = false;
-            while (Player.instance.camp == GameController.RoundType)
+            while (GameController.RoundType == Player.instance.camp)
             {
                 GameController.state = GameState.Action;
                 break;
@@ -88,19 +85,23 @@ public class GameStatus : MonoBehaviourPun
         else
         {
             photonView.RPC("SyncMove", RpcTarget.Others, current, target);
-            if (sync) GameController.state = GameState.StandBy;
+            GameController.state = GameState.StandBy;
         }
-
+        
+        // checkmate检测
+        EventManager.CallOnTurnEnd();
     }
     
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target)
     {
         var currentSelection = Selection.GetSelection(new Vector2Int((int)current.x, (int)current.y));
         var targetSelection = Selection.GetSelection(new Vector2Int((int)target.x, (int)target.y));
-        currentSelection.GetPiece().MovePiece(targetSelection.Location);
-        if (targetSelection.chessList.Count > 0)
-            currentSelection.GetPiece().EatPiece(targetSelection);
+        
+        Chess chess = currentSelection.GetPiece();
+        chess.MovePiece(targetSelection.Location);
+        chess.Location = targetSelection.Location;
+        
+        
         count++;
-        sync = true;
     }
 }
