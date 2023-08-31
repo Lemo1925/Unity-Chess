@@ -15,11 +15,8 @@ public class GameController : MonoBehaviour
 
     private void OnDisable() => EventManager.OnGameResetEvent -= ResetGame;
 
-    private void Start()
-    {
-        state = GameState.Init;
-    }
-    
+    private void Start() => state = GameState.Init;
+
     private void Update()
     {
         switch (state)

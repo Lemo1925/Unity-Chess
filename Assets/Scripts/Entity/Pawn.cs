@@ -119,6 +119,13 @@ public class Pawn : Chess
         EnPassSelect.chessPiece.DestroyPiece();
         EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
     }
+    
+    public void En_Pass(Selection target)
+    {
+        var EnPassSelect = target.ForwardAndBack(0, 1)[0];
+        EnPassSelect.chessPiece.DestroyPiece();
+        EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
+    }
 
     public void Promotion() => EventManager.CallOnPromotion(this,true);
 

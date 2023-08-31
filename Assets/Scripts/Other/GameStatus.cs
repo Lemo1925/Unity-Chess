@@ -8,7 +8,7 @@ public class GameStatus : MonoBehaviourPun
     public int count;
     public Chess selectChess;
     public Vector2 current, target;
-    public string movetype;
+    public string moveType;
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -16,6 +16,7 @@ public class GameStatus : MonoBehaviourPun
 
     private void Start()
     {
+        moveType = "Default";
         isOver = false;
         count = 0;
     }
@@ -53,6 +54,10 @@ public class GameStatus : MonoBehaviourPun
                 break;
             }
         }
+        else
+        {
+            GameController.state = GameState.Action;
+        }
     }
 
     public void Action(ref bool select, ref bool deselect)
@@ -84,7 +89,8 @@ public class GameStatus : MonoBehaviourPun
         }
         else
         {
-            photonView.RPC("SyncMove", RpcTarget.Others, current, target);
+            photonView.RPC("SyncMove", RpcTarget.Others, current, target, moveType);
+            moveType = "Default";
             GameController.state = GameState.StandBy;
         }
         
@@ -92,18 +98,41 @@ public class GameStatus : MonoBehaviourPun
         EventManager.CallOnTurnEnd();
     }
     
-    [PunRPC] public void SyncMove(Vector2 current, Vector2 target)
+    [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
     {
         var currentSelection = Selection.GetSelection(new Vector2Int((int)current.x, (int)current.y));
         var targetSelection = Selection.GetSelection(new Vector2Int((int)target.x, (int)target.y));
-
+        
         Chess chess = currentSelection.GetPiece();
-        if (targetSelection.GetPiece() != null)
-        {
-            chess.EatPiece(targetSelection);
-        }
         chess.MovePiece(targetSelection.Location);
         chess.Location = targetSelection.Location;
+        
+        if (chess.GetComponent<Pawn>() != null)
+        {
+            chess.GetComponent<Pawn>().moveTurn = count;
+            chess.GetComponent<Pawn>().firstMoveStep = Mathf.Abs(targetSelection.Location.y - currentSelection.Location.y);
+        }
+
+        switch (moveType)
+        {
+            case "Promotion": break;
+            case "PassBy":
+                targetSelection.occupyType = (Selection.OccupyGridType)chess.camp;
+                targetSelection.chessPiece = chess;
+                chess.GetComponent<Pawn>().En_Pass(targetSelection);
+                break;
+            case "LongCast": 
+                chess.GetComponent<King>().InitChessList();
+                chess.GetComponent<King>().LongCastling();
+                break;
+            case "ShortCast": 
+                chess.GetComponent<King>().InitChessList();
+                chess.GetComponent<King>().ShortCastling();
+                break;
+            default:
+                if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
+                break;
+        }
         count++;
     }
 }

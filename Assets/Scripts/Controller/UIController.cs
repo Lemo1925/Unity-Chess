@@ -26,7 +26,7 @@ public class UIController : MonoBehaviourPunCallbacks
     public GameObject waitPanel;
     public Button ReadyButton; 
     
-    private bool cameraFlag = true;
+    public bool cameraFlag = true;
 
     private Button Rook, Knight, Bishop, Queen;
 
@@ -54,10 +54,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
+        if (Instance == null) Instance = this;
 
         promotionPanel.gameObject.SetActive(false);
         WinUpPanel.gameObject.SetActive(false);
@@ -170,11 +167,8 @@ public class UIController : MonoBehaviourPunCallbacks
         ReadyButton.interactable = false;
     }
 
-    public void isReady()
-    {
-        waitPanel.SetActive(false);
-    }
-    
+    public void isReady() => waitPanel.SetActive(false);
+
     private void ChangeCameraPos()
     {
         var BtnImg = cameraButton.GetComponent<Image>();

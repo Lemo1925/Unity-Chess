@@ -51,15 +51,25 @@ public class Selector : MonoBehaviour
                             if (!GameStatus.instance.isOver) 
                                 pawn.Promotion();
                         }
-                        else pawn.En_Pass();
+                        else
+                        {
+                            GameStatus.instance.moveType = "PassBy";
+                            pawn.En_Pass();
+                        }
                     }
                     else
                     {
                         var king = chess.GetComponent<King>();
                         if (select.Location.x == 2)
+                        {
+                            GameStatus.instance.moveType = "LongCast";
                             king.LongCastling();
+                        }
                         else
+                        {
+                            GameStatus.instance.moveType = "ShortCast";
                             king.ShortCastling();
+                        }
                     }
                 }
 

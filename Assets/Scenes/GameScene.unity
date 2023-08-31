@@ -569,6 +569,7 @@ MonoBehaviour:
   BlackTransform: {fileID: 1630494385}
   waitPanel: {fileID: 1426509789}
   ReadyButton: {fileID: 1309223600}
+  cameraFlag: 1
 --- !u!4 &313840666
 Transform:
   m_ObjectHideFlags: 0
@@ -1752,6 +1753,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOver: 0
   count: 0
+  selectChess: {fileID: 0}
+  current: {x: 0, y: 0}
+  target: {x: 0, y: 0}
+  moveType: 
 --- !u!114 &1469608682
 MonoBehaviour:
   m_ObjectHideFlags: 0

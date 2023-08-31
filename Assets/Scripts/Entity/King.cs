@@ -85,20 +85,19 @@ public class King : Chess
 
     #region 王车易位
 
-    private List<Chess> InitChessList()
+    public void InitChessList()
     {
-        var list = new List<Chess>();
-
-        for (int i = 0; i < 8; i++) 
-            list.Add(Selection.GetSelection(new Vector2Int(i, Location.y)).chessPiece);
-
-        return list;
+        // 初始化存储王车之间棋子的列表
+        for (int i = 0; i < 8; i++)
+        {
+            chessList.Add(Selection.GetSelection(new Vector2Int(i, Location.y)).chessPiece);
+        }
     }
     private bool CanLongCastling()
     {
         isCheckmate = MatchManager.Instance.checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
-        chessList = InitChessList();
+        InitChessList();
         if (chessList[0] != null)
         {
             Rock rock = (Rock)chessList[0];
@@ -116,7 +115,7 @@ public class King : Chess
     {
         isCheckmate = MatchManager.Instance.checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
-        chessList = InitChessList();
+        InitChessList();
         if (chessList[7] != null)
         {
             Rock rock = (Rock)chessList[7];
