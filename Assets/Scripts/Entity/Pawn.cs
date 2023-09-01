@@ -110,6 +110,7 @@ public class Pawn : Chess
         
         ChessBoard.instance.chessGO[chessType].Add(chessGameObject);
         ChessBoard.InitChessComponents(chessGameObject, (int)chessType, Location);
+        Selection.GetSelection(Location).chessList.Remove(this);
         DestroyPiece();
     }
 
