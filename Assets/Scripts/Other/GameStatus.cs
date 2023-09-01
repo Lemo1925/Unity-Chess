@@ -69,7 +69,7 @@ public class GameStatus : MonoBehaviourPun
             current = new Vector2(selectChess.lastLocation.x, selectChess.lastLocation.y);
             target =  new Vector2(selectChess.Location.x, selectChess.Location.y);
         }
-
+        
         if (Chess.isMoved)
         {
             GameController.state = GameState.End;
@@ -89,6 +89,7 @@ public class GameStatus : MonoBehaviourPun
         }
         else
         {
+            print(moveType);
             photonView.RPC("SyncMove", RpcTarget.Others, current, target, moveType);
             moveType = "Default";
             GameController.state = GameState.StandBy;
@@ -113,7 +114,7 @@ public class GameStatus : MonoBehaviourPun
         
         targetSelection.occupyType = (Selection.OccupyGridType)chess.camp;
         targetSelection.chessList.Add(chess);
-        targetSelection.chessPiece =  chess;
+        targetSelection.chessPiece = chess;
         
         if (chess.GetComponent<Pawn>() != null)
         {

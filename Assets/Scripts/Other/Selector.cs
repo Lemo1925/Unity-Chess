@@ -48,8 +48,10 @@ public class Selector : MonoBehaviour
                         {
                             if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
                                 chess.EatPiece(select);
-                            if (!GameStatus.instance.isOver) 
+                            if (!GameStatus.instance.isOver)
+                            {
                                 pawn.Promotion();
+                            }
                         }
                         else
                         {
