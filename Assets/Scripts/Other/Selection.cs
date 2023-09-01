@@ -37,12 +37,18 @@ public class Selection : MonoBehaviour
     {
         chessPiece = other.GetComponent<Chess>();
         occupyType = (OccupyGridType)other.GetComponent<Chess>().camp;
-        chessList.Add(chessPiece);
+        if (!chessList.Contains(chessPiece))
+        {
+            chessList.Add(chessPiece);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        chessList.Remove(chessPiece);
+        if (chessList.Contains(chessPiece))
+        {
+            chessList.Remove(chessPiece);
+        }
         chessPiece = null;
         occupyType = OccupyGridType.NoneOccupyGrid;
     }

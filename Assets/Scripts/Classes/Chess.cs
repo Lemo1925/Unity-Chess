@@ -56,7 +56,8 @@ public abstract class Chess : MonoBehaviour
     public void MovePiece(int x, int y) => 
         transform.position = ChessBoard.instance.ChessSelections[x, y].transform.position;
 
-    public void MovePiece(Vector2Int location) => transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;
+    public void MovePiece(Vector2Int location) => 
+        transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;
 
     public virtual void DestroyPiece() => Destroy(gameObject);
 

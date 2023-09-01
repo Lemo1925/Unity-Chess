@@ -106,6 +106,14 @@ public class GameStatus : MonoBehaviourPun
         Chess chess = currentSelection.GetPiece();
         chess.MovePiece(targetSelection.Location);
         chess.Location = targetSelection.Location;
+
+        currentSelection.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
+        currentSelection.chessList.Clear();
+        currentSelection.chessPiece = null;
+        
+        targetSelection.occupyType = (Selection.OccupyGridType)chess.camp;
+        targetSelection.chessList.Add(chess);
+        targetSelection.chessPiece =  chess;
         
         if (chess.GetComponent<Pawn>() != null)
         {
@@ -115,10 +123,23 @@ public class GameStatus : MonoBehaviourPun
 
         switch (moveType)
         {
-            case "Promotion": break;
+            case "RookPromotion":
+                if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
+                break;
+            case "KnightPromotion":
+                if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
+                break;
+            case "BishopPromotion":
+                if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
+                break;
+            case "QueenPromotion":
+                if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
+                break;
             case "PassBy":
-                targetSelection.occupyType = (Selection.OccupyGridType)chess.camp;
-                targetSelection.chessPiece = chess;
                 chess.GetComponent<Pawn>().En_Pass(targetSelection);
                 break;
             case "LongCast": 

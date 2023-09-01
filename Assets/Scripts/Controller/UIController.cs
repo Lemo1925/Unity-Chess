@@ -106,6 +106,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void RookPromotion()
     {
+        GameStatus.instance.moveType = "RookPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Rook));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
         setPromotionPanel(null,false);
@@ -113,6 +114,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void KnightPromotion()
     {
+        GameStatus.instance.moveType = "KnightPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Knight));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
         setPromotionPanel(null,false);
@@ -120,6 +122,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void BishopPromotion()
     {
+        GameStatus.instance.moveType = "BishopPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Bishop));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
         setPromotionPanel(null,false);
@@ -127,6 +130,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void QueenPromotion()
     {
+        GameStatus.instance.moveType = "QueenPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Queen));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
         setPromotionPanel(null,false);
