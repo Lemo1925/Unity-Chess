@@ -99,7 +99,7 @@ public class Pawn : Chess
         }
     }
 
-    public void PromotionLogic(ChessType chessType)
+    public void PromotionLogic(ChessType chessType, bool isRemote = false)
     {
         var chessGameObject = Instantiate(
             ChessBoard.instance.ChessPrefab[Mathf.Abs((int)chessType) - 1],
@@ -107,11 +107,20 @@ public class Pawn : Chess
         
         chessGameObject.GetComponentInChildren<Renderer>().material = (int)chessType > 0 ? 
             ChessBoard.instance.materials[0] : ChessBoard.instance.materials[1];
-        
+
         ChessBoard.instance.chessGO[chessType].Add(chessGameObject);
         ChessBoard.InitChessComponents(chessGameObject, (int)chessType, Location);
+        
+        var PromotionPiece = chessGameObject.GetComponent<Chess>();
+        PromotionPiece.lastLocation = lastLocation;
+
         Selection.GetSelection(Location).chessList.Remove(this);
+        Selection.GetSelection(Location).chessPiece = PromotionPiece;
         DestroyPiece();
+
+        if (isRemote) return;
+        isMoved = true;
+        GameStatus.instance.isPromotion = false;
     }
 
     public void En_Pass()
@@ -124,7 +133,9 @@ public class Pawn : Chess
     public void En_Pass(Selection target)
     {
         var EnPassSelect = target.ForwardAndBack(0, 1)[0];
+        EnPassSelect.chessList.Remove(EnPassSelect.chessPiece);
         EnPassSelect.chessPiece.DestroyPiece();
+        EnPassSelect.chessPiece = null;
         EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
     }
 

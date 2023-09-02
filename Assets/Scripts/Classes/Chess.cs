@@ -44,8 +44,7 @@ public abstract class Chess : MonoBehaviour
     public virtual void DeselectPiece()
     {
         if (MatchManager.Instance.currentSelection != null) Location = MatchManager.Instance.currentSelection.Location;
-        isMoved = lastLocation != Location;
-        
+        isMoved = lastLocation != Location && !GameStatus.instance.isPromotion;
         GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
         MatchManager.Instance.currentChess = null;
     }

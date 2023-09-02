@@ -50,6 +50,7 @@ public class Selector : MonoBehaviour
                                 chess.EatPiece(select);
                             if (!GameStatus.instance.isOver)
                             {
+                                GameStatus.instance.isPromotion = true;
                                 pawn.Promotion();
                             }
                         }
@@ -74,7 +75,7 @@ public class Selector : MonoBehaviour
                         }
                     }
                 }
-
+                
                 chess.DeselectPiece();
                 foreach (var selection in selections) selection.Deselect();
                 selectStatus = false;

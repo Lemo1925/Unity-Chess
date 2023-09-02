@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameStatus : MonoBehaviourPun
 {
     public static GameStatus instance;
-    public bool isOver;
+    public bool isOver, isPromotion;
     public int count;
     public Chess selectChess;
     public Vector2 current, target;
@@ -17,6 +17,7 @@ public class GameStatus : MonoBehaviourPun
     private void Start()
     {
         moveType = "Default";
+        isPromotion = false;
         isOver = false;
         count = 0;
     }
@@ -81,7 +82,7 @@ public class GameStatus : MonoBehaviourPun
         count++;
         Chess.isMoved = false;
         MatchManager.Instance.checkmate = -1;
-
+        print("End");
         if (GameController.model == GameModel.SINGLE)
         {
             EventManager.CallOnCameraChanged();
@@ -89,7 +90,6 @@ public class GameStatus : MonoBehaviourPun
         }
         else
         {
-            print(moveType);
             photonView.RPC("SyncMove", RpcTarget.Others, current, target, moveType);
             moveType = "Default";
             GameController.state = GameState.StandBy;
@@ -126,19 +126,23 @@ public class GameStatus : MonoBehaviourPun
         {
             case "RookPromotion":
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
-                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? 
+                    ChessType.WhiteRock : ChessType.BlackRock, true);
                 break;
             case "KnightPromotion":
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
-                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? 
+                    ChessType.WhiteKnight : ChessType.BlackKnight, true);
                 break;
             case "BishopPromotion":
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
-                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? 
+                    ChessType.WhiteBishop : ChessType.BlackBishop, true);
                 break;
             case "QueenPromotion":
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
-                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
+                chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.WHITE ? 
+                        ChessType.WhiteQueen : ChessType.BlackQueen, true);
                 break;
             case "PassBy":
                 chess.GetComponent<Pawn>().En_Pass(targetSelection);
