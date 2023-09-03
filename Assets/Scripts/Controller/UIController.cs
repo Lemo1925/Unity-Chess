@@ -30,6 +30,8 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private Button Rook, Knight, Bishop, Queen;
 
+    [Header("计时器")] 
+    public GameObject Timer;
 
     public static UIController Instance;
     
@@ -95,8 +97,7 @@ public class UIController : MonoBehaviourPunCallbacks
             waitPanel.SetActive(true);
         }
     }
-
-   
+    
 
     private void setPromotionPanel(Pawn chess, bool visible)
     {

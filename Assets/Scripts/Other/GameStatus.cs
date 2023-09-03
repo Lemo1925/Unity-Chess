@@ -9,6 +9,7 @@ public class GameStatus : MonoBehaviourPun
     public Chess selectChess;
     public Vector2 current, target;
     public string moveType;
+    
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -45,7 +46,6 @@ public class GameStatus : MonoBehaviourPun
     {
         
         if (isOver) return;
-        
         GameController.RoundType = (Camp)(count % 2);
         if (GameController.model == GameModel.MULTIPLE)
         {
@@ -59,6 +59,7 @@ public class GameStatus : MonoBehaviourPun
         {
             GameController.state = GameState.Action;
         }
+        Timer.instance.StartTimer(180.0f);
     }
 
     public void Action(ref bool select, ref bool deselect)
@@ -80,9 +81,9 @@ public class GameStatus : MonoBehaviourPun
     public void End()
     {
         count++;
+        Timer.instance.ResetTimer();
         Chess.isMoved = false;
         MatchManager.Instance.checkmate = -1;
-        print("End");
         if (GameController.model == GameModel.SINGLE)
         {
             EventManager.CallOnCameraChanged();
@@ -96,7 +97,7 @@ public class GameStatus : MonoBehaviourPun
         }
         
         // checkmate检测
-        EventManager.CallOnTurnEnd();
+        EventManager.CallOnTurnEnd();            
     }
     
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
@@ -160,5 +161,6 @@ public class GameStatus : MonoBehaviourPun
                 break;
         }
         count++;
+        Timer.instance.ResetTimer();
     }
 }
