@@ -10,12 +10,12 @@ public class King : Chess
     // 是否被将军
     public bool isCheckmate;
     
-    public List<Chess> chessList = new List<Chess>();
+    public List<Chess> castChessList = new List<Chess>();
 
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
-    private void Start()
+    private void Awake()
     {
         hasMove = false; 
         isCheckmate = false;
@@ -90,7 +90,7 @@ public class King : Chess
         // 初始化存储王车之间棋子的列表
         for (int i = 0; i < 8; i++)
         {
-            chessList.Add(Selection.GetSelection(new Vector2Int(i, Location.y)).chessPiece);
+            castChessList.Add(Selection.GetSelection(new Vector2Int(i, Location.y)).chessPiece);
         }
     }
     private bool CanLongCastling()
@@ -98,13 +98,13 @@ public class King : Chess
         isCheckmate = MatchManager.Instance.checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
         InitChessList();
-        if (chessList[0] != null)
+        if (castChessList[0] != null)
         {
-            Rock rock = (Rock)chessList[0];
+            Rock rock = (Rock)castChessList[0];
             if (rock != null && rock.hasMove == false)
             {
                 for (var i = 1; i < 4; i++)
-                    if (chessList[i] != null)
+                    if (castChessList[i] != null)
                         return false;
                 return true;
             }
@@ -116,13 +116,13 @@ public class King : Chess
         isCheckmate = MatchManager.Instance.checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
         InitChessList();
-        if (chessList[7] != null)
+        if (castChessList[7] != null)
         {
-            Rock rock = (Rock)chessList[7];
+            Rock rock = (Rock)castChessList[7];
             if (rock != null && rock.hasMove == false)
             {
                 for (var i = 5; i < 7; i++)
-                    if (chessList[i] != null)
+                    if (castChessList[i] != null)
                         return false;
                 return true;
             }
@@ -131,13 +131,18 @@ public class King : Chess
     }
     public void LongCastling()
     {
-        chessList[0].Location = new Vector2Int(3, Location.y);
-        chessList[0].MovePiece(3, Location.y);
+        var newLocation = new Vector2Int(3, Location.y);
+        castChessList[0].UpdateSelection(castChessList[0].Location, newLocation);
+        castChessList[0].Location = newLocation;
+        castChessList[0].MovePiece(3, Location.y);
+        
     }
     public void ShortCastling()
     {
-        chessList[7].Location = new Vector2Int(5, Location.y);
-        chessList[7].MovePiece(5, Location.y);
+        var newLocation = new Vector2Int(5, Location.y);
+        castChessList[7].UpdateSelection(castChessList[7].Location, newLocation);
+        castChessList[7].Location = newLocation;
+        castChessList[7].MovePiece(5, Location.y);
     }
 
     #endregion

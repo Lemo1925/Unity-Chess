@@ -7,8 +7,11 @@ public class Pawn : Chess
     public int firstMoveStep;
     public int moveTurn = -1;
     
-    public void Start() => isFirstMove = true;
-    
+    public void Awake()
+    {
+        isFirstMove = true;
+    }
+
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
@@ -126,6 +129,7 @@ public class Pawn : Chess
     public void En_Pass()
     {
         var EnPassSelect = MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0];
+        print(EnPassSelect.Location);
         EnPassSelect.chessPiece.DestroyPiece();
         EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
     }

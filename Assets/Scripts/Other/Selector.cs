@@ -33,7 +33,7 @@ public class Selector : MonoBehaviour
             // 取消选择
             if (DeselectButtonClick && selectStatus)
             {
-                var chess = gridSelection.chessPiece;
+                var chess = MatchManager.Instance.currentChess;
                 var select = MatchManager.Instance.currentSelection;
                 if (select.gridType == Selection.GridType.Attack || select.gridType == Selection.GridType.Normal)
                 {
@@ -57,7 +57,9 @@ public class Selector : MonoBehaviour
                         else
                         {
                             GameStatus.instance.moveType = "PassBy";
-                            pawn.En_Pass();
+                            select.chessPiece = pawn;
+                            select.occupyType = (Selection.OccupyGridType)pawn.camp;
+                            pawn.En_Pass(select);
                         }
                     }
                     else
@@ -75,8 +77,9 @@ public class Selector : MonoBehaviour
                         }
                     }
                 }
-                
+
                 chess.DeselectPiece();
+                chess.UpdateSelection();
                 foreach (var selection in selections) selection.Deselect();
                 selectStatus = false;
                 lastSelect = null;

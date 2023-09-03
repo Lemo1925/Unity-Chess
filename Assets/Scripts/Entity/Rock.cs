@@ -5,7 +5,10 @@ public class Rock : Chess
 {
     public bool hasMove{ get; private set; }
 
-    private void Start() => hasMove = false;
+    private void Awake()
+    {
+        hasMove = false;
+    }
 
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
