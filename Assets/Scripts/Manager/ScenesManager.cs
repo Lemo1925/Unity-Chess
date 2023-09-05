@@ -28,9 +28,10 @@ public class ScenesManager : MonoBehaviour
     private IEnumerator Transition(string currentScene, string targetScene)
     {
         yield return StartCoroutine(Fade(1));
+        if (currentScene != string.Empty) yield return SceneManager.UnloadSceneAsync(currentScene);
+        
         yield return SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Additive);
 
-        if (currentScene != string.Empty) yield return SceneManager.UnloadSceneAsync(currentScene);
         //激活新场景
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);

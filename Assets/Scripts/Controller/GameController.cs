@@ -13,9 +13,8 @@ public class GameController : MonoBehaviour
 
     private void OnDisable() => EventManager.OnGameResetEvent -= ResetGame;
 
-    private void Start()
+    private void Awake()
     {
-        print("Init");
         state = GameState.Init;
         RoundType = Camp.WHITE;
     }
@@ -25,15 +24,12 @@ public class GameController : MonoBehaviour
         switch (state)
         {
             case GameState.Init:
-                print("Init"+GameStatus.instance); 
                 GameStatus.instance.GameInit(chessboard);
                 break;
             case GameState.StandBy:
-                print("StandBy"+GameStatus.instance);
                 GameStatus.instance.StandBy();
                 break;
             case GameState.Action:
-                print("Action"+GameStatus.instance);
                 GameStatus.instance.Action(ref selectButtonListener, ref deselectButtonListener);
                 break;
             case GameState.End:
@@ -51,7 +47,6 @@ public class GameController : MonoBehaviour
 
     private void ResetGame()
     {
-        // GameStatus.instance = null;
         MatchManager.Instance.currentSelection = null;
         MatchManager.Instance.currentChess = null;
         MatchManager.Instance.checkmate = -1;
@@ -59,6 +54,7 @@ public class GameController : MonoBehaviour
 
     private void OnDestroy()
     {
+        UIController.Instance = null;
         GameStatus.instance = null;
     }
 }

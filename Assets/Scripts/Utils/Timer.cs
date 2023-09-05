@@ -39,6 +39,7 @@ public class Timer : MonoBehaviour
             if (elapsedTime >= totalTime)
             {
                 StopTimer();
+                EventManager.CallOnGameOver(GameController.RoundType == Camp.BLACK ? "White Win" : "Black Win");
                 Debug.Log("Time's up!");
             }
         }

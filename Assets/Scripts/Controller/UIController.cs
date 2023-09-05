@@ -36,7 +36,6 @@ public class UIController : MonoBehaviourPunCallbacks
     public static UIController Instance;
     
     
-    
     private static Pawn promotionChess { set; get; }
 
 
