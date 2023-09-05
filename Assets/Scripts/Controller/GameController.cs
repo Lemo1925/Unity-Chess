@@ -2,7 +2,7 @@
 
 public class GameController : MonoBehaviour
 {
-    public GameObject ChessBoard;
+    public GameObject chessboard;
     
     public static GameModel model;
     public static Camp RoundType = Camp.WHITE;
@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
         switch (state)
         {
             case GameState.Init:
-                GameStatus.instance.GameInit(ChessBoard);
+                GameStatus.instance.GameInit(chessboard);
                 break;
             case GameState.StandBy:
                 GameStatus.instance.StandBy();
@@ -45,10 +45,11 @@ public class GameController : MonoBehaviour
 
     private void ResetGame()
     {
+        // GameStatus.instance = null;
+        state = GameState.Init;
         MatchManager.Instance.currentSelection = null;
         MatchManager.Instance.currentChess = null;
         MatchManager.Instance.checkmate = -1;
-        state = GameState.Init;
-        GameStatus.instance.count = 0;
+
     }
 }

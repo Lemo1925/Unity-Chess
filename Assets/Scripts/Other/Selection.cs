@@ -11,7 +11,8 @@ public class Selection : MonoBehaviour
     
     public Chess chessPiece;
     public List<Chess> chessList;
-    
+
+
     public enum OccupyGridType
     {
         WhiteOccupyGrid = 0,
