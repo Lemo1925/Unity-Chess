@@ -5,17 +5,18 @@ public class GameManager : MonoBehaviourPun
 {
     public static int ready;
     public static GameObject player;
+    public static GameModel model;
     public Transform white, black;
     private void Awake()
     {
         var PhotonView = GetComponent<PhotonView>();
-        if (GameController.model == GameModel.MULTIPLE && PhotonView == null)
+        if (model == GameModel.MULTIPLE && PhotonView == null)
         {
             PhotonView view = gameObject.AddComponent<PhotonView>();
             view.ViewID = 1;
         }
 
-        if (GameController.model == GameModel.SINGLE && PhotonView != null)
+        if (model == GameModel.SINGLE && PhotonView != null)
         {
             Destroy(PhotonView);
         }

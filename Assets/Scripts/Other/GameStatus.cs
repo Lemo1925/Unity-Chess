@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System;
+using Photon.Pun;
 using UnityEngine;
 
 public class GameStatus : MonoBehaviourPun
@@ -25,7 +26,7 @@ public class GameStatus : MonoBehaviourPun
 
     public void GameInit(GameObject chessboard)
     {
-        if (GameController.model == GameModel.MULTIPLE)
+        if (GameManager.model == GameModel.MULTIPLE)
         {
             if (GameManager.ready == 2)
             {
@@ -47,7 +48,7 @@ public class GameStatus : MonoBehaviourPun
         
         if (isOver) return;
         GameController.RoundType = (Camp)(count % 2);
-        if (GameController.model == GameModel.MULTIPLE)
+        if (GameManager.model == GameModel.MULTIPLE)
         {
             while (GameController.RoundType == Player.instance.camp)
             {
@@ -84,7 +85,7 @@ public class GameStatus : MonoBehaviourPun
         Timer.instance.ResetTimer();
         Chess.isMoved = false;
         MatchManager.Instance.checkmate = -1;
-        if (GameController.model == GameModel.SINGLE)
+        if (GameManager.model == GameModel.SINGLE)
         {
             EventManager.CallOnCameraChanged();
             GameController.state = GameState.StandBy;
