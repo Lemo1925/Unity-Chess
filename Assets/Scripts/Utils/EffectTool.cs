@@ -12,6 +12,7 @@ public class EffectTool
     private float scaleAmount = 0.8f;
     private float animationDuration = 0.2f;
     
+    // UI按钮缩放效果
     public IEnumerator ScaleAnimation(Component button)
     {
         Vector3 originalScale = button.transform.localScale;

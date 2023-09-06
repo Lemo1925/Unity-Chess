@@ -17,7 +17,6 @@ public class Timer : MonoBehaviour
         if (instance == null) instance = this;
     }
 
-    //  StartTimer(180.0f);
     public void StartTimer(float timeInSeconds)
     {
         if (!isRunning)
@@ -45,10 +44,7 @@ public class Timer : MonoBehaviour
         }
     }
 
-    private void StopTimer()
-    {
-        isRunning = false;
-    }
+    private void StopTimer() => isRunning = false;
 
     public void ResetTimer()
     {

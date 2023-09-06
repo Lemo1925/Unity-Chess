@@ -153,7 +153,9 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
         EventManager.CallOnGameReset();
-        ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
+        if (GameManager.model == GameModel.SINGLE)
+            ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
+        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
     }
 
     private void BackToMenu()
@@ -161,6 +163,7 @@ public class UIController : MonoBehaviourPunCallbacks
         StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
         EventManager.CallOnGameReset();
         ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
+        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.Disconnect();
     }
 
     private void Ready()

@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
 public class GameController : MonoBehaviour
-{
-    public GameObject chessboard;
-    
+{    
     public static Camp RoundType;
     public static GameState state;
     
     private bool selectButtonListener, deselectButtonListener;
     
-    private void OnEnable() => EventManager.OnGameResetEvent += ResetGame;
+    private void OnEnable() => 
+        EventManager.OnGameResetEvent += ResetGame;
 
-    private void OnDisable() => EventManager.OnGameResetEvent -= ResetGame;
+    private void OnDisable() => 
+        EventManager.OnGameResetEvent -= ResetGame;
 
     private void Awake()
     {
@@ -24,13 +24,15 @@ public class GameController : MonoBehaviour
         switch (state)
         {
             case GameState.Init:
-                GameStatus.instance.GameInit(chessboard);
+                GameStatus.instance.GameInit();
                 break;
             case GameState.StandBy:
                 GameStatus.instance.StandBy();
                 break;
             case GameState.Action:
-                GameStatus.instance.Action(ref selectButtonListener, ref deselectButtonListener);
+                GameStatus.instance.Action(
+                    ref selectButtonListener, 
+                    ref deselectButtonListener);
                 break;
             case GameState.End:
                 GameStatus.instance.End();
@@ -40,7 +42,9 @@ public class GameController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
+        EventManager.CallOnSelectAction(
+            selectButtonListener,
+            deselectButtonListener);
         selectButtonListener = false;
         deselectButtonListener = false;
     }

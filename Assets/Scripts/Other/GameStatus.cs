@@ -4,6 +4,8 @@ using UnityEngine;
 public class GameStatus : MonoBehaviourPun
 {
     public static GameStatus instance;
+    public GameObject chessboard;
+
     public bool isOver, isPromotion;
     public int count;
     public Chess selectChess;
@@ -23,7 +25,7 @@ public class GameStatus : MonoBehaviourPun
         count = 0;
     }
 
-    public void GameInit(GameObject chessboard)
+    public void GameInit()
     {
         if (GameManager.model == GameModel.MULTIPLE)
         {
@@ -44,7 +46,6 @@ public class GameStatus : MonoBehaviourPun
 
     public void StandBy()
     {
-        
         if (isOver) return;
         GameController.RoundType = (Camp)(count % 2);
         if (GameManager.model == GameModel.MULTIPLE)

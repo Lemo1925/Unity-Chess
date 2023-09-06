@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class King : Chess
 {
-    // 是否移动过
     private bool hasMove;
-    
-    // 是否被将军
     public bool isCheckmate;
     
     public List<Chess> castChessList = new List<Chess>();
@@ -134,7 +131,7 @@ public class King : Chess
         var newLocation = new Vector2Int(3, Location.y);
         castChessList[0].UpdateSelection(castChessList[0].Location, newLocation);
         castChessList[0].Location = newLocation;
-        castChessList[0].MovePiece(3, Location.y);
+        castChessList[0].MovePiece(newLocation);
         
     }
     public void ShortCastling()
@@ -142,7 +139,7 @@ public class King : Chess
         var newLocation = new Vector2Int(5, Location.y);
         castChessList[7].UpdateSelection(castChessList[7].Location, newLocation);
         castChessList[7].Location = newLocation;
-        castChessList[7].MovePiece(5, Location.y);
+        castChessList[7].MovePiece(newLocation);
     }
 
     #endregion

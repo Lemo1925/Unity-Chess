@@ -1753,6 +1753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b26bec9152f64d279a3d712360a0f6f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chessboard: {fileID: 5181488058727767806, guid: c73ae37b9649b5f48b04fc1114f37b33, type: 3}
   isOver: 0
   isPromotion: 0
   count: 0
@@ -1772,7 +1773,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0190252bc204ef2811abd2d6a411faa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chessboard: {fileID: 5181488058727767806, guid: c73ae37b9649b5f48b04fc1114f37b33, type: 3}
 --- !u!1 &1512228307
 GameObject:
   m_ObjectHideFlags: 0

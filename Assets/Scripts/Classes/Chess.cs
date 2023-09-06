@@ -16,8 +16,6 @@ public abstract class Chess : MonoBehaviour
         selection.chessList.Add(this);
     }
 
-    public void Move() => MovePiece();
-
     public virtual List<Selection> CalculateGrid()
     {
         var selections = new List<Selection> { Selection.GetSelection(Location) };
@@ -38,23 +36,8 @@ public abstract class Chess : MonoBehaviour
         renderers.material = Resources.Load<Material>("Material/Other/Yellow");
     }
 
-    public void UpdateSelection()
-    {
-        // remove Chess Piece in Selection
-        var lastSelection = Selection.GetSelection(lastLocation);
-        if (lastSelection.chessList.Contains(this))
-            lastSelection.chessList.Remove(this);
-        lastSelection.chessPiece = null;
-        lastSelection.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
+    public void UpdateSelection() => UpdateSelection(lastLocation, Location);
 
-        // update Chess Piece in Selection
-        var newSelection = Selection.GetSelection(Location);
-        if (!newSelection.chessList.Contains(this))
-            newSelection.chessList.Add(this);
-        newSelection.chessPiece = this;
-        newSelection.occupyType = (Selection.OccupyGridType)camp;
-    }
-    
     public void UpdateSelection(Vector2Int lastLocation, Vector2Int Location)
     {
         // remove Chess Piece in Selection
@@ -74,7 +57,8 @@ public abstract class Chess : MonoBehaviour
     
     public virtual void DeselectPiece()
     {
-        if (MatchManager.Instance.currentSelection != null) Location = MatchManager.Instance.currentSelection.Location;
+        if (MatchManager.Instance.currentSelection != null) 
+            Location = MatchManager.Instance.currentSelection.Location;
         
         isMoved = lastLocation != Location && !GameStatus.instance.isPromotion;
 
@@ -93,11 +77,8 @@ public abstract class Chess : MonoBehaviour
         }
     }
 
-    private void MovePiece() => 
+    public void MovePiece() => 
         transform.position = MatchManager.Instance.currentSelection.transform.position;
-
-    public void MovePiece(int x, int y) => 
-        transform.position = ChessBoard.instance.ChessSelections[x, y].transform.position;
 
     public void MovePiece(Vector2Int location) => 
         transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;

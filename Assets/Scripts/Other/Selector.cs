@@ -28,7 +28,7 @@ public class Selector : MonoBehaviour
             // 移动棋子
             if (selections.Contains(gridSelection))
             {
-                MatchManager.Instance.currentChess.Move();
+                MatchManager.Instance.currentChess.MovePiece();
             }
             // 取消选择
             if (DeselectButtonClick && selectStatus)
