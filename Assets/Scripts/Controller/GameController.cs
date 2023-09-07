@@ -6,13 +6,7 @@ public class GameController : MonoBehaviour
     public static GameState state;
     
     private bool selectButtonListener, deselectButtonListener;
-    
-    private void OnEnable() => 
-        EventManager.OnGameResetEvent += ResetGame;
-
-    private void OnDisable() => 
-        EventManager.OnGameResetEvent -= ResetGame;
-
+   
     private void Awake()
     {
         state = GameState.Init;
@@ -47,13 +41,6 @@ public class GameController : MonoBehaviour
             deselectButtonListener);
         selectButtonListener = false;
         deselectButtonListener = false;
-    }
-
-    private void ResetGame()
-    {
-        MatchManager.Instance.currentSelection = null;
-        MatchManager.Instance.currentChess = null;
-        MatchManager.Instance.checkmate = -1;
     }
 
     private void OnDestroy()

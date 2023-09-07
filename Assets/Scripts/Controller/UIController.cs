@@ -34,10 +34,7 @@ public class UIController : MonoBehaviourPunCallbacks
     public GameObject Timer;
 
     public static UIController Instance;
-    
-    
     private static Pawn promotionChess { set; get; }
-
 
     public override void OnEnable()
     {
@@ -148,14 +145,13 @@ public class UIController : MonoBehaviourPunCallbacks
         waitPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
     }
-    
+
     private void OnceAgain()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
         EventManager.CallOnGameReset();
         if (GameManager.model == GameModel.SINGLE)
             ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
-        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
     }
 
     private void BackToMenu()
@@ -174,7 +170,9 @@ public class UIController : MonoBehaviourPunCallbacks
         ReadyButton.interactable = false;
     }
 
-    public void isReady() => waitPanel.SetActive(false);
+    public void WaitReady() => waitPanel.SetActive(true);
+
+    public void IsReady() => waitPanel.SetActive(false);
 
     private void ChangeCameraPos()
     {

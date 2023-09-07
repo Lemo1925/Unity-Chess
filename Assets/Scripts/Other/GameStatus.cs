@@ -11,7 +11,14 @@ public class GameStatus : MonoBehaviourPun
     public Chess selectChess;
     public Vector2 current, target;
     public string moveType;
-    
+
+    private void OnEnable() =>
+        EventManager.OnGameResetEvent += ResetGame;
+
+    private void OnDisable() =>
+        EventManager.OnGameResetEvent -= ResetGame;
+
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -29,9 +36,10 @@ public class GameStatus : MonoBehaviourPun
     {
         if (GameManager.model == GameModel.MULTIPLE)
         {
+            UIController.Instance.WaitReady();
             if (GameManager.ready == 2)
             {
-                UIController.Instance.isReady();
+                UIController.Instance.IsReady();
                 Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
                 UIController.CameraTransition(GameManager.player.transform);
                 GameController.state = GameState.StandBy;
@@ -100,7 +108,19 @@ public class GameStatus : MonoBehaviourPun
         // checkmate检测
         EventManager.CallOnTurnEnd();            
     }
-    
+
+    private void ResetGame()
+    {
+        MatchManager.Instance.currentSelection = null;
+        MatchManager.Instance.currentChess = null;
+        MatchManager.Instance.checkmate = -1;
+
+        if (GameManager.model == GameModel.MULTIPLE)
+        {
+            photonView.RPC("Again", RpcTarget.All);
+        }
+    }
+
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
     {
         var currentSelection = Selection.GetSelection(new Vector2Int((int)current.x, (int)current.y));
@@ -163,5 +183,12 @@ public class GameStatus : MonoBehaviourPun
         }
         count++;
         Timer.instance.ResetTimer();
+    }
+    [PunRPC]
+    public void Again()
+    {
+        GameManager.ready = 0;
+        GameController.state = GameState.Init;
+        PhotonNetwork.LoadLevel(2);
     }
 }
