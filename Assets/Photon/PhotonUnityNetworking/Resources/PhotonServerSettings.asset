@@ -41,6 +41,7 @@ MonoBehaviour:
   - Ready
   - SyncMove
   - Again
+  - Menu
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

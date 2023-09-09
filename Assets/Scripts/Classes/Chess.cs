@@ -26,7 +26,7 @@ public abstract class Chess : MonoBehaviour
 
     public void SelectPiece()
     {
-        MatchManager.Instance.currentChess = this;
+        MatchManager.currentChess = this;
         GameStatus.instance.selectChess = this;
         isMoved = false;
         lastLocation = Location;
@@ -57,13 +57,13 @@ public abstract class Chess : MonoBehaviour
     
     public virtual void DeselectPiece()
     {
-        if (MatchManager.Instance.currentSelection != null) 
-            Location = MatchManager.Instance.currentSelection.Location;
+        if (MatchManager.currentSelection != null) 
+            Location = MatchManager.currentSelection.Location;
         
-        isMoved = lastLocation != Location && !GameStatus.instance.isPromotion;
+        isMoved = lastLocation != Location && !GameStatus.isPromotion;
 
         GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
-        MatchManager.Instance.currentChess = null;
+        MatchManager.currentChess = null;
     }
 
     public void EatPiece(Selection select)
@@ -78,7 +78,7 @@ public abstract class Chess : MonoBehaviour
     }
 
     public void MovePiece() => 
-        transform.position = MatchManager.Instance.currentSelection.transform.position;
+        transform.position = MatchManager.currentSelection.transform.position;
 
     public void MovePiece(Vector2Int location) => 
         transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;

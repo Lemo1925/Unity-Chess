@@ -7,7 +7,7 @@ using Debug = System.Diagnostics.Debug;
 public class UIController : MonoBehaviourPunCallbacks
 {
     [Header("结算面板")] 
-    public Image WinUpPanel;
+    public Image GameOverPanel;
     public Text winText;
     public Button AgainButton;
     public Button MenuButton;
@@ -23,7 +23,7 @@ public class UIController : MonoBehaviourPunCallbacks
     public Transform WhiteTransform, BlackTransform;
     
     [Header("准备面板")]
-    public GameObject waitPanel;
+    public GameObject readyPanel;
     public Button ReadyButton; 
     
     public bool cameraFlag = true;
@@ -40,14 +40,14 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         EventManager.OnCameraChangedEvent += ChangeCameraPos;
         EventManager.OnPromotionEvent += setPromotionPanel;
-        EventManager.OnGameOverEvent += WinUp;
+        EventManager.OnGameOverEvent += IsGameOver;
     }
 
     public override void OnDisable()
     {
         EventManager.OnCameraChangedEvent -= ChangeCameraPos;
         EventManager.OnPromotionEvent -= setPromotionPanel;
-        EventManager.OnGameOverEvent -= WinUp;
+        EventManager.OnGameOverEvent -= IsGameOver;
     }
 
     private void Awake()
@@ -55,7 +55,7 @@ public class UIController : MonoBehaviourPunCallbacks
         if (Instance == null) Instance = this;
 
         promotionPanel.gameObject.SetActive(false);
-        WinUpPanel.gameObject.SetActive(false);
+        GameOverPanel.gameObject.SetActive(false);
         
         Rook = buttons[0];
         Knight = buttons[1];
@@ -77,24 +77,14 @@ public class UIController : MonoBehaviourPunCallbacks
         Bishop.onClick.AddListener(BishopPromotion);
         Queen.onClick.AddListener(QueenPromotion);
         
-        if (GameController.RoundType == Camp.WHITE)
-        {
-            cameraFlag = true;
-            CameraTransition(WhiteTransform);
-        }
-        else
-        {
-            cameraFlag = false;
-            CameraTransition(BlackTransform);
-        }
+        CameraTransition(WhiteTransform);
 
         if (PhotonNetwork.IsConnected)
-        {
-            waitPanel.SetActive(true);
-        }
+           readyPanel.SetActive(true);
+        
     }
     
-
+    #region 升变相关
     private void setPromotionPanel(Pawn chess, bool visible)
     {
         promotionChess = chess;
@@ -103,7 +93,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void RookPromotion()
     {
-        GameStatus.instance.moveType = "RookPromotion";
+        GameStatus.moveType = "RookPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Rook));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
         setPromotionPanel(null,false);
@@ -111,7 +101,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void KnightPromotion()
     {
-        GameStatus.instance.moveType = "KnightPromotion";
+        GameStatus.moveType = "KnightPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Knight));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
         setPromotionPanel(null,false);
@@ -119,7 +109,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void BishopPromotion()
     {
-        GameStatus.instance.moveType = "BishopPromotion";
+        GameStatus.moveType = "BishopPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Bishop));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
         setPromotionPanel(null,false);
@@ -127,39 +117,34 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void QueenPromotion()
     {
-        GameStatus.instance.moveType = "QueenPromotion";
+        GameStatus.moveType = "QueenPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Queen));
         promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
         setPromotionPanel(null,false);
     }
-
-    private void WinUp(string text)
+    #endregion
+    
+    private void IsGameOver(string text)
     {
         winText.text = text;
-        WinUpPanel.gameObject.SetActive(true);
-        GameStatus.instance.isOver = true;
+        GameOverPanel.gameObject.SetActive(true);
     }
 
     public void UpdateUI()
     {
-        waitPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-
+        readyPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
     }
 
     private void OnceAgain()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
-        EventManager.CallOnGameReset();
-        if (GameManager.model == GameModel.SINGLE)
-            ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
+        EventManager.CallOnGameAgain();
     }
 
     private void BackToMenu()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
-        EventManager.CallOnGameReset();
-        ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
-        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.Disconnect();
+        EventManager.CallOnBackToMenu();
     }
 
     private void Ready()
@@ -170,27 +155,21 @@ public class UIController : MonoBehaviourPunCallbacks
         ReadyButton.interactable = false;
     }
 
-    public void WaitReady() => waitPanel.SetActive(true);
+    public void ReadyPanel() => readyPanel.SetActive(true);
 
-    public void IsReady() => waitPanel.SetActive(false);
+    public void IsReady() => readyPanel.SetActive(false);
 
-    private void ChangeCameraPos()
+    public void ChangeCameraPos()
     {
         var BtnImg = cameraButton.GetComponent<Image>();
-        if (cameraFlag)
-        {
-            BtnImg.sprite = BlackPic;
-            CameraTransition(BlackTransform);
-        }
-        else
-        {
-            BtnImg.sprite = WhitePic;
-            CameraTransition(WhiteTransform);
-        }
+        BtnImg.sprite = cameraFlag ? BlackPic : WhitePic;
+        CameraTransition(cameraFlag ? BlackTransform : WhiteTransform);
         cameraFlag = !cameraFlag;
     }
-    
-    public static void CameraTransition(Transform target)
+
+    public void InitCameraFlag(Player player) => cameraFlag = player.camp != Camp.WHITE;
+
+    private static void CameraTransition(Transform target)
     {
         Debug.Assert(Camera.main != null, "Camera.main != null");
         LeanTween.move(Camera.main.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);

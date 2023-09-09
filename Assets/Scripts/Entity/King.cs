@@ -30,7 +30,7 @@ public class King : Chess
     private List<Selection> SpecialGrid()
     {
         var selections = new List<Selection>();
-        var selection = MatchManager.Instance.currentSelection;
+        var selection = MatchManager.currentSelection;
 
         if (CanLongCastling()) selections.Add(selection.GetSelection(Location.x - 2, Location.y));
         if (CanShortCastling()) selections.Add(selection.GetSelection(Location.x + 2, Location.y));
@@ -77,7 +77,7 @@ public class King : Chess
     public override void DestroyPiece()
     {
         base.DestroyPiece();
-        EventManager.CallOnGameOver(camp == Camp.BLACK ? "White Win" : "Black Win");
+        GameController.state = GameState.Over;
     }
 
     #region 王车易位

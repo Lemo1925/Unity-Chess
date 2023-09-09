@@ -10,7 +10,8 @@ public enum GameState
     Init = -1,
     StandBy = 0,
     Action = 1,
-    End = 2
+    End = 2,
+    Over = 3 
 }
 public enum Camp
 {

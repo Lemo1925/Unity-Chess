@@ -18,7 +18,7 @@ public class Selector : MonoBehaviour
         {
             // 选择棋子并计算可移动格子
             if (SelectButtonClick && !selectStatus && gridSelection.chessPiece != null 
-                && gridSelection.chessPiece.camp == GameController.RoundType)
+                && gridSelection.chessPiece.camp == GameStatus.RoundType)
             {
                 var chess = gridSelection.chessPiece;
                 chess.SelectPiece();
@@ -28,13 +28,13 @@ public class Selector : MonoBehaviour
             // 移动棋子
             if (selections.Contains(gridSelection))
             {
-                MatchManager.Instance.currentChess.MovePiece();
+                MatchManager.currentChess.MovePiece();
             }
             // 取消选择
             if (DeselectButtonClick && selectStatus)
             {
-                var chess = MatchManager.Instance.currentChess;
-                var select = MatchManager.Instance.currentSelection;
+                var chess = MatchManager.currentChess;
+                var select = MatchManager.currentSelection;
                 if (select.gridType == Selection.GridType.Attack || select.gridType == Selection.GridType.Normal)
                 {
                     chess.EatPiece(select);
@@ -48,15 +48,15 @@ public class Selector : MonoBehaviour
                         {
                             if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
                                 chess.EatPiece(select);
-                            if (!GameStatus.instance.isOver)
+                            if (!GameStatus.isOver)
                             {
-                                GameStatus.instance.isPromotion = true;
+                                GameStatus.isPromotion = true;
                                 pawn.Promotion();
                             }
                         }
                         else
                         {
-                            GameStatus.instance.moveType = "PassBy";
+                            GameStatus.moveType = "PassBy";
                             select.chessPiece = pawn;
                             select.occupyType = (Selection.OccupyGridType)pawn.camp;
                             pawn.En_Pass(select);
@@ -67,12 +67,12 @@ public class Selector : MonoBehaviour
                         var king = chess.GetComponent<King>();
                         if (select.Location.x == 2)
                         {
-                            GameStatus.instance.moveType = "LongCast";
+                            GameStatus.moveType = "LongCast";
                             king.LongCastling();
                         }
                         else
                         {
-                            GameStatus.instance.moveType = "ShortCast";
+                            GameStatus.moveType = "ShortCast";
                             king.ShortCastling();
                         }
                     }

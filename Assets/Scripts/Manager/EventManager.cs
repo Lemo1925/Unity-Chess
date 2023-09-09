@@ -6,10 +6,14 @@ public static class EventManager
 
     public static void CallOnGameOver(string text) => OnGameOverEvent?.Invoke(text);
     
-    public static event Action OnGameResetEvent;
+    public static event Action OnGameAgainEvent;
 
-    public static void CallOnGameReset() => OnGameResetEvent?.Invoke();
-    
+    public static void CallOnGameAgain() => OnGameAgainEvent?.Invoke();
+
+    public static event Action OnBackToMenuEvent;
+
+    public static void CallOnBackToMenu() => OnBackToMenuEvent?.Invoke();
+
     public static event Action<bool, bool> OnSelectActionEvent;
     
     public static void CallOnSelectAction(bool selectButton, bool deselectButton) => OnSelectActionEvent?.Invoke(selectButton,deselectButton);

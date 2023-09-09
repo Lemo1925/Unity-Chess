@@ -280,25 +280,12 @@ public class Selection : MonoBehaviour
     public void Select()
     {
         GetComponent<Renderer>().material = materials[1];
-        MatchManager.Instance.currentSelection = this;
+        MatchManager.currentSelection = this;
     }
     public void Deselect()
     {
         gridType = GridType.Normal;
         GetComponent<Renderer>().material = materials[0];
-        MatchManager.Instance.currentSelection = null;
+        MatchManager.currentSelection = null;
     }
-}
-
-
-public class MatchManager
-{
-    private static MatchManager instance;
-    public static MatchManager Instance => instance ??= new MatchManager();
-    
-    public Selection currentSelection;
-    
-    public Chess currentChess;
-
-    public int checkmate = -1;
 }

@@ -5,19 +5,26 @@ public class GameStatus : MonoBehaviourPun
 {
     public static GameStatus instance;
     public GameObject chessboard;
+    public static Camp RoundType;
 
-    public bool isOver, isPromotion;
-    public int count;
+    public static int count;
+    public static bool isOver, isPromotion;
+    public static string moveType;
+
     public Chess selectChess;
-    public Vector2 current, target;
-    public string moveType;
+    private Vector2 current, target;
 
-    private void OnEnable() =>
-        EventManager.OnGameResetEvent += ResetGame;
+    private void OnEnable()
+    {
+        EventManager.OnGameAgainEvent += AgainGame;
+        EventManager.OnBackToMenuEvent += BackMenu;
+    }
 
-    private void OnDisable() =>
-        EventManager.OnGameResetEvent -= ResetGame;
-
+    private void OnDisable()
+    {
+        EventManager.OnGameAgainEvent -= AgainGame;
+        EventManager.OnBackToMenuEvent += BackMenu;
+    }
 
     private void Awake()
     {
@@ -27,23 +34,27 @@ public class GameStatus : MonoBehaviourPun
     private void Start()
     {
         moveType = "Default";
+        RoundType = Camp.WHITE;
         isPromotion = false;
         isOver = false;
         count = 0;
     }
 
+    #region Game Loop
     public void GameInit()
     {
         if (GameManager.model == GameModel.MULTIPLE)
         {
-            UIController.Instance.WaitReady();
+            UIController.Instance.ReadyPanel();
             if (GameManager.ready == 2)
             {
                 UIController.Instance.IsReady();
+                GameManager.ready = 0;
                 Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
-                UIController.CameraTransition(GameManager.player.transform);
+                UIController.Instance.InitCameraFlag(GameManager.GetPlayer());
+                UIController.Instance.ChangeCameraPos();
                 GameController.state = GameState.StandBy;
-            }    
+            }
         }
         else
         {
@@ -55,10 +66,10 @@ public class GameStatus : MonoBehaviourPun
     public void StandBy()
     {
         if (isOver) return;
-        GameController.RoundType = (Camp)(count % 2);
+        RoundType = (Camp)(count % 2);
         if (GameManager.model == GameModel.MULTIPLE)
         {
-            while (GameController.RoundType == Player.instance.camp)
+            while (RoundType == Player.instance.camp)
             {
                 GameController.state = GameState.Action;
                 break;
@@ -108,17 +119,35 @@ public class GameStatus : MonoBehaviourPun
         // checkmate检测
         EventManager.CallOnTurnEnd();            
     }
+    #endregion
 
     private void ResetGame()
     {
-        MatchManager.Instance.currentSelection = null;
-        MatchManager.Instance.currentChess = null;
+        MatchManager.currentSelection = null;
+        MatchManager.currentChess = null;
         MatchManager.Instance.checkmate = -1;
+    }
 
-        if (GameManager.model == GameModel.MULTIPLE)
-        {
-            photonView.RPC("Again", RpcTarget.All);
-        }
+    private void AgainGame()
+    {
+        ResetGame();
+        if (GameManager.model == GameModel.MULTIPLE) photonView.RPC("Again", RpcTarget.All);
+        if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
+    }
+
+    public void GameOver()
+    {
+        Chess.isMoved = false;
+        isOver = true;
+        EventManager.CallOnGameOver(RoundType == Camp.WHITE ? "White Win" : "Black Win");
+    }
+
+    // HACK: Multiple BackMenu Bug!
+    private void BackMenu()
+    {
+        ResetGame();
+        if (GameManager.model == GameModel.MULTIPLE) photonView.RPC("Menu", RpcTarget.All);
+        if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
     }
 
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
@@ -184,11 +213,18 @@ public class GameStatus : MonoBehaviourPun
         count++;
         Timer.instance.ResetTimer();
     }
-    [PunRPC]
-    public void Again()
+
+    [PunRPC] public void Again()
     {
-        GameManager.ready = 0;
         GameController.state = GameState.Init;
         PhotonNetwork.LoadLevel(2);
+    }
+
+    // TODO: About the Player is left!
+    // HACK: tell other player you have leave! 
+    [PunRPC] public void Menu()
+    {
+        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.Disconnect();
     }
 }

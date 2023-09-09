@@ -18,7 +18,7 @@ public class Pawn : Chess
     private List<Selection> MoveGrid()
     {
         var selections = new List<Selection>();
-        var selection = MatchManager.Instance.currentSelection;
+        var selection = MatchManager.currentSelection;
 
         var collection = selection.ForwardAndBack(isFirstMove ? 2 : 1, 0);
 
@@ -51,7 +51,7 @@ public class Pawn : Chess
     private List<Selection> EnPassGrid()
     {
         var selections = new List<Selection>();
-        var selection = MatchManager.Instance.currentSelection;
+        var selection = MatchManager.currentSelection;
 
         var collection = selection.LeftAndRight(1,1);
         
@@ -63,7 +63,7 @@ public class Pawn : Chess
                 select.occupyType == Selection.OccupyGridType.NoneOccupyGrid) continue;
             
             var pawn = select.chessPiece.GetComponent<Pawn>();
-            if (pawn == null || pawn.moveTurn != GameStatus.instance.count - 1 || pawn.firstMoveStep != 2) continue;
+            if (pawn == null || pawn.moveTurn != GameStatus.count - 1 || pawn.firstMoveStep != 2) continue;
             
             var EnPassSelection = select.GetSelection(pawn.Location.x, pawn.Location.y).ForwardAndBack(0,1)[0];
             selections.Add(EnPassSelection);
@@ -98,7 +98,7 @@ public class Pawn : Chess
         {           
             firstMoveStep = Mathf.Abs(lastLocation.y - Location.y);
             isFirstMove = false;
-            moveTurn = GameStatus.instance.count;
+            moveTurn = GameStatus.count;
         }
     }
 
@@ -123,12 +123,12 @@ public class Pawn : Chess
 
         if (isRemote) return;
         isMoved = true;
-        GameStatus.instance.isPromotion = false;
+        GameStatus.isPromotion = false;
     }
 
     public void En_Pass()
     {
-        var EnPassSelect = MatchManager.Instance.currentSelection.ForwardAndBack(0, 1)[0];
+        var EnPassSelect = MatchManager.currentSelection.ForwardAndBack(0, 1)[0];
         print(EnPassSelect.Location);
         EnPassSelect.chessPiece.DestroyPiece();
         EnPassSelect.occupyType = Selection.OccupyGridType.NoneOccupyGrid;

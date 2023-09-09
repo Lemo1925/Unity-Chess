@@ -2,7 +2,6 @@
 
 public class GameController : MonoBehaviour
 {    
-    public static Camp RoundType;
     public static GameState state;
     
     private bool selectButtonListener, deselectButtonListener;
@@ -10,7 +9,6 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         state = GameState.Init;
-        RoundType = Camp.WHITE;
     }
 
     private void Update()
@@ -30,6 +28,9 @@ public class GameController : MonoBehaviour
                 break;
             case GameState.End:
                 GameStatus.instance.End();
+                break;
+            case GameState.Over:
+                GameStatus.instance.GameOver();
                 break;
         }
     }
