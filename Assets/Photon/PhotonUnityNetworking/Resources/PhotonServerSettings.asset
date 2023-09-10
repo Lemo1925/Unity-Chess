@@ -42,6 +42,8 @@ MonoBehaviour:
   - SyncMove
   - Again
   - Menu
+  - ReciverMsg
+  - SyncReady
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

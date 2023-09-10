@@ -14,17 +14,17 @@ public class GameManager : MonoBehaviourPun
         {
             PhotonView view = gameObject.AddComponent<PhotonView>();
             view.ViewID = 1;
+            if (!PhotonNetwork.IsMasterClient) SendMsg("New Player Comming");
         }
 
-        if (model == GameModel.SINGLE && PhotonView != null)
-        {
-            Destroy(PhotonView);
-        }
+        if (model == GameModel.SINGLE && PhotonView != null) Destroy(PhotonView);
     }
 
-    public static Player GetPlayer()
+    public static Player GetPlayer() => player.GetComponent<Player>();
+
+    public void SendMsg(string msg)
     {
-        return player.GetComponent<Player>();
+        photonView.RPC("ReciverMsg", RpcTarget.Others, msg);
     }
 
     public void OnReadyButtonClick()
@@ -35,13 +35,23 @@ public class GameManager : MonoBehaviourPun
             PhotonNetwork.Instantiate("Player", black.position, black.rotation);
     }
 
-
-
-    // TODO: Sync ready message for the player who coming latter!
     [PunRPC] public void Ready()
     {
         ready += 1;
         UIController.Instance.UpdateUI();
     }
-    
+
+    [PunRPC] public void SyncReady(int allReady)
+    {
+        ready = allReady;
+        UIController.Instance.UpdateUI();
+    }
+
+    [PunRPC] public void ReciverMsg(string msg)
+    {
+        if(msg == "New Player Comming")
+        {
+            photonView.RPC("SyncReady", RpcTarget.All, ready);
+        }
+    }
 }

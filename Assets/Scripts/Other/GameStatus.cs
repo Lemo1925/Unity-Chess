@@ -65,7 +65,11 @@ public class GameStatus : MonoBehaviourPun
 
     public void StandBy()
     {
-        if (isOver) return;
+        if (isOver)
+        {
+            GameController.state = GameState.Over;
+            return; 
+        }
         RoundType = (Camp)(count % 2);
         if (GameManager.model == GameModel.MULTIPLE)
         {
@@ -107,17 +111,15 @@ public class GameStatus : MonoBehaviourPun
         if (GameManager.model == GameModel.SINGLE)
         {
             EventManager.CallOnCameraChanged();
-            GameController.state = GameState.StandBy;
         }
         else
         {
             photonView.RPC("SyncMove", RpcTarget.Others, current, target, moveType);
             moveType = "Default";
-            GameController.state = GameState.StandBy;
         }
-        
-        // checkmate检测
-        EventManager.CallOnTurnEnd();            
+
+        GameController.state = GameState.StandBy;
+        EventManager.CallOnTurnEnd(); // checkmate检测
     }
     #endregion
 
@@ -137,6 +139,7 @@ public class GameStatus : MonoBehaviourPun
 
     public void GameOver()
     {
+        Timer.instance.StopTimer();
         Chess.isMoved = false;
         isOver = true;
         EventManager.CallOnGameOver(RoundType == Camp.WHITE ? "White Win" : "Black Win");
@@ -172,7 +175,7 @@ public class GameStatus : MonoBehaviourPun
             chess.GetComponent<Pawn>().moveTurn = count;
             chess.GetComponent<Pawn>().firstMoveStep = Mathf.Abs(targetSelection.Location.y - currentSelection.Location.y);
         }
-
+       
         switch (moveType)
         {
             case "RookPromotion":

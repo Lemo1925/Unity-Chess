@@ -77,7 +77,7 @@ public class King : Chess
     public override void DestroyPiece()
     {
         base.DestroyPiece();
-        GameController.state = GameState.Over;
+        GameStatus.isOver = true;
     }
 
     #region 王车易位

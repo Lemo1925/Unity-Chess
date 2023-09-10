@@ -5,11 +5,8 @@ public class GameController : MonoBehaviour
     public static GameState state;
     
     private bool selectButtonListener, deselectButtonListener;
-   
-    private void Awake()
-    {
-        state = GameState.Init;
-    }
+
+    private void Awake() => state = GameState.Init;
 
     private void Update()
     {
@@ -22,9 +19,7 @@ public class GameController : MonoBehaviour
                 GameStatus.instance.StandBy();
                 break;
             case GameState.Action:
-                GameStatus.instance.Action(
-                    ref selectButtonListener, 
-                    ref deselectButtonListener);
+                GameStatus.instance.Action(ref selectButtonListener, ref deselectButtonListener);
                 break;
             case GameState.End:
                 GameStatus.instance.End();
@@ -37,9 +32,7 @@ public class GameController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        EventManager.CallOnSelectAction(
-            selectButtonListener,
-            deselectButtonListener);
+        EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
         selectButtonListener = false;
         deselectButtonListener = false;
     }

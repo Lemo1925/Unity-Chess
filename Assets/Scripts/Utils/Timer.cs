@@ -44,7 +44,7 @@ public class Timer : MonoBehaviour
         }
     }
 
-    private void StopTimer() => isRunning = false;
+    public void StopTimer() => isRunning = false;
 
     public void ResetTimer()
     {
