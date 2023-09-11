@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         Debug.Log(otherPlayer.NickName + " has left the game.");
+        if (GameController.state == GameState.Init || GameController.state == GameState.Over) return;
         GameStatus.instance.DrawOver();
     }
 

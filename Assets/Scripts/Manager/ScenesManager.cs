@@ -14,7 +14,7 @@ public class ScenesManager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
         if (!scene.isLoaded) 
-            SceneManager.LoadScene("Scenes/UIScene", LoadSceneMode.Additive);
+            SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
 
         if (instance == null) instance = this;
         fadeGroup = GameObject.Find("FadeCanvas").GetComponentInChildren<CanvasGroup>();
@@ -28,15 +28,29 @@ public class ScenesManager : MonoBehaviour
     private IEnumerator Transition(string currentScene, string targetScene)
     {
         yield return StartCoroutine(Fade(1));
+        //卸载旧场景
         if (currentScene != string.Empty) yield return SceneManager.UnloadSceneAsync(currentScene);
         
         yield return SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Additive);
 
-        //激活新场景
+        //等待新场景加载完成
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            //取消注册SceneManager.sceneLoaded事件
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+
+            //设置新场景为活动场景
+            SceneManager.SetActiveScene(scene);
+        }
+
+        yield return StartCoroutine(Fade(0));
+        /*//激活新场景
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);
 
-        yield return Fade(0);
+        yield return StartCoroutine(Fade(0));*/
     }
 
     private IEnumerator Fade(float tar)

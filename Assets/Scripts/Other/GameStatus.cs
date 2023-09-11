@@ -14,17 +14,6 @@ public class GameStatus : MonoBehaviourPun
     public Chess selectChess;
     private Vector2 current, target;
 
-    private void OnEnable()
-    {
-        EventManager.OnGameAgainEvent += AgainGame;
-        EventManager.OnBackToMenuEvent += BackMenu;
-    }
-
-    private void OnDisable()
-    {
-        EventManager.OnGameAgainEvent -= AgainGame;
-        EventManager.OnBackToMenuEvent += BackMenu;
-    }
 
     private void Awake()
     {
@@ -126,18 +115,16 @@ public class GameStatus : MonoBehaviourPun
     }
     #endregion
 
-    private void ResetGame()
+    public static void ResetGame()
     {
         MatchManager.currentSelection = null;
         MatchManager.currentChess = null;
         MatchManager.Instance.checkmate = -1;
     }
 
-    private void AgainGame()
+    public void OnceAgain()
     {
-        ResetGame();
-        if (GameManager.model == GameModel.MULTIPLE) photonView.RPC("Again", RpcTarget.All);
-        if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/GameScene");
+        photonView.RPC("Again", RpcTarget.All);
     }
 
     public void GameOver()
@@ -159,13 +146,6 @@ public class GameStatus : MonoBehaviourPun
     }
 
     public void GamePause() => UIController.Instance.GamePause();
-
-    private void BackMenu()
-    {
-        ResetGame();
-        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
-        if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
-    }
 
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
     {
@@ -230,7 +210,7 @@ public class GameStatus : MonoBehaviourPun
         count++;
         Timer.instance.ResetTimer();
     }
-
+   
     [PunRPC] public void Again()
     {
         GameController.state = GameState.Init;

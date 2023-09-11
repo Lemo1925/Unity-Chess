@@ -120,14 +120,19 @@ public class UIController : MonoBehaviourPunCallbacks
     private void OnceAgain()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
-        EventManager.CallOnGameAgain();
+        GameStatus.ResetGame();
+        if (GameManager.model == GameModel.MULTIPLE) GameStatus.instance.OnceAgain();
+        if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("GameScene", "GameScene");
     }
 
     private void BackToMenu()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
-        EventManager.CallOnBackToMenu();
+        GameStatus.ResetGame();
+        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
+        if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("GameScene", "UIScene");
     }
+
 
     #region 升变相关
     private void setPromotionPanel(Pawn chess, bool visible)

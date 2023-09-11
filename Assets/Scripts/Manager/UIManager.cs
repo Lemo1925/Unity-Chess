@@ -40,7 +40,7 @@ public class UIManager : MonoBehaviour
     private void SingleBtn_Click()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(Single));
-        ScenesManager.instance.Translate("Scenes/UIScene", "Scenes/GameScene");
+        ScenesManager.instance.Translate("UIScene", "GameScene");
         GameManager.model = GameModel.SINGLE;
     }
 
