@@ -1,7 +1,8 @@
 ﻿using Photon.Pun;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviourPun
+public class GameManager : MonoBehaviourPunCallbacks
 {
     public static int ready;
     public static GameObject player;
@@ -13,7 +14,7 @@ public class GameManager : MonoBehaviourPun
         if (model == GameModel.MULTIPLE && PhotonView == null)
         {
             PhotonView view = gameObject.AddComponent<PhotonView>();
-            view.ViewID = 1;
+            view.ViewID = 1; 
             if (!PhotonNetwork.IsMasterClient) SendMsg("New Player Comming");
         }
 
@@ -25,6 +26,12 @@ public class GameManager : MonoBehaviourPun
     public void SendMsg(string msg)
     {
         photonView.RPC("ReciverMsg", RpcTarget.Others, msg);
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        Debug.Log(otherPlayer.NickName + " has left the game.");
+        GameStatus.instance.DrawOver();
     }
 
     public void OnReadyButtonClick()

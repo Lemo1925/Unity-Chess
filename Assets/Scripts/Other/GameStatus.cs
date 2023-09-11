@@ -46,6 +46,7 @@ public class GameStatus : MonoBehaviourPun
         if (GameManager.model == GameModel.MULTIPLE)
         {
             UIController.Instance.ReadyPanel();
+            UIController.Instance.SetStatusMessage("Wait");
             if (GameManager.ready == 2)
             {
                 UIController.Instance.IsReady();
@@ -70,7 +71,10 @@ public class GameStatus : MonoBehaviourPun
             GameController.state = GameState.Over;
             return; 
         }
+
         RoundType = (Camp)(count % 2);
+        UIController.Instance.SetStatusMessage(RoundType.ToString());
+
         if (GameManager.model == GameModel.MULTIPLE)
         {
             while (RoundType == Player.instance.camp)
@@ -78,6 +82,7 @@ public class GameStatus : MonoBehaviourPun
                 GameController.state = GameState.Action;
                 break;
             }
+
         }
         else
         {
@@ -96,10 +101,8 @@ public class GameStatus : MonoBehaviourPun
             target =  new Vector2(selectChess.Location.x, selectChess.Location.y);
         }
         
-        if (Chess.isMoved)
-        {
-            GameController.state = GameState.End;
-        }
+        if (GameManager.model == GameModel.SINGLE) UIController.Instance.GamePause();
+        if (Chess.isMoved) GameController.state = GameState.End;
     }
     
     public void End()
@@ -140,16 +143,27 @@ public class GameStatus : MonoBehaviourPun
     public void GameOver()
     {
         Timer.instance.StopTimer();
+        UIController.Instance.SetStatusMessage("Over");
         Chess.isMoved = false;
         isOver = true;
         EventManager.CallOnGameOver(RoundType == Camp.WHITE ? "White Win" : "Black Win");
     }
 
-    // HACK: Multiple BackMenu Bug!
+    public void DrawOver()
+    {
+        Timer.instance.StopTimer();
+        UIController.Instance.SetStatusMessage("Draw Over");
+        Chess.isMoved = false;
+        GameController.state = GameState.Draw;
+        EventManager.CallOnGameOver("Rival Offline");
+    }
+
+    public void GamePause() => UIController.Instance.GamePause();
+
     private void BackMenu()
     {
         ResetGame();
-        if (GameManager.model == GameModel.MULTIPLE) photonView.RPC("Menu", RpcTarget.All);
+        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
         if (GameManager.model == GameModel.SINGLE) ScenesManager.instance.Translate("Scenes/GameScene", "Scenes/UIScene");
     }
 
@@ -221,13 +235,5 @@ public class GameStatus : MonoBehaviourPun
     {
         GameController.state = GameState.Init;
         PhotonNetwork.LoadLevel(2);
-    }
-
-    // TODO: About the Player is left!
-    // HACK: tell other player you have leave! 
-    [PunRPC] public void Menu()
-    {
-        PhotonNetwork.LoadLevel(1);
-        PhotonNetwork.Disconnect();
     }
 }

@@ -14,6 +14,14 @@ public class Launcher : MonoBehaviourPunCallbacks
     
     public static void  LauncherON() => PhotonNetwork.ConnectUsingSettings();
 
+    private void Awake()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
+
     public override void OnConnectedToMaster()
     {
         lobbyGameObject.SetActive(false);

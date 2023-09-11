@@ -46,6 +46,8 @@ public class Timer : MonoBehaviour
 
     public void StopTimer() => isRunning = false;
 
+    public void GoAhead() => isRunning = true;
+
     public void ResetTimer()
     {
         elapsedTime = 0f;

@@ -7,8 +7,8 @@ using Debug = System.Diagnostics.Debug;
 public class UIController : MonoBehaviourPunCallbacks
 {
     [Header("结算面板")] 
-    public Image GameOverPanel;
-    public Text winText;
+    public Image Panel;
+    public Text Text;
     public Button AgainButton;
     public Button MenuButton;
 
@@ -26,12 +26,12 @@ public class UIController : MonoBehaviourPunCallbacks
     public GameObject readyPanel;
     public Button ReadyButton; 
     
-    public bool cameraFlag = true;
+    public bool cameraFlag = true, pauseFlag = true;
 
     private Button Rook, Knight, Bishop, Queen;
 
-    [Header("计时器")] 
-    public GameObject Timer;
+    [Header("游戏状态")]
+    public GameObject Status;
 
     public static UIController Instance;
     private static Pawn promotionChess { set; get; }
@@ -40,14 +40,14 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         EventManager.OnCameraChangedEvent += ChangeCameraPos;
         EventManager.OnPromotionEvent += setPromotionPanel;
-        EventManager.OnGameOverEvent += IsGameOver;
+        EventManager.OnGameOverEvent += ShowPanel;
     }
 
     public override void OnDisable()
     {
         EventManager.OnCameraChangedEvent -= ChangeCameraPos;
         EventManager.OnPromotionEvent -= setPromotionPanel;
-        EventManager.OnGameOverEvent -= IsGameOver;
+        EventManager.OnGameOverEvent -= ShowPanel;
     }
 
     private void Awake()
@@ -55,8 +55,9 @@ public class UIController : MonoBehaviourPunCallbacks
         if (Instance == null) Instance = this;
 
         promotionPanel.gameObject.SetActive(false);
-        GameOverPanel.gameObject.SetActive(false);
+        Panel.gameObject.SetActive(false);
         
+
         Rook = buttons[0];
         Knight = buttons[1];
         Bishop = buttons[2];
@@ -79,11 +80,55 @@ public class UIController : MonoBehaviourPunCallbacks
         
         CameraTransition(WhiteTransform);
 
-        if (PhotonNetwork.IsConnected)
-           readyPanel.SetActive(true);
+        if (PhotonNetwork.IsConnected) readyPanel.SetActive(true);
         
     }
-    
+
+    public void GamePause()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseFlag)
+            {
+                ShowPanel("Game Pause");
+                Timer.instance.StopTimer();
+                GameController.state = GameState.Pause;
+            }
+            else
+            {
+                HidPanel();
+                Timer.instance.GoAhead();
+                GameController.state = GameState.Action;
+            }
+            pauseFlag = !pauseFlag;
+        }
+    }
+
+    public void SetStatusMessage(string msg)
+    {
+        Status.GetComponent<Text>().text = msg;
+    }
+   
+    private void ShowPanel(string text)
+    {
+        Text.text = text;
+        Panel.gameObject.SetActive(true);
+    }
+
+    private void HidPanel() => Panel.gameObject.SetActive(false);
+
+    private void OnceAgain()
+    {
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
+        EventManager.CallOnGameAgain();
+    }
+
+    private void BackToMenu()
+    {
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
+        EventManager.CallOnBackToMenu();
+    }
+
     #region 升变相关
     private void setPromotionPanel(Pawn chess, bool visible)
     {
@@ -123,29 +168,6 @@ public class UIController : MonoBehaviourPunCallbacks
         setPromotionPanel(null,false);
     }
     #endregion
-    
-    private void IsGameOver(string text)
-    {
-        winText.text = text;
-        GameOverPanel.gameObject.SetActive(true);
-    }
-
-    public void UpdateUI()
-    {
-        readyPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-    }
-
-    private void OnceAgain()
-    {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
-        EventManager.CallOnGameAgain();
-    }
-
-    private void BackToMenu()
-    {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
-        EventManager.CallOnBackToMenu();
-    }
 
     private void Ready()
     {
@@ -155,9 +177,11 @@ public class UIController : MonoBehaviourPunCallbacks
         ReadyButton.interactable = false;
     }
 
+    public void UpdateUI() => readyPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
     public void ReadyPanel() => readyPanel.SetActive(true);
-
     public void IsReady() => readyPanel.SetActive(false);
+
+    #region Camera相关
 
     public void ChangeCameraPos()
     {
@@ -175,4 +199,6 @@ public class UIController : MonoBehaviourPunCallbacks
         LeanTween.move(Camera.main.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);
         LeanTween.rotate(Camera.main.gameObject, target.rotation.eulerAngles, 0.5f).setEase(LeanTweenType.easeInOutQuad);
     }
+
+    #endregion
 }

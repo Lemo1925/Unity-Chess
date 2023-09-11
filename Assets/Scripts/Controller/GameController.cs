@@ -27,6 +27,11 @@ public class GameController : MonoBehaviour
             case GameState.Over:
                 GameStatus.instance.GameOver();
                 break;
+            case GameState.Draw:
+                break;
+            case GameState.Pause:
+                GameStatus.instance.GamePause();
+                break;
         }
     }
 

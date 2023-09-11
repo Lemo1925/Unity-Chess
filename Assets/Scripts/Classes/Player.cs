@@ -7,10 +7,8 @@ public class Player : MonoBehaviourPun
 
     private void Awake()
     {
-        if (instance == null) 
-            instance = this;
+        if (instance == null) instance = this;
 
         camp = PhotonNetwork.IsMasterClient ? Camp.WHITE : Camp.BLACK;
     }
-    
 }

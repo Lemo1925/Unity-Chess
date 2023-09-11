@@ -11,7 +11,9 @@ public enum GameState
     StandBy = 0,
     Action = 1,
     End = 2,
-    Over = 3 
+    Over = 3,
+    Draw = 4,
+    Pause = 5,
 }
 public enum Camp
 {
