@@ -18,29 +18,29 @@ public class King : Chess
         isCheckmate = false;
     }
     
-    private List<Selection> AttackGrid() => 
+    private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Selection.OccupyGridType)camp && 
-            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (Grid.OccupyGridType)camp && 
+            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> MoveGrid() => 
+    private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> SpecialGrid()
+    private List<Grid> SpecialGrid()
     {
-        var selections = new List<Selection>();
-        var selection = MatchManager.currentSelection;
+        var selections = new List<Grid>();
+        var selection = MatchManager.CurrentGrid;
 
-        if (CanLongCastling()) selections.Add(selection.GetSelection(Location.x - 2, Location.y));
-        if (CanShortCastling()) selections.Add(selection.GetSelection(Location.x + 2, Location.y));
+        if (CanLongCastling()) selections.Add(Grid.GetSelection(location.x - 2, location.y));
+        if (CanShortCastling()) selections.Add(Grid.GetSelection(location.x + 2, location.y));
 
         return selections;
     }
 
-    private List<Selection> CalculateMove()
+    private List<Grid> CalculateMove()
     {
-        var selection = Selection.GetSelection(Location);
+        var selection = Grid.GetSelection(location);
 
         var collection = selection.Bevel(1, 1);
         collection.AddRange(selection.ForwardAndBack(1, 1));
@@ -49,7 +49,7 @@ public class King : Chess
         return collection;
     }
 
-    public override List<Selection> CalculateGrid()
+    public override List<Grid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
         
@@ -67,7 +67,7 @@ public class King : Chess
     public override void DeselectPiece()
     {
         base.DeselectPiece();
-        if (isMoved)
+        if (IsMoved)
         {
             hasMove = true;
             isCheckmate = false;
@@ -77,7 +77,7 @@ public class King : Chess
     public override void DestroyPiece()
     {
         base.DestroyPiece();
-        GameStatus.isOver = true;
+        GameStatus.IsOver = true;
     }
 
     #region 王车易位
@@ -87,12 +87,12 @@ public class King : Chess
         // 初始化存储王车之间棋子的列表
         for (int i = 0; i < 8; i++)
         {
-            castChessList.Add(Selection.GetSelection(new Vector2Int(i, Location.y)).chessPiece);
+            castChessList.Add(Grid.GetSelection(new Vector2Int(i, location.y)).chessPiece);
         }
     }
     private bool CanLongCastling()
     {
-        isCheckmate = MatchManager.Instance.checkmate == (int)camp;
+        isCheckmate = MatchManager.Instance.Checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
         InitChessList();
         if (castChessList[0] != null)
@@ -110,7 +110,7 @@ public class King : Chess
     }
     private bool CanShortCastling()
     {
-        isCheckmate = MatchManager.Instance.checkmate == (int)camp;
+        isCheckmate = MatchManager.Instance.Checkmate == (int)camp;
         if (hasMove || isCheckmate) return false;
         InitChessList();
         if (castChessList[7] != null)
@@ -128,17 +128,17 @@ public class King : Chess
     }
     public void LongCastling()
     {
-        var newLocation = new Vector2Int(3, Location.y);
-        castChessList[0].UpdateSelection(castChessList[0].Location, newLocation);
-        castChessList[0].Location = newLocation;
+        var newLocation = new Vector2Int(3, location.y);
+        castChessList[0].UpdateSelection(castChessList[0].location, newLocation);
+        castChessList[0].location = newLocation;
         castChessList[0].MovePiece(newLocation);
         
     }
     public void ShortCastling()
     {
-        var newLocation = new Vector2Int(5, Location.y);
-        castChessList[7].UpdateSelection(castChessList[7].Location, newLocation);
-        castChessList[7].Location = newLocation;
+        var newLocation = new Vector2Int(5, location.y);
+        castChessList[7].UpdateSelection(castChessList[7].location, newLocation);
+        castChessList[7].location = newLocation;
         castChessList[7].MovePiece(newLocation);
     }
 

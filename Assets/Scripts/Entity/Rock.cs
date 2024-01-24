@@ -13,18 +13,18 @@ public class Rock : Chess
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
-    private List<Selection> MoveGrid() => 
+    private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> AttackGrid() => 
+    private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Selection.OccupyGridType)camp && 
-            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (Grid.OccupyGridType)camp && 
+            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> CalculateMove()
+    private List<Grid> CalculateMove()
     {
-        var selection = Selection.GetSelection(Location);
+        var selection = Grid.GetSelection(location);
 
         var collection = selection.ForwardAndBack(7, 7);
         collection.AddRange(selection.LeftAndRight(7, 7));
@@ -32,7 +32,7 @@ public class Rock : Chess
         return collection;
     }
 
-    public override List<Selection> CalculateGrid()
+    public override List<Grid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
 
@@ -48,7 +48,7 @@ public class Rock : Chess
     public override void DeselectPiece()
     {
         base.DeselectPiece();
-        if (isMoved) hasMove = true;
+        if (IsMoved) hasMove = true;
     }
     
     private void Checkmate() => CallCheck(AttackGrid());

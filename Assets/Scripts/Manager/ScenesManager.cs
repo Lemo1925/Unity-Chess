@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class ScenesManager : MonoBehaviour
 {
-    public static ScenesManager instance;
+    public static ScenesManager Instance;
     
     public CanvasGroup fadeGroup;
 
@@ -16,7 +16,7 @@ public class ScenesManager : MonoBehaviour
         if (!scene.isLoaded) 
             SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
 
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
         fadeGroup = GameObject.Find("FadeCanvas").GetComponentInChildren<CanvasGroup>();
     }
 
@@ -46,11 +46,11 @@ public class ScenesManager : MonoBehaviour
         }
 
         yield return StartCoroutine(Fade(0));
-        /*//激活新场景
+        //激活新场景
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);
 
-        yield return StartCoroutine(Fade(0));*/
+        yield return StartCoroutine(Fade(0));
     }
 
     private IEnumerator Fade(float tar)

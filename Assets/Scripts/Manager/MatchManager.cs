@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class MatchManager
 {
-    private static MatchManager instance;
-    public static MatchManager Instance => instance ??= new MatchManager();
+    private static MatchManager _instance;
+    public static MatchManager Instance => _instance ??= new MatchManager();
 
-    public static Selection currentSelection;
+    public static Grid CurrentGrid;
 
-    public static Chess currentChess;
+    public static Chess CurrentChess;
 
-    public int checkmate = -1;
+    public int Checkmate = -1;
 }

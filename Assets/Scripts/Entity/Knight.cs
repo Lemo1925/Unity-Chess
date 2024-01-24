@@ -6,33 +6,33 @@ public class Knight : Chess
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
     
-    private List<Selection> MoveGrid() => 
+    private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> AttackGrid() => 
+    private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Selection.OccupyGridType)camp && 
-            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (Grid.OccupyGridType)camp && 
+            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> CalculateMove()
+    private List<Grid> CalculateMove()
     {
-        var selection = Selection.GetSelection(Location);
-        var collection = new List<Selection>();
+        var selection = Grid.GetSelection(location);
+        var collection = new List<Grid>();
         int[] deltaX = {1, 1, -1, -1, 2, 2, -2, -2};
         int[] deltaY = {2, -2, 2, -2, 1, -1, 1, -1};
 
         for (int i = 0; i < deltaX.Length; i++)
         {
-            int X = Location.x + deltaX[i], Y = Location.y + deltaY[i];
-            if (selection.GetSelection(X, Y) != null)
-                collection.Add(selection.GetSelection(X, Y));
+            int X = location.x + deltaX[i], Y = location.y + deltaY[i];
+            if (Grid.GetSelection(X, Y) != null)
+                collection.Add(Grid.GetSelection(X, Y));
         }
 
         return collection;
     }
 
-    public override List<Selection> CalculateGrid()
+    public override List<Grid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
 

@@ -3,30 +3,30 @@ using UnityEngine;
 
 public class GameStatus : MonoBehaviourPun
 {
-    public static GameStatus instance;
+    public static GameStatus Instance;
     public GameObject chessboard;
     public static Camp RoundType;
 
-    public static int count;
-    public static bool isOver, isPromotion;
-    public static string moveType;
+    public static int Count;
+    public static bool IsOver, IsPromotion;
+    public static string MoveType;
 
     public Chess selectChess;
-    private Vector2 current, target;
+    private Vector2 _current, _target;
 
 
     private void Awake()
     {
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
     }
 
     private void Start()
     {
-        moveType = "Default";
+        MoveType = "Default";
         RoundType = Camp.WHITE;
-        isPromotion = false;
-        isOver = false;
-        count = 0;
+        IsPromotion = false;
+        IsOver = false;
+        Count = 0;
     }
 
     #region Game Loop
@@ -43,39 +43,39 @@ public class GameStatus : MonoBehaviourPun
                 Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
                 UIController.Instance.InitCameraFlag(GameManager.GetPlayer());
                 UIController.Instance.ChangeCameraPos();
-                GameController.state = GameState.StandBy;
+                GameController.State = GameState.StandBy;
             }
         }
         else
         {
             Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
-            GameController.state = GameState.StandBy;
+            GameController.State = GameState.StandBy;
         }
     }
 
     public void StandBy()
     {
-        if (isOver)
+        if (IsOver)
         {
-            GameController.state = GameState.Over;
+            GameController.State = GameState.Over;
             return; 
         }
 
-        RoundType = (Camp)(count % 2);
+        RoundType = (Camp)(Count % 2);
         UIController.Instance.SetStatusMessage(RoundType.ToString());
 
         if (GameManager.model == GameModel.MULTIPLE)
         {
             while (RoundType == Player.instance.camp)
             {
-                GameController.state = GameState.Action;
+                GameController.State = GameState.Action;
                 break;
             }
 
         }
         else
         {
-            GameController.state = GameState.Action;
+            GameController.State = GameState.Action;
         }
         Timer.instance.StartTimer(180.0f);
     }
@@ -86,53 +86,51 @@ public class GameStatus : MonoBehaviourPun
         if (Input.GetMouseButtonDown(1)) deselect = true;
         if (selectChess != null)
         {
-            current = new Vector2(selectChess.lastLocation.x, selectChess.lastLocation.y);
-            target =  new Vector2(selectChess.Location.x, selectChess.Location.y);
+            _current = new Vector2(selectChess.lastLocation.x, selectChess.lastLocation.y);
+            _target =  new Vector2(selectChess.location.x, selectChess.location.y);
         }
         
         if (GameManager.model == GameModel.SINGLE) UIController.Instance.GamePause();
-        if (Chess.isMoved) GameController.state = GameState.End;
+        if (Chess.IsMoved) GameController.State = GameState.End;
     }
     
     public void End()
     {
-        count++;
+        Count++;
         Timer.instance.ResetTimer();
-        Chess.isMoved = false;
-        MatchManager.Instance.checkmate = -1;
+        Chess.IsMoved = false;
+        MatchManager.Instance.Checkmate = -1;
         if (GameManager.model == GameModel.SINGLE)
         {
             EventManager.CallOnCameraChanged();
         }
         else
         {
-            photonView.RPC("SyncMove", RpcTarget.Others, current, target, moveType);
-            moveType = "Default";
+            photonView.RPC("SyncMove", RpcTarget.Others, _current, _target, MoveType);
+            MoveType = "Default";
         }
 
-        GameController.state = GameState.StandBy;
+        GameController.State = GameState.StandBy;
         EventManager.CallOnTurnEnd(); // checkmate检测
     }
     #endregion
 
     public static void ResetGame()
     {
-        MatchManager.currentSelection = null;
-        MatchManager.currentChess = null;
-        MatchManager.Instance.checkmate = -1;
+        MatchManager.CurrentGrid = null;
+        MatchManager.CurrentChess = null;
+        MatchManager.Instance.Checkmate = -1;
     }
 
-    public void OnceAgain()
-    {
+    public void OnceAgain() => 
         photonView.RPC("Again", RpcTarget.All);
-    }
 
     public void GameOver()
     {
         Timer.instance.StopTimer();
         UIController.Instance.SetStatusMessage("Over");
-        Chess.isMoved = false;
-        isOver = true;
+        Chess.IsMoved = false;
+        IsOver = true;
         EventManager.CallOnGameOver(RoundType == Camp.WHITE ? "White Win" : "Black Win");
     }
 
@@ -140,8 +138,8 @@ public class GameStatus : MonoBehaviourPun
     {
         Timer.instance.StopTimer();
         UIController.Instance.SetStatusMessage("Draw Over");
-        Chess.isMoved = false;
-        GameController.state = GameState.Draw;
+        Chess.IsMoved = false;
+        GameController.State = GameState.Draw;
         EventManager.CallOnGameOver("Rival Offline");
     }
 
@@ -149,25 +147,25 @@ public class GameStatus : MonoBehaviourPun
 
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
     {
-        var currentSelection = Selection.GetSelection(new Vector2Int((int)current.x, (int)current.y));
-        var targetSelection = Selection.GetSelection(new Vector2Int((int)target.x, (int)target.y));
+        var currentSelection = Grid.GetSelection(new Vector2Int((int)current.x, (int)current.y));
+        var targetSelection = Grid.GetSelection(new Vector2Int((int)target.x, (int)target.y));
         
         Chess chess = currentSelection.GetPiece();
-        chess.MovePiece(targetSelection.Location);
-        chess.Location = targetSelection.Location;
+        chess.MovePiece(targetSelection.location);
+        chess.location = targetSelection.location;
 
-        currentSelection.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
+        currentSelection.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
         currentSelection.chessList.Clear();
         currentSelection.chessPiece = null;
         
-        targetSelection.occupyType = (Selection.OccupyGridType)chess.camp;
+        targetSelection.occupyType = (Grid.OccupyGridType)chess.camp;
         targetSelection.chessList.Add(chess);
         targetSelection.chessPiece = chess;
         
         if (chess.GetComponent<Pawn>() != null)
         {
-            chess.GetComponent<Pawn>().moveTurn = count;
-            chess.GetComponent<Pawn>().firstMoveStep = Mathf.Abs(targetSelection.Location.y - currentSelection.Location.y);
+            chess.GetComponent<Pawn>().moveTurn = Count;
+            chess.GetComponent<Pawn>().firstMoveStep = Mathf.Abs(targetSelection.location.y - currentSelection.location.y);
         }
        
         switch (moveType)
@@ -207,13 +205,13 @@ public class GameStatus : MonoBehaviourPun
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
                 break;
         }
-        count++;
+        Count++;
         Timer.instance.ResetTimer();
     }
    
     [PunRPC] public void Again()
     {
-        GameController.state = GameState.Init;
+        GameController.State = GameState.Init;
         PhotonNetwork.LoadLevel(2);
     }
 }

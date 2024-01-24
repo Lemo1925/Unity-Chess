@@ -7,22 +7,22 @@ public class Bishop:Chess
     
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
     
-    private List<Selection> MoveGrid() => 
+    private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> AttackGrid() => 
+    private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Selection.OccupyGridType)camp && 
-            select.occupyType != Selection.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (Grid.OccupyGridType)camp && 
+            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Selection> CalculateMove()
+    private List<Grid> CalculateMove()
     {
-        var selection = Selection.GetSelection(Location);
+        var selection = Grid.GetSelection(location);
         return selection.Bevel(7, 7);
     }
 
-    public override List<Selection> CalculateGrid()
+    public override List<Grid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
 

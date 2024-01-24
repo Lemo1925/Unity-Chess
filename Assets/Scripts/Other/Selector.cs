@@ -3,76 +3,76 @@ using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
-    private Selection gridSelection;
-    
-    private List<Selection> selections = new List<Selection>();
-    private RaycastHit raycastHit; 
-    private Selection lastSelect;
-    private bool selectStatus;
+    private Grid _selectGrid;
+    private Camera _camera;
+    private List<Grid> _grids = new();
+    private RaycastHit _hit; 
+    private Grid _lastSelect;
+    private bool _selectStatus;
     
     private void OnEnable() => EventManager.OnSelectActionEvent += SelectPiece;
     private void OnDisable() => EventManager.OnSelectActionEvent -= SelectPiece;
-    private void SelectPiece(bool SelectButtonClick, bool DeselectButtonClick)
+
+    private void Awake() => _camera = Camera.main;
+
+    private void SelectPiece(bool selectButtonClick, bool deselectButtonClick)
     {
-        if (gridSelection != null)
+        if (!ReferenceEquals(_selectGrid, null))
         {
+            var chessPiece = _selectGrid.chessPiece;
             // 选择棋子并计算可移动格子
-            if (SelectButtonClick && !selectStatus && gridSelection.chessPiece != null 
-                && gridSelection.chessPiece.camp == GameStatus.RoundType)
+            if (selectButtonClick && !_selectStatus && 
+                !ReferenceEquals(chessPiece, null) && 
+                chessPiece.camp == GameStatus.RoundType)
             {
-                var chess = gridSelection.chessPiece;
-                chess.SelectPiece();
-                selectStatus = true;
-                selections = chess.CalculateGrid();
+                chessPiece.SelectPiece();
+                _selectStatus = true;
+                _grids = chessPiece.CalculateGrid();
             }
             // 移动棋子
-            if (selections.Contains(gridSelection))
-            {
-                MatchManager.currentChess.MovePiece();
-            }
+            if (_grids.Contains(_selectGrid)) 
+                MatchManager.CurrentChess.MovePiece();
             // 取消选择
-            if (DeselectButtonClick && selectStatus)
+            if (deselectButtonClick && _selectStatus)
             {
-                var chess = MatchManager.currentChess;
-                var select = MatchManager.currentSelection;
-                if (select.gridType == Selection.GridType.Attack || select.gridType == Selection.GridType.Normal)
-                {
+                var chess = MatchManager.CurrentChess; 
+                var select = MatchManager.CurrentGrid;
+                if (select.gridType is Grid.GridType.Attack or Grid.GridType.Normal)
                     chess.EatPiece(select);
-                }
-                else if (select.gridType == Selection.GridType.Special)
+                else if (select.gridType == Grid.GridType.Special)
                 {
                     if (chess.GetComponent<Pawn>() != null)
                     {
                         var pawn = chess.GetComponent<Pawn>();
-                        if (select.Location.y == 0 || select.Location.y == 7)
+                        if (select.location.y == 0 || select.location.y == 7)
                         {
-                            if (select.occupyType != Selection.OccupyGridType.NoneOccupyGrid) 
+                            if (select.occupyType != Grid.OccupyGridType.NoneOccupyGrid) 
                                 chess.EatPiece(select);
-                            if (!GameStatus.isOver)
+                            if (!GameStatus.IsOver)
                             {
-                                GameStatus.isPromotion = true;
+                                GameStatus.IsPromotion = true;
                                 pawn.Promotion();
                             }
                         }
                         else
                         {
-                            GameStatus.moveType = "PassBy";
+                            GameStatus.MoveType = "PassBy";
                             select.chessPiece = pawn;
-                            select.occupyType = (Selection.OccupyGridType)pawn.camp;
+                            select.occupyType = (Grid.OccupyGridType)pawn.camp;
                             pawn.En_Pass(select);
                         }
                     }
                     else
                     {
                         var king = chess.GetComponent<King>();
-                        if (select.Location.x == 2)
+                        if (select.location.x == 2)
                         {
-                            GameStatus.moveType = "LongCast";
+                            GameStatus.MoveType = "LongCast";
                             king.LongCastling();
                         }
                         else
                         {
-                            GameStatus.moveType = "ShortCast";
+                            GameStatus.MoveType = "ShortCast";
                             king.ShortCastling();
                         }
                     }
@@ -80,41 +80,41 @@ public class Selector : MonoBehaviour
 
                 chess.DeselectPiece();
                 chess.UpdateSelection();
-                foreach (var selection in selections) selection.Deselect();
-                selectStatus = false;
-                lastSelect = null;
-                gridSelection = null;
-                selections.Clear();
+                foreach (var selection in _grids) selection.Deselect();
+                _selectStatus = false;
+                _lastSelect = null;
+                _selectGrid = null;
+                _grids.Clear();
             }
         }
 
         // Selection光标
-        Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out raycastHit, 9999f, LayerMask.GetMask("Selection")))
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out _hit, 9999f, LayerMask.GetMask("Selection")))
         {
-            var hitSelection = raycastHit.collider.GetComponent<Selection>();
-            if (gridSelection == hitSelection) return;
-            if (selectStatus)
+            var hitSelection = _hit.collider.GetComponent<Grid>();
+            if (_selectGrid == hitSelection) return;
+            if (_selectStatus)
             {
-                if (selections.Contains(hitSelection))
+                if (_grids.Contains(hitSelection))
                 {
                     RaySelect(hitSelection);
-                    lastSelect = gridSelection;
+                    _lastSelect = _selectGrid;
                 }
-                else if (lastSelect != null) lastSelect.Select();
+                else if (_lastSelect != null) _lastSelect.Select();
             }
             else RaySelect(hitSelection);
         }
-        else if (gridSelection != null && !selectStatus)
+        else if (_selectGrid != null && !_selectStatus)
         {
-            gridSelection.Deselect();
-            gridSelection = null;
+            _selectGrid.Deselect();
+            _selectGrid = null;
         }
     }
-    private void RaySelect(Selection hitSelection)
+    private void RaySelect(Grid hitGrid)
     {
-        if (gridSelection != null) gridSelection.Deselect();
-        gridSelection = hitSelection;
-        gridSelection.Select();
+        if (_selectGrid != null) _selectGrid.Deselect();
+        _selectGrid = hitGrid;
+        _selectGrid.Select();
     }
 }

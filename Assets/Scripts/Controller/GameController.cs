@@ -2,49 +2,49 @@
 
 public class GameController : MonoBehaviour
 {    
-    public static GameState state;
+    public static GameState State;
     
-    private bool selectButtonListener, deselectButtonListener;
+    private bool _selectButtonListener, _deselectButtonListener;
 
-    private void Awake() => state = GameState.Init;
+    private void Awake() => State = GameState.Init;
 
     private void Update()
     {
-        switch (state)
+        switch (State)
         {
             case GameState.Init:
-                GameStatus.instance.GameInit();
+                GameStatus.Instance.GameInit();
                 break;
             case GameState.StandBy:
-                GameStatus.instance.StandBy();
+                GameStatus.Instance.StandBy();
                 break;
             case GameState.Action:
-                GameStatus.instance.Action(ref selectButtonListener, ref deselectButtonListener);
+                GameStatus.Instance.Action(ref _selectButtonListener, ref _deselectButtonListener);
                 break;
             case GameState.End:
-                GameStatus.instance.End();
+                GameStatus.Instance.End();
                 break;
             case GameState.Over:
-                GameStatus.instance.GameOver();
+                GameStatus.Instance.GameOver();
                 break;
             case GameState.Draw:
                 break;
             case GameState.Pause:
-                GameStatus.instance.GamePause();
+                GameStatus.Instance.GamePause();
                 break;
         }
     }
 
     private void FixedUpdate()
     {
-        EventManager.CallOnSelectAction(selectButtonListener,deselectButtonListener);
-        selectButtonListener = false;
-        deselectButtonListener = false;
+        EventManager.CallOnSelectAction(_selectButtonListener,_deselectButtonListener);
+        _selectButtonListener = false;
+        _deselectButtonListener = false;
     }
 
     private void OnDestroy()
     {
         UIController.Instance = null;
-        GameStatus.instance = null;
+        GameStatus.Instance = null;
     }
 }

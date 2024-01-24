@@ -13,7 +13,7 @@ public class ChessBoard : MonoBehaviourPun
     public Dictionary<ChessType, List<GameObject>> chessGO;
     private Vector2 BoardSize = new Vector2(2.105f, 2.105f);
     private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
-    public readonly Selection[,] ChessSelections = new Selection[8, 8];
+    public readonly Grid[,] ChessSelections = new Grid[8, 8];
     
     private void Awake()
     {
@@ -55,9 +55,9 @@ public class ChessBoard : MonoBehaviourPun
             GameObject ChessBoardTile = Instantiate(GridPrefab, position, Quaternion.identity,SelectionCollection);
            
             ChessBoardGrids[i, j] = ChessBoardTile;
-            Selection selection = ChessBoardTile.GetComponent<Selection>();
-            ChessSelections[i, j] = selection;
-            selection.Location = new Vector2Int(i, j);
+            Grid grid = ChessBoardTile.GetComponent<Grid>();
+            ChessSelections[i, j] = grid;
+            grid.location = new Vector2Int(i, j);
 
         }
         
@@ -109,42 +109,42 @@ public class ChessBoard : MonoBehaviourPun
             {
                 Rock rock = go.AddComponent<Rock>();
                 rock.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
-                rock.Location = Location;
+                rock.location = Location;
                 break;
             }
             case 2:
             {
                 Knight knight = go.AddComponent<Knight>();
                 knight.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
-                knight.Location = Location;
+                knight.location = Location;
                 break;
             }
             case 3:
             {
                 Bishop bishop = go.AddComponent<Bishop>();
                 bishop.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
-                bishop.Location = Location;
+                bishop.location = Location;
                 break;
             }
             case 4:
             {
                 Queen queen = go.AddComponent<Queen>();
                 queen.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
-                queen.Location = Location;
+                queen.location = Location;
                 break;
             }
             case 5:
             {
                 King king = go.AddComponent<King>();
                 king.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
-                king.Location = Location;
+                king.location = Location;
                 break;
             }
             default:
             {
                 Pawn pawn = go.AddComponent<Pawn>();
                 pawn.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
-                pawn.Location = Location;
+                pawn.location = Location;
                 break;
             }
         }

@@ -1,5 +1,4 @@
 ﻿using Photon.Pun;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
@@ -31,8 +30,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         Debug.Log(otherPlayer.NickName + " has left the game.");
-        if (GameController.state == GameState.Init || GameController.state == GameState.Over) return;
-        GameStatus.instance.DrawOver();
+        if (GameController.State == GameState.Init || GameController.State == GameState.Over) return;
+        GameStatus.Instance.DrawOver();
     }
 
     public void OnReadyButtonClick()

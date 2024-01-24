@@ -1,24 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
+
 public abstract class Chess : MonoBehaviour
 {
     public Camp camp;
-    public Vector2Int Location, lastLocation;
+    public Vector2Int location, lastLocation;
     public Material defaultMaterial;
 
-    public static bool isMoved;
+    public static bool IsMoved;
 
     public void Start()
     {
-        var selection = Selection.GetSelection(Location);
+        var selection = Grid.GetSelection(location);
         selection.chessPiece = this;
-        selection.occupyType = (Selection.OccupyGridType)camp;
+        selection.occupyType = (Grid.OccupyGridType)camp;
         selection.chessList.Add(this);
     }
 
-    public virtual List<Selection> CalculateGrid()
+    public virtual List<Grid> CalculateGrid()
     {
-        var selections = new List<Selection> { Selection.GetSelection(Location) };
+        var selections = new List<Grid> { Grid.GetSelection(location) };
         selections[0].MoveSelect();
         
         return selections;
@@ -26,47 +27,47 @@ public abstract class Chess : MonoBehaviour
 
     public void SelectPiece()
     {
-        MatchManager.currentChess = this;
-        GameStatus.instance.selectChess = this;
-        isMoved = false;
-        lastLocation = Location;
+        MatchManager.CurrentChess = this;
+        GameStatus.Instance.selectChess = this;
+        IsMoved = false;
+        lastLocation = location;
         
         MeshRenderer renderers = GetComponentInChildren<MeshRenderer>();
         defaultMaterial = renderers.material;
         renderers.material = Resources.Load<Material>("Material/Other/Yellow");
     }
 
-    public void UpdateSelection() => UpdateSelection(lastLocation, Location);
+    public void UpdateSelection() => UpdateSelection(lastLocation, location);
 
-    public void UpdateSelection(Vector2Int lastLocation, Vector2Int Location)
+    public void UpdateSelection(Vector2Int lastSelect, Vector2Int select)
     {
         // remove Chess Piece in Selection
-        var lastSelection = Selection.GetSelection(lastLocation);
+        var lastSelection = Grid.GetSelection(lastSelect);
         if (lastSelection.chessList.Contains(this)) 
             lastSelection.chessList.Remove(this);
         lastSelection.chessPiece = null;
-        lastSelection.occupyType = Selection.OccupyGridType.NoneOccupyGrid;
+        lastSelection.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
 
         // update Chess Piece in Selection
-        var newSelection = Selection.GetSelection(Location);
+        var newSelection = Grid.GetSelection(select);
         if (!newSelection.chessList.Contains(this))
             newSelection.chessList.Add(this);
         newSelection.chessPiece = this;
-        newSelection.occupyType = (Selection.OccupyGridType)camp;
+        newSelection.occupyType = (Grid.OccupyGridType)camp;
     }
     
     public virtual void DeselectPiece()
     {
-        if (MatchManager.currentSelection != null) 
-            Location = MatchManager.currentSelection.Location;
+        if (MatchManager.CurrentGrid != null) 
+            location = MatchManager.CurrentGrid.location;
         
-        isMoved = lastLocation != Location && !GameStatus.isPromotion;
+        IsMoved = lastLocation != location && !GameStatus.IsPromotion;
 
         GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
-        MatchManager.currentChess = null;
+        MatchManager.CurrentChess = null;
     }
 
-    public void EatPiece(Selection select)
+    public void EatPiece(Grid select)
     {
         for (var index = 0; index < select.chessList.Count; index++)
         {
@@ -78,14 +79,14 @@ public abstract class Chess : MonoBehaviour
     }
 
     public void MovePiece() => 
-        transform.position = MatchManager.currentSelection.transform.position;
+        transform.position = MatchManager.CurrentGrid.transform.position;
 
     public void MovePiece(Vector2Int location) => 
         transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;
 
     public virtual void DestroyPiece() => Destroy(gameObject);
 
-    protected void CallCheck(List<Selection> selections)
+    protected void CallCheck(List<Grid> selections)
     {
         foreach (var selection in selections)
         {
@@ -93,7 +94,7 @@ public abstract class Chess : MonoBehaviour
             var king = (King)selection.chessPiece;
             if (king != null && king.camp != camp)
             {
-                MatchManager.Instance.checkmate = (int)king.camp;
+                MatchManager.Instance.Checkmate = (int)king.camp;
                 return;
             }
         }
