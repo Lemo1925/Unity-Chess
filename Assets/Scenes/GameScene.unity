@@ -631,10 +631,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c7c3e6fe4334f6c8d55d567cdbbda63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Panel: {fileID: 1849283982}
-  Text: {fileID: 90081749}
-  AgainButton: {fileID: 1372907801}
-  MenuButton: {fileID: 40680274}
+  panel: {fileID: 1849283982}
+  text: {fileID: 90081749}
+  againButton: {fileID: 1372907801}
+  menuButton: {fileID: 40680274}
   promotionPanel: {fileID: 142288934}
   buttons:
   - {fileID: 64626118}
@@ -642,15 +642,15 @@ MonoBehaviour:
   - {fileID: 904152857}
   - {fileID: 1531422292}
   cameraButton: {fileID: 2137943918}
-  WhitePic: {fileID: 21300000, guid: 80375ef9ab49f6c4b9b2cdad23dd08e3, type: 3}
-  BlackPic: {fileID: 21300000, guid: fbc7905fb4ba6c24cb503464ce488efc, type: 3}
-  WhiteTransform: {fileID: 1554907424}
-  BlackTransform: {fileID: 1630494385}
+  whitePic: {fileID: 21300000, guid: 80375ef9ab49f6c4b9b2cdad23dd08e3, type: 3}
+  blackPic: {fileID: 21300000, guid: fbc7905fb4ba6c24cb503464ce488efc, type: 3}
+  whiteTransform: {fileID: 1554907424}
+  blackTransform: {fileID: 1630494385}
   readyPanel: {fileID: 1426509789}
-  ReadyButton: {fileID: 1309223600}
+  readyButton: {fileID: 1309223600}
   cameraFlag: 1
   pauseFlag: 1
-  Status: {fileID: 225327151}
+  status: {fileID: 225327151}
 --- !u!4 &313840666
 Transform:
   m_ObjectHideFlags: 0

@@ -62,8 +62,8 @@ public class Pawn : Chess
             var pawn = select.chessPiece.GetComponent<Pawn>();
             if (pawn == null || pawn.moveTurn != GameStatus.Count - 1 || pawn.firstMoveStep != 2) continue;
             
-            var EnPassSelection = Grid.GetSelection(pawn.location.x, pawn.location.y).ForwardAndBack(0,1)[0];
-            selections.Add(EnPassSelection);
+            var enPassSelection = Grid.GetSelection(pawn.location.x, pawn.location.y).ForwardAndBack(0,1)[0];
+            selections.Add(enPassSelection);
         }
 
         return selections;
@@ -111,11 +111,11 @@ public class Pawn : Chess
         ChessBoard.instance.chessGO[chessType].Add(chessGameObject);
         ChessBoard.InitChessComponents(chessGameObject, (int)chessType, location);
         
-        var PromotionPiece = chessGameObject.GetComponent<Chess>();
-        PromotionPiece.lastLocation = lastLocation;
+        var promotionPiece = chessGameObject.GetComponent<Chess>();
+        promotionPiece.lastLocation = lastLocation;
 
         Grid.GetSelection(location).chessList.Remove(this);
-        Grid.GetSelection(location).chessPiece = PromotionPiece;
+        Grid.GetSelection(location).chessPiece = promotionPiece;
         DestroyPiece();
 
         if (isRemote) return;
@@ -125,22 +125,29 @@ public class Pawn : Chess
 
     public void En_Pass()
     {
-        var EnPassSelect = MatchManager.CurrentGrid.ForwardAndBack(0, 1)[0];
-        print(EnPassSelect.location);
-        EnPassSelect.chessPiece.DestroyPiece();
-        EnPassSelect.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
+        var enPassSelect = MatchManager.CurrentGrid.ForwardAndBack(0, 1)[0];
+        enPassSelect.chessPiece.DestroyPiece();
+        enPassSelect.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
     }
     
     public void En_Pass(Grid target)
     {
-        var EnPassSelect = target.ForwardAndBack(0, 1)[0];
-        EnPassSelect.chessList.Remove(EnPassSelect.chessPiece);
-        EnPassSelect.chessPiece.DestroyPiece();
-        EnPassSelect.chessPiece = null;
-        EnPassSelect.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
+        GameStatus.MoveType = "PassBy";
+        target.chessPiece = this;
+        target.occupyType = (Grid.OccupyGridType)camp;
+        // 吃掉对方的兵
+        var enemy = target.ForwardAndBack(0, 1)[0];
+        enemy.DestroyPiece();
     }
 
-    public void Promotion() => EventManager.CallOnPromotion(this,true);
+    public void Promotion()
+    {
+        if (MatchManager.CurrentGrid.occupyType != Grid.OccupyGridType.NoneOccupyGrid)
+            MatchManager.CurrentChess.EatPiece(MatchManager.CurrentGrid);
+        if (GameStatus.IsOver) return;
+        GameStatus.IsPromotion = true;
+        EventManager.CallOnPromotion(this, true);
+    }
 
     private void Checkmate() => CallCheck(AttackGrid());
 }

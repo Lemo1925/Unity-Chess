@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class King : Chess
 {
-    private bool hasMove;
+    private bool _hasMove;
     public bool isCheckmate;
     
-    public List<Chess> castChessList = new List<Chess>();
+    public List<Chess> castChessList = new();
 
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
     private void Awake()
     {
-        hasMove = false; 
+        _hasMove = false; 
         isCheckmate = false;
     }
     
@@ -30,10 +30,8 @@ public class King : Chess
     private List<Grid> SpecialGrid()
     {
         var selections = new List<Grid>();
-        var selection = MatchManager.CurrentGrid;
-
-        if (CanLongCastling()) selections.Add(Grid.GetSelection(location.x - 2, location.y));
-        if (CanShortCastling()) selections.Add(Grid.GetSelection(location.x + 2, location.y));
+        if (CanCastling(true)) selections.Add(Grid.GetSelection(location.x - 2, location.y));
+        if (CanCastling(false)) selections.Add(Grid.GetSelection(location.x + 2, location.y));
 
         return selections;
     }
@@ -69,7 +67,7 @@ public class King : Chess
         base.DeselectPiece();
         if (IsMoved)
         {
-            hasMove = true;
+            _hasMove = true;
             isCheckmate = false;
         }
     }
@@ -85,63 +83,54 @@ public class King : Chess
     public void InitChessList()
     {
         // 初始化存储王车之间棋子的列表
-        for (int i = 0; i < 8; i++)
-        {
-            castChessList.Add(Grid.GetSelection(new Vector2Int(i, location.y)).chessPiece);
-        }
+        castChessList.Clear();
+        for (int i = 0; i < 8; i++) 
+            castChessList.Add(Grid.GetSelection(i, location.y).chessPiece);
     }
-    private bool CanLongCastling()
+
+    private bool CanCastling(bool castlingType)
     {
         isCheckmate = MatchManager.Instance.Checkmate == (int)camp;
-        if (hasMove || isCheckmate) return false;
+        if (_hasMove || isCheckmate) return false;
         InitChessList();
-        if (castChessList[0] != null)
-        {
-            Rock rock = (Rock)castChessList[0];
-            if (rock != null && rock.hasMove == false)
-            {
-                for (var i = 1; i < 4; i++)
-                    if (castChessList[i] != null)
-                        return false;
-                return true;
-            }
-        }
-        return false;
+
+        int index = castlingType ? 0 : 7;
+        Rock rock = (Rock)castChessList[index];
+        if (!rock || rock.hasMove) return false;
+
+        int start = castlingType ? 1 : 5, 
+            end = castlingType ? 4 : 7;
+        for (int i = start; i < end; i++)
+            if (castChessList[i]) return false;
+        return true;
     }
-    private bool CanShortCastling()
-    {
-        isCheckmate = MatchManager.Instance.Checkmate == (int)camp;
-        if (hasMove || isCheckmate) return false;
-        InitChessList();
-        if (castChessList[7] != null)
-        {
-            Rock rock = (Rock)castChessList[7];
-            if (rock != null && rock.hasMove == false)
-            {
-                for (var i = 5; i < 7; i++)
-                    if (castChessList[i] != null)
-                        return false;
-                return true;
-            }
-        }
-        return false;
-    }
+    
+    
     public void LongCastling()
     {
+        GameStatus.MoveType = "LongCast";
         var newLocation = new Vector2Int(3, location.y);
         castChessList[0].UpdateSelection(castChessList[0].location, newLocation);
         castChessList[0].location = newLocation;
         castChessList[0].MovePiece(newLocation);
-        
     }
     public void ShortCastling()
     {
+        GameStatus.MoveType = "ShortCast";
         var newLocation = new Vector2Int(5, location.y);
         castChessList[7].UpdateSelection(castChessList[7].location, newLocation);
         castChessList[7].location = newLocation;
         castChessList[7].MovePiece(newLocation);
     }
 
+    public void Castling()
+    {
+        if (MatchManager.CurrentGrid.location.x == 2)
+            LongCastling();
+        else
+            ShortCastling();
+    }
+    
     #endregion
    
     private void Checkmate() => CallCheck(AttackGrid());

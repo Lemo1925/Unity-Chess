@@ -24,12 +24,21 @@ public class Grid : MonoBehaviour
     
     public Chess GetPiece() => chessList.Count > 0 ? chessList[0] : null;
 
+    public void DestroyPiece()
+    {
+        chessList.Remove(chessPiece);
+        chessPiece.DestroyPiece();
+        chessPiece = null;
+        occupyType = OccupyGridType.NoneOccupyGrid;
+    }
+    
     // 越界判断
     private static bool OutOfRangeY(int y) => y is < 0 or > 7;
     private static bool OutOfRangeX(int x) => x is < 0 or > 7;
-    
-    // 方向检测
-    public static Grid GetSelection(int x , int y)
+
+    #region 方向侦测
+
+       public static Grid GetSelection(int x , int y)
     {
         Grid grid = null;
         if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
@@ -240,6 +249,10 @@ public class Grid : MonoBehaviour
         return selections;
     }
 
+    #endregion
+ 
+    #region 选择Grid
+    
     public void MoveSelect()
     {
         gridType = GridType.Move;
@@ -266,4 +279,6 @@ public class Grid : MonoBehaviour
         GetComponent<Renderer>().material = materials[0];
         MatchManager.CurrentGrid = null;
     }
+    
+    #endregion
 }

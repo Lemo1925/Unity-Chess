@@ -17,70 +17,49 @@ public class Selector : MonoBehaviour
 
     private void SelectPiece(bool selectButtonClick, bool deselectButtonClick)
     {
-        if (!ReferenceEquals(_selectGrid, null))
+        if (_selectGrid&& !GameStatus.IsPromotion )
         {
             var chessPiece = _selectGrid.chessPiece;
             // 选择棋子并计算可移动格子
-            if (selectButtonClick && !_selectStatus && !GameStatus.IsPromotion &&
-                !ReferenceEquals(chessPiece, null) && 
-                chessPiece.camp == GameStatus.RoundType)
+            if (selectButtonClick && !_selectStatus&& chessPiece && chessPiece.camp == GameStatus.RoundType)
             {
                 chessPiece.SelectPiece();
                 _selectStatus = true;
                 _grids = chessPiece.CalculateGrid();
             }
             // 移动棋子
-            if (_grids.Contains(_selectGrid)) 
-                MatchManager.CurrentChess.MovePiece();
+            if (_grids.Contains(_selectGrid)) MatchManager.CurrentChess.MovePiece();
             // 取消选择
             if (deselectButtonClick && _selectStatus)
             {
                 var chess = MatchManager.CurrentChess; 
                 var select = MatchManager.CurrentGrid;
-                if (select.gridType is Grid.GridType.Attack or Grid.GridType.Normal)
-                    chess.EatPiece(select);
-                else if (select.gridType == Grid.GridType.Special)
+                // 判断移动类型
+                switch (select.gridType)
                 {
-                    if (chess.GetComponent<Pawn>() != null)
+                    case Grid.GridType.Attack:
+                        chess.EatPiece(select);
+                        break;
+                    case Grid.GridType.Normal:
+                        chess.EatPiece(select);
+                        break;
+                    case Grid.GridType.Special:
                     {
                         var pawn = chess.GetComponent<Pawn>();
-                        if (select.location.y == 0 || select.location.y == 7)
-                        {
-                            if (select.occupyType != Grid.OccupyGridType.NoneOccupyGrid) 
-                                chess.EatPiece(select);
-                            if (!GameStatus.IsOver)
-                            {
-                                GameStatus.IsPromotion = true;
-                                pawn.Promotion();
-                            }
-                        }
-                        else
-                        {
-                            GameStatus.MoveType = "PassBy";
-                            select.chessPiece = pawn;
-                            select.occupyType = (Grid.OccupyGridType)pawn.camp;
-                            pawn.En_Pass(select);
-                        }
-                    }
-                    else
-                    {
                         var king = chess.GetComponent<King>();
-                        if (select.location.x == 2)
-                        {
-                            GameStatus.MoveType = "LongCast";
-                            king.LongCastling();
-                        }
-                        else
-                        {
-                            GameStatus.MoveType = "ShortCast";
-                            king.ShortCastling();
-                        }
+                        if (pawn)
+                            if (select.location.y is 0 or 7) pawn.Promotion();
+                            else pawn.En_Pass(select);
+                        if (king) king.Castling();
+                        break;
                     }
                 }
 
                 chess.DeselectPiece();
                 chess.UpdateSelection();
-                foreach (var selection in _grids) selection.Deselect();
+                
+                foreach (var selection in _grids) 
+                    selection.Deselect();
                 _selectStatus = false;
                 _lastSelect = null;
                 _selectGrid = null;
@@ -113,7 +92,7 @@ public class Selector : MonoBehaviour
     }
     private void RaySelect(Grid hitGrid)
     {
-        if (_selectGrid != null) _selectGrid.Deselect();
+        if (_selectGrid) _selectGrid.Deselect();
         _selectGrid = hitGrid;
         _selectGrid.Select();
     }

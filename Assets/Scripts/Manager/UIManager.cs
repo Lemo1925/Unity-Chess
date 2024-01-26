@@ -1,13 +1,14 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     [Header("Button List")] 
-    public Button Single;
+    public Button single;
 
-    public Button Multiple;
-    public Button Exit;
+    public Button multiple;
+    public Button exit;
 
     [Header("背景音乐按钮设置")]
     public AudioSource source;
@@ -17,42 +18,42 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Single.onClick.AddListener(SingleBtn_Click);
-        Multiple.onClick.AddListener(MultiBtn_Click);
-        Exit.onClick.AddListener(ExitBtn_Click);
+        single.onClick.AddListener(SingleBtn_Click);
+        multiple.onClick.AddListener(MultiBtn_Click);
+        exit.onClick.AddListener(ExitBtn_Click);
     }
     
     public void SoundBtn_Click(Button button)
     {
-        Image BtnImg = button.GetComponent<Image>();
+        Image btnImg = button.GetComponent<Image>();
         if (source.isPlaying)
         {
-            BtnImg.sprite = defaultSprite;
+            btnImg.sprite = defaultSprite;
             source.Stop();
         }
         else
         {
-            BtnImg.sprite = highlightsSprite;
+            btnImg.sprite = highlightsSprite;
             source.Play();
         }
     }
     
     private void SingleBtn_Click()
     {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Single));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(single));
         ScenesManager.Instance.Translate("UIScene", "GameScene");
         GameManager.model = GameModel.SINGLE;
     }
 
     private void MultiBtn_Click()
     {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Multiple));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(multiple));
         Launcher.LauncherON();
     }
 
     private void ExitBtn_Click()
     {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Exit));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(exit));
         Application.Quit();
     }
 }

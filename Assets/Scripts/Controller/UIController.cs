@@ -2,15 +2,14 @@
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
-using Debug = System.Diagnostics.Debug;
 
 public class UIController : MonoBehaviourPunCallbacks
 {
     [Header("结算面板")] 
-    public Image Panel;
-    public Text Text;
-    public Button AgainButton;
-    public Button MenuButton;
+    public Image panel;
+    public Text text;
+    public Button againButton;
+    public Button menuButton;
 
     [Header("升变面板")]
     public Image promotionPanel;
@@ -18,35 +17,35 @@ public class UIController : MonoBehaviourPunCallbacks
     
     [Header("相机控制")] 
     public Button cameraButton;
-    public Sprite WhitePic;
-    public Sprite BlackPic;
-    public Transform WhiteTransform, BlackTransform;
+    public Sprite whitePic;
+    public Sprite blackPic;
+    public Transform whiteTransform, blackTransform;
     
     [Header("准备面板")]
     public GameObject readyPanel;
-    public Button ReadyButton; 
+    public Button readyButton; 
     
     public bool cameraFlag = true, pauseFlag = true;
 
-    private Button Rook, Knight, Bishop, Queen;
+    private Button _rook, _knight, _bishop, _queen;
 
     [Header("游戏状态")]
-    public GameObject Status;
+    public GameObject status;
 
     public static UIController Instance;
-    private static Pawn promotionChess { set; get; }
+    private static Pawn PromotionChess { set; get; }
 
     public override void OnEnable()
     {
         EventManager.OnCameraChangedEvent += ChangeCameraPos;
-        EventManager.OnPromotionEvent += setPromotionPanel;
+        EventManager.OnPromotionEvent += SetPromotionPanel;
         EventManager.OnGameOverEvent += ShowPanel;
     }
 
     public override void OnDisable()
     {
         EventManager.OnCameraChangedEvent -= ChangeCameraPos;
-        EventManager.OnPromotionEvent -= setPromotionPanel;
+        EventManager.OnPromotionEvent -= SetPromotionPanel;
         EventManager.OnGameOverEvent -= ShowPanel;
     }
 
@@ -55,30 +54,29 @@ public class UIController : MonoBehaviourPunCallbacks
         if (Instance == null) Instance = this;
 
         promotionPanel.gameObject.SetActive(false);
-        Panel.gameObject.SetActive(false);
+        panel.gameObject.SetActive(false);
         
-
-        Rook = buttons[0];
-        Knight = buttons[1];
-        Bishop = buttons[2];
-        Queen = buttons[3];
+        _rook = buttons[0];
+        _knight = buttons[1];
+        _bishop = buttons[2];
+        _queen = buttons[3];
     }  
 
     private void Start()
     {
         cameraButton.onClick.AddListener(ChangeCameraPos);
         
-        AgainButton.onClick.AddListener(OnceAgain);
-        MenuButton.onClick.AddListener(BackToMenu);
+        againButton.onClick.AddListener(OnceAgain);
+        menuButton.onClick.AddListener(BackToMenu);
         
-        ReadyButton.onClick.AddListener(Ready);
+        readyButton.onClick.AddListener(Ready);
         
-        Rook.onClick.AddListener(RookPromotion);
-        Knight.onClick.AddListener(KnightPromotion);
-        Bishop.onClick.AddListener(BishopPromotion);
-        Queen.onClick.AddListener(QueenPromotion);
+        _rook.onClick.AddListener(RookPromotion);
+        _knight.onClick.AddListener(KnightPromotion);
+        _bishop.onClick.AddListener(BishopPromotion);
+        _queen.onClick.AddListener(QueenPromotion);
         
-        CameraTransition(WhiteTransform);
+        CameraTransition(whiteTransform);
 
         if (PhotonNetwork.IsConnected) readyPanel.SetActive(true);
         
@@ -106,20 +104,20 @@ public class UIController : MonoBehaviourPunCallbacks
 
     public void SetStatusMessage(string msg)
     {
-        Status.GetComponent<Text>().text = msg;
+        status.GetComponent<Text>().text = msg;
     }
    
-    private void ShowPanel(string text)
+    private void ShowPanel(string txt)
     {
-        Text.text = text;
-        Panel.gameObject.SetActive(true);
+        text.text = txt;
+        panel.gameObject.SetActive(true);
     }
 
-    private void HidPanel() => Panel.gameObject.SetActive(false);
+    private void HidPanel() => panel.gameObject.SetActive(false);
 
     private void OnceAgain()
     {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(AgainButton));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(againButton));
         GameStatus.ResetGame();
         if (GameManager.model == GameModel.MULTIPLE) GameStatus.Instance.OnceAgain();
         if (GameManager.model == GameModel.SINGLE) ScenesManager.Instance.Translate("GameScene", "GameScene");
@@ -127,7 +125,7 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private void BackToMenu()
     {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(MenuButton));
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(menuButton));
         GameStatus.ResetGame();
         if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
         if (GameManager.model == GameModel.SINGLE) ScenesManager.Instance.Translate("GameScene", "UIScene");
@@ -135,51 +133,51 @@ public class UIController : MonoBehaviourPunCallbacks
 
 
     #region 升变相关
-    private void setPromotionPanel(Pawn chess, bool visible)
+    private void SetPromotionPanel(Pawn chess, bool visible)
     {
-        promotionChess = chess;
+        PromotionChess = chess;
         promotionPanel.gameObject.SetActive(visible);
     }
 
     private void RookPromotion()
     {
         GameStatus.MoveType = "RookPromotion";
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Rook));
-        promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
-        setPromotionPanel(null,false);
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(_rook));
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
+        SetPromotionPanel(null,false);
     }
 
     private void KnightPromotion()
     {
         GameStatus.MoveType = "KnightPromotion";
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Knight));
-        promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
-        setPromotionPanel(null,false);
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(_knight));
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
+        SetPromotionPanel(null,false);
     }
 
     private void BishopPromotion()
     {
         GameStatus.MoveType = "BishopPromotion";
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Bishop));
-        promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
-        setPromotionPanel(null,false);
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(_bishop));
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
+        SetPromotionPanel(null,false);
     }
 
     private void QueenPromotion()
     {
         GameStatus.MoveType = "QueenPromotion";
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(Queen));
-        promotionChess.PromotionLogic(promotionChess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
-        setPromotionPanel(null,false);
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(_queen));
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
+        SetPromotionPanel(null,false);
     }
     #endregion
 
     private void Ready()
     {
-        StartCoroutine(EffectTool.Instance.ScaleAnimation(ReadyButton));
-        ReadyButton.GetComponentInChildren<Text>().text = "已准备";
-        ReadyButton.enabled = false;
-        ReadyButton.interactable = false;
+        StartCoroutine(EffectTool.Instance.ScaleAnimation(readyButton));
+        readyButton.GetComponentInChildren<Text>().text = "已准备";
+        readyButton.enabled = false;
+        readyButton.interactable = false;
     }
 
     public void UpdateUI() => readyPanel.GetComponentInChildren<Text>().text = $"准备玩家：{GameManager.ready}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
@@ -190,9 +188,9 @@ public class UIController : MonoBehaviourPunCallbacks
 
     public void ChangeCameraPos()
     {
-        var BtnImg = cameraButton.GetComponent<Image>();
-        BtnImg.sprite = cameraFlag ? BlackPic : WhitePic;
-        CameraTransition(cameraFlag ? BlackTransform : WhiteTransform);
+        var btnImg = cameraButton.GetComponent<Image>();
+        btnImg.sprite = cameraFlag ? blackPic : whitePic;
+        CameraTransition(cameraFlag ? blackTransform : whiteTransform);
         cameraFlag = !cameraFlag;
     }
 
@@ -200,9 +198,8 @@ public class UIController : MonoBehaviourPunCallbacks
 
     private static void CameraTransition(Transform target)
     {
-        Debug.Assert(Camera.main != null, "Camera.main != null");
-        LeanTween.move(Camera.main.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);
-        LeanTween.rotate(Camera.main.gameObject, target.rotation.eulerAngles, 0.5f).setEase(LeanTweenType.easeInOutQuad);
+        LeanTween.move(Camera.main!.gameObject, target.position, 0.5f).setEase(LeanTweenType.easeInOutQuad);
+        LeanTween.rotate(Camera.main!.gameObject, target.rotation.eulerAngles, 0.5f).setEase(LeanTweenType.easeInOutQuad);
     }
 
     #endregion
