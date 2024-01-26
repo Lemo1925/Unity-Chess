@@ -50,7 +50,8 @@ public class Selector : MonoBehaviour
                         if (pawn)
                             if (select.location.y is 0 or 7) pawn.Promotion();
                             else pawn.En_Pass(select);
-                        if (king) king.Castling();
+                        if (king) 
+                            king.Castling(select.location.x == 2);
                         break;
                     }
                 }

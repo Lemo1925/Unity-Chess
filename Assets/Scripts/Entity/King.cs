@@ -80,7 +80,7 @@ public class King : Chess
 
     #region 王车易位
 
-    public void InitChessList()
+    private void InitChessList()
     {
         // 初始化存储王车之间棋子的列表
         castChessList.Clear();
@@ -105,30 +105,15 @@ public class King : Chess
         return true;
     }
     
-    
-    public void LongCastling()
+    public void Castling(bool castlingType) // true is long cast, false is short cast 
     {
-        GameStatus.MoveType = "LongCast";
-        var newLocation = new Vector2Int(3, location.y);
-        castChessList[0].UpdateSelection(castChessList[0].location, newLocation);
-        castChessList[0].location = newLocation;
-        castChessList[0].MovePiece(newLocation);
-    }
-    public void ShortCastling()
-    {
-        GameStatus.MoveType = "ShortCast";
-        var newLocation = new Vector2Int(5, location.y);
-        castChessList[7].UpdateSelection(castChessList[7].location, newLocation);
-        castChessList[7].location = newLocation;
-        castChessList[7].MovePiece(newLocation);
-    }
-
-    public void Castling()
-    {
-        if (MatchManager.CurrentGrid.location.x == 2)
-            LongCastling();
-        else
-            ShortCastling();
+        InitChessList();
+        GameStatus.MoveType = castlingType ? "LongCast" : "ShortCast";
+        int index = castlingType ? 0 : 7, loc = castlingType ? 3 : 5;
+        Vector2Int newLoc = new Vector2Int(loc, location.y);
+        castChessList[index].UpdateSelection(castChessList[index].location, newLoc);
+        castChessList[index].location = newLoc;
+        castChessList[index].MovePiece(newLoc);
     }
     
     #endregion

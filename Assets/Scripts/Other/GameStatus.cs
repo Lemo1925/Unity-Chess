@@ -194,12 +194,10 @@ public class GameStatus : MonoBehaviourPun
                 chess.GetComponent<Pawn>().En_Pass(targetSelection);
                 break;
             case "LongCast": 
-                chess.GetComponent<King>().InitChessList();
-                chess.GetComponent<King>().LongCastling();
+                chess.GetComponent<King>().Castling(true);
                 break;
             case "ShortCast": 
-                chess.GetComponent<King>().InitChessList();
-                chess.GetComponent<King>().ShortCastling();
+                chess.GetComponent<King>().Castling(false);
                 break;
             default:
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
