@@ -1,9 +1,7 @@
-﻿public enum GameModel
-{
-    SINGLE = 0,
-    MULTIPLE = 1,
-}
-
+﻿public enum GameModel { Single = 0, Multiple = 1}
+public enum Camp { White = 0, Black = 1, }
+public enum GridType { Normal = 0, Select = 1, Move = 2, Attack = 3, Special = 4 }
+public enum OccupyGridType { WhiteOccupyGrid = 0, BlackOccupyGrid = 1, NoneOccupyGrid = 2 }
 public enum GameState
 {
     // 游戏状态
@@ -14,12 +12,6 @@ public enum GameState
     Over = 3,
     Draw = 4,
     Pause = 5,
-}
-public enum Camp
-{
-    // 阵营
-    WHITE = 0,
-    BLACK = 1,
 }
 public enum ChessType
 {

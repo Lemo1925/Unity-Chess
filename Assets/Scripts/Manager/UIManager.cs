@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(single));
         ScenesManager.Instance.Translate("UIScene", "GameScene");
-        GameManager.model = GameModel.SINGLE;
+        GameManager.model = GameModel.Single;
     }
 
     private void MultiBtn_Click()

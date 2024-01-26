@@ -20,12 +20,12 @@ public class King : Chess
     
     private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Grid.OccupyGridType)camp && 
-            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (OccupyGridType)camp && 
+            select.occupyType != OccupyGridType.NoneOccupyGrid).ToList();
 
     private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == OccupyGridType.NoneOccupyGrid).ToList();
 
     private List<Grid> SpecialGrid()
     {
@@ -96,7 +96,7 @@ public class King : Chess
 
         int index = castlingType ? 0 : 7;
         Rock rock = (Rock)castChessList[index];
-        if (!rock || rock.hasMove) return false;
+        if (!rock || rock.HasMove) return false;
 
         int start = castlingType ? 1 : 5, 
             end = castlingType ? 4 : 7;

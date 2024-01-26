@@ -37,13 +37,13 @@ public class Selector : MonoBehaviour
                 // 判断移动类型
                 switch (select.gridType)
                 {
-                    case Grid.GridType.Attack:
+                    case GridType.Attack:
                         chess.EatPiece(select);
                         break;
-                    case Grid.GridType.Normal:
+                    case GridType.Normal:
                         chess.EatPiece(select);
                         break;
-                    case Grid.GridType.Special:
+                    case GridType.Special:
                     {
                         var pawn = chess.GetComponent<Pawn>();
                         var king = chess.GetComponent<King>();

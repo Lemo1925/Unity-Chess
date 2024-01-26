@@ -21,7 +21,7 @@ public class Pawn : Chess
 
         foreach (var select in collection)
         {
-            if (select.occupyType != Grid.OccupyGridType.NoneOccupyGrid) continue;
+            if (select.occupyType != OccupyGridType.NoneOccupyGrid) continue;
             selections.Add(select);
         }
         
@@ -37,8 +37,8 @@ public class Pawn : Chess
 
         foreach (var select in collection)
         {
-            if (select.occupyType == (Grid.OccupyGridType)camp ||
-                select.occupyType == Grid.OccupyGridType.NoneOccupyGrid) continue;
+            if (select.occupyType == (OccupyGridType)camp ||
+                select.occupyType == OccupyGridType.NoneOccupyGrid) continue;
             selections.Add(select);
         }
         
@@ -56,8 +56,8 @@ public class Pawn : Chess
         {
             if (location.y != 3 && location.y != 4) break;
             
-            if (select.occupyType == (Grid.OccupyGridType)camp || 
-                select.occupyType == Grid.OccupyGridType.NoneOccupyGrid) continue;
+            if (select.occupyType == (OccupyGridType)camp || 
+                select.occupyType == OccupyGridType.NoneOccupyGrid) continue;
             
             var pawn = select.chessPiece.GetComponent<Pawn>();
             if (pawn == null || pawn.moveTurn != GameStatus.Count - 1 || pawn.firstMoveStep != 2) continue;
@@ -127,14 +127,14 @@ public class Pawn : Chess
     {
         var enPassSelect = MatchManager.CurrentGrid.ForwardAndBack(0, 1)[0];
         enPassSelect.chessPiece.DestroyPiece();
-        enPassSelect.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
+        enPassSelect.occupyType = OccupyGridType.NoneOccupyGrid;
     }
     
     public void En_Pass(Grid target)
     {
         GameStatus.MoveType = "PassBy";
         target.chessPiece = this;
-        target.occupyType = (Grid.OccupyGridType)camp;
+        target.occupyType = (OccupyGridType)camp;
         // 吃掉对方的兵
         var enemy = target.ForwardAndBack(0, 1)[0];
         enemy.DestroyPiece();
@@ -142,7 +142,7 @@ public class Pawn : Chess
 
     public void Promotion()
     {
-        if (MatchManager.CurrentGrid.occupyType != Grid.OccupyGridType.NoneOccupyGrid)
+        if (MatchManager.CurrentGrid.occupyType != OccupyGridType.NoneOccupyGrid)
             MatchManager.CurrentChess.EatPiece(MatchManager.CurrentGrid);
         if (GameStatus.IsOver) return;
         GameStatus.IsPromotion = true;

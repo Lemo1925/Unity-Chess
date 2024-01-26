@@ -10,14 +10,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         var PhotonView = GetComponent<PhotonView>();
-        if (model == GameModel.MULTIPLE && PhotonView == null)
+        if (model == GameModel.Multiple && PhotonView == null)
         {
             PhotonView view = gameObject.AddComponent<PhotonView>();
             view.ViewID = 1; 
             if (!PhotonNetwork.IsMasterClient) SendMsg("New Player Comming");
         }
 
-        if (model == GameModel.SINGLE && PhotonView != null) Destroy(PhotonView);
+        if (model == GameModel.Single && PhotonView != null) Destroy(PhotonView);
     }
 
     public static Player GetPlayer() => player.GetComponent<Player>();

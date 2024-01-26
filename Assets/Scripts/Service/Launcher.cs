@@ -53,7 +53,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.PlayerListOthers[0].NickName = "Slaves";
         }
-        GameManager.model = GameModel.MULTIPLE;
+        GameManager.model = GameModel.Multiple;
         PhotonNetwork.LoadLevel(2);
     }
 

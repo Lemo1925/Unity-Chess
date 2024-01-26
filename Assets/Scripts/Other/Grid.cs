@@ -12,10 +12,7 @@ public class Grid : MonoBehaviour
     public Chess chessPiece;
     public List<Chess> chessList;
 
-
-    public enum OccupyGridType { WhiteOccupyGrid = 0, BlackOccupyGrid = 1, NoneOccupyGrid = 2 }
-    public enum GridType { Normal = 0, Select = 1, Move = 2, Attack = 3, Special = 4 }
-
+    
     private void Awake()
     {
         gridType = GridType.Normal;

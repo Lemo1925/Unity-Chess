@@ -119,16 +119,16 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(againButton));
         GameStatus.ResetGame();
-        if (GameManager.model == GameModel.MULTIPLE) GameStatus.Instance.OnceAgain();
-        if (GameManager.model == GameModel.SINGLE) ScenesManager.Instance.Translate("GameScene", "GameScene");
+        if (GameManager.model == GameModel.Multiple) GameStatus.Instance.OnceAgain();
+        if (GameManager.model == GameModel.Single) ScenesManager.Instance.Translate("GameScene", "GameScene");
     }
 
     private void BackToMenu()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(menuButton));
         GameStatus.ResetGame();
-        if (GameManager.model == GameModel.MULTIPLE) PhotonNetwork.LoadLevel(1);
-        if (GameManager.model == GameModel.SINGLE) ScenesManager.Instance.Translate("GameScene", "UIScene");
+        if (GameManager.model == GameModel.Multiple) PhotonNetwork.LoadLevel(1);
+        if (GameManager.model == GameModel.Single) ScenesManager.Instance.Translate("GameScene", "UIScene");
     }
 
 
@@ -143,7 +143,7 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         GameStatus.MoveType = "RookPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(_rook));
-        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteRock : ChessType.BlackRock);
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.White ? ChessType.WhiteRock : ChessType.BlackRock);
         SetPromotionPanel(null,false);
     }
 
@@ -151,7 +151,7 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         GameStatus.MoveType = "KnightPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(_knight));
-        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteKnight : ChessType.BlackKnight);
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.White ? ChessType.WhiteKnight : ChessType.BlackKnight);
         SetPromotionPanel(null,false);
     }
 
@@ -159,7 +159,7 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         GameStatus.MoveType = "BishopPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(_bishop));
-        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteBishop : ChessType.BlackBishop);
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.White ? ChessType.WhiteBishop : ChessType.BlackBishop);
         SetPromotionPanel(null,false);
     }
 
@@ -167,7 +167,7 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         GameStatus.MoveType = "QueenPromotion";
         StartCoroutine(EffectTool.Instance.ScaleAnimation(_queen));
-        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.WHITE ? ChessType.WhiteQueen : ChessType.BlackQueen);
+        PromotionChess.PromotionLogic(PromotionChess.camp == Camp.White ? ChessType.WhiteQueen : ChessType.BlackQueen);
         SetPromotionPanel(null,false);
     }
     #endregion
@@ -194,7 +194,7 @@ public class UIController : MonoBehaviourPunCallbacks
         cameraFlag = !cameraFlag;
     }
 
-    public void InitCameraFlag(Player player) => cameraFlag = player.camp != Camp.WHITE;
+    public void InitCameraFlag(Player player) => cameraFlag = player.camp != Camp.White;
 
     private static void CameraTransition(Transform target)
     {

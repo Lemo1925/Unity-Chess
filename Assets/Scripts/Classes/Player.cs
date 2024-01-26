@@ -9,6 +9,6 @@ public class Player : MonoBehaviourPun
     {
         if (instance == null) instance = this;
 
-        camp = PhotonNetwork.IsMasterClient ? Camp.WHITE : Camp.BLACK;
+        camp = PhotonNetwork.IsMasterClient ? Camp.White : Camp.Black;
     }
 }

@@ -108,42 +108,42 @@ public class ChessBoard : MonoBehaviourPun
             case 1:
             {
                 Rock rock = go.AddComponent<Rock>();
-                rock.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
+                rock.camp = index > 0 ? Camp.White : Camp.Black;
                 rock.location = Location;
                 break;
             }
             case 2:
             {
                 Knight knight = go.AddComponent<Knight>();
-                knight.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
+                knight.camp = index > 0 ? Camp.White : Camp.Black;
                 knight.location = Location;
                 break;
             }
             case 3:
             {
                 Bishop bishop = go.AddComponent<Bishop>();
-                bishop.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
+                bishop.camp = index > 0 ? Camp.White : Camp.Black;
                 bishop.location = Location;
                 break;
             }
             case 4:
             {
                 Queen queen = go.AddComponent<Queen>();
-                queen.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
+                queen.camp = index > 0 ? Camp.White : Camp.Black;
                 queen.location = Location;
                 break;
             }
             case 5:
             {
                 King king = go.AddComponent<King>();
-                king.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
+                king.camp = index > 0 ? Camp.White : Camp.Black;
                 king.location = Location;
                 break;
             }
             default:
             {
                 Pawn pawn = go.AddComponent<Pawn>();
-                pawn.camp = index > 0 ? Camp.WHITE : Camp.BLACK;
+                pawn.camp = index > 0 ? Camp.White : Camp.Black;
                 pawn.location = Location;
                 break;
             }

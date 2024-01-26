@@ -13,7 +13,7 @@ public abstract class Chess : MonoBehaviour
     {
         var selection = Grid.GetSelection(location);
         selection.chessPiece = this;
-        selection.occupyType = (Grid.OccupyGridType)camp;
+        selection.occupyType = (OccupyGridType)camp;
         selection.chessList.Add(this);
     }
 
@@ -46,14 +46,14 @@ public abstract class Chess : MonoBehaviour
         if (lastSelection.chessList.Contains(this)) 
             lastSelection.chessList.Remove(this);
         lastSelection.chessPiece = null;
-        lastSelection.occupyType = Grid.OccupyGridType.NoneOccupyGrid;
+        lastSelection.occupyType = OccupyGridType.NoneOccupyGrid;
 
         // update Chess Piece in Selection
         var newSelection = Grid.GetSelection(select);
         if (!newSelection.chessList.Contains(this))
             newSelection.chessList.Add(this);
         newSelection.chessPiece = this;
-        newSelection.occupyType = (Grid.OccupyGridType)camp;
+        newSelection.occupyType = (OccupyGridType)camp;
     }
     
     public virtual void DeselectPiece()
@@ -81,13 +81,10 @@ public abstract class Chess : MonoBehaviour
     public void MovePiece() => 
         transform.position = MatchManager.CurrentGrid.transform.position;
 
-    public void MovePiece(Vector2Int location) => 
-        transform.position = ChessBoard.instance.ChessSelections[location.x, location.y].transform.position;
+    public void MovePiece(Vector2Int loc) => 
+        transform.position = ChessBoard.instance.ChessSelections[loc.x, loc.y].transform.position;
 
-    public virtual void DestroyPiece()
-    {
-        Destroy(gameObject);
-    }
+    public virtual void DestroyPiece() => Destroy(gameObject);
 
     protected void CallCheck(List<Grid> selections)
     {

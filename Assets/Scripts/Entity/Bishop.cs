@@ -9,12 +9,12 @@ public class Bishop:Chess
     
     private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == OccupyGridType.NoneOccupyGrid).ToList();
 
     private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Grid.OccupyGridType)camp && 
-            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (OccupyGridType)camp && 
+            select.occupyType != OccupyGridType.NoneOccupyGrid).ToList();
 
     private List<Grid> CalculateMove()
     {

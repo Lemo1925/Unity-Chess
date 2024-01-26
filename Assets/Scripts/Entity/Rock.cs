@@ -3,24 +3,21 @@ using System.Linq;
 
 public class Rock : Chess
 {
-    public bool hasMove{ get; private set; }
+    public bool HasMove{ get; private set; }
 
-    private void Awake()
-    {
-        hasMove = false;
-    }
+    private void Awake() => HasMove = false;
 
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
     private List<Grid> MoveGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType == Grid.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType == OccupyGridType.NoneOccupyGrid).ToList();
 
     private List<Grid> AttackGrid() => 
         CalculateMove().Where(select => 
-            select.occupyType != (Grid.OccupyGridType)camp && 
-            select.occupyType != Grid.OccupyGridType.NoneOccupyGrid).ToList();
+            select.occupyType != (OccupyGridType)camp && 
+            select.occupyType != OccupyGridType.NoneOccupyGrid).ToList();
 
     private List<Grid> CalculateMove()
     {
@@ -48,7 +45,7 @@ public class Rock : Chess
     public override void DeselectPiece()
     {
         base.DeselectPiece();
-        if (IsMoved) hasMove = true;
+        if (IsMoved) HasMove = true;
     }
     
     private void Checkmate() => CallCheck(AttackGrid());
