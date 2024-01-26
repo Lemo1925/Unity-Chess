@@ -7,10 +7,7 @@ public class Pawn : Chess
     public int firstMoveStep;
     public int moveTurn = -1;
     
-    public void Awake()
-    {
-        isFirstMove = true;
-    }
+    public void Awake() => isFirstMove = true;
 
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;

@@ -21,7 +21,7 @@ public class Selector : MonoBehaviour
         {
             var chessPiece = _selectGrid.chessPiece;
             // 选择棋子并计算可移动格子
-            if (selectButtonClick && !_selectStatus && 
+            if (selectButtonClick && !_selectStatus && !GameStatus.IsPromotion &&
                 !ReferenceEquals(chessPiece, null) && 
                 chessPiece.camp == GameStatus.RoundType)
             {
