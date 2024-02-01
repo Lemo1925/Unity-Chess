@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-public class Grid : MonoBehaviour
+public class BoardGrid : MonoBehaviour
 {
     public OccupyGridType occupyType;
     public GridType gridType;
@@ -35,27 +35,27 @@ public class Grid : MonoBehaviour
 
     #region 方向侦测
 
-       public static Grid GetSelection(int x , int y)
+       public static BoardGrid GetSelection(int x , int y)
     {
-        Grid grid = null;
+        BoardGrid grid = null;
         if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
             grid = ChessBoard.instance.ChessSelections[x, y];
         return grid;
     }
-    public static Grid GetSelection(Vector2Int select)
+    public static BoardGrid GetSelection(Vector2Int select)
     {
         int x = select.x, y = select.y;
-        Grid grid = null;
+        BoardGrid grid = null;
         if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
             grid = ChessBoard.instance.ChessSelections[x, y];
         return grid;
     }
-    private List<Grid> Forward(int counts)
+    private List<BoardGrid> Forward(int counts)
     {
         // 创建一个List用于获取敌方棋子的位置
-        List<Grid> enemies = new List<Grid>();
+        List<BoardGrid> enemies = new List<BoardGrid>();
         // 定义一个侦察器，用于侦察前方
-        Grid sensor;
+        BoardGrid sensor;
         // 定义一个方向变量，用于判断方向
         int dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             x = location.x, 
@@ -78,10 +78,10 @@ public class Grid : MonoBehaviour
         }
         return enemies;
     }
-    private List<Grid> Back(int steps)
+    private List<BoardGrid> Back(int steps)
     {
-        Grid sensor;
-        var enemies = new List<Grid>();
+        BoardGrid sensor;
+        var enemies = new List<BoardGrid>();
         int dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1, 
             x = location.x,
             y = 0;
@@ -101,10 +101,10 @@ public class Grid : MonoBehaviour
         }
         return enemies;
     }
-    private List<Grid> Left(int steps)
+    private List<BoardGrid> Left(int steps)
     {
-        var enemies = new List<Grid>();
-        Grid sensor;
+        var enemies = new List<BoardGrid>();
+        BoardGrid sensor;
         int dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             x = 0,
             y = location.y;
@@ -124,10 +124,10 @@ public class Grid : MonoBehaviour
         }
         return enemies;
     }
-    private List<Grid> Right(int steps)
+    private List<BoardGrid> Right(int steps)
     {
-        var selections = new List<Grid>();
-        Grid sensor;
+        var selections = new List<BoardGrid>();
+        BoardGrid sensor;
         int dir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             x = 0,
             y = location.y;
@@ -147,10 +147,10 @@ public class Grid : MonoBehaviour
         }
         return selections;
     }
-    private List<Grid> LeftBevel(int forwardLength, int backwardLength)
+    private List<BoardGrid> LeftBevel(int forwardLength, int backwardLength)
     {
-        var enemies = new List<Grid>();
-        Grid sensor;
+        var enemies = new List<BoardGrid>();
+        BoardGrid sensor;
         int xDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             yDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             x = 0, y = 0;
@@ -186,10 +186,10 @@ public class Grid : MonoBehaviour
         
         return enemies;
     }
-    private List<Grid> RightBevel(int forwardLength, int backwardLength)
+    private List<BoardGrid> RightBevel(int forwardLength, int backwardLength)
     {
-        var enemies = new List<Grid>();
-        Grid sensor;
+        var enemies = new List<BoardGrid>();
+        BoardGrid sensor;
         int xDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             yDir = occupyType == OccupyGridType.WhiteOccupyGrid ? -1 : 1,
             x = 0, y = 0;
@@ -224,23 +224,23 @@ public class Grid : MonoBehaviour
         }
         return enemies;
     }
-    public List<Grid> ForwardAndBack(int forward, int back)
+    public List<BoardGrid> ForwardAndBack(int forward, int back)
     {
-        var selections = new List<Grid>();
+        var selections = new List<BoardGrid>();
         selections.AddRange(Forward(forward));
         selections.AddRange(Back(back));
         return selections;
     }
-    public List<Grid> LeftAndRight(int left, int right)
+    public List<BoardGrid> LeftAndRight(int left, int right)
     {
-        var selections = new List<Grid>();
+        var selections = new List<BoardGrid>();
         selections.AddRange(Left(left));
         selections.AddRange(Right(right));
         return selections;
     }
-    public List<Grid> Bevel(int forwardLength, int backwardLength)
+    public List<BoardGrid> Bevel(int forwardLength, int backwardLength)
     {
-        var selections = new List<Grid>();
+        var selections = new List<BoardGrid>();
         selections.AddRange(LeftBevel(forwardLength, backwardLength));
         selections.AddRange(RightBevel(forwardLength, backwardLength));
         return selections;

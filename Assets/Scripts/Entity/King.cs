@@ -18,27 +18,27 @@ public class King : Chess
         isCheckmate = false;
     }
     
-    private List<Grid> AttackGrid() => 
+    private List<BoardGrid> AttackGrid() => 
         CalculateMove().Where(select => 
             select.occupyType != (OccupyGridType)camp && 
             select.occupyType != OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Grid> MoveGrid() => 
+    private List<BoardGrid> MoveGrid() => 
         CalculateMove().Where(select => 
             select.occupyType == OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Grid> SpecialGrid()
+    private List<BoardGrid> SpecialGrid()
     {
-        var selections = new List<Grid>();
-        if (CanCastling(true)) selections.Add(Grid.GetSelection(location.x - 2, location.y));
-        if (CanCastling(false)) selections.Add(Grid.GetSelection(location.x + 2, location.y));
+        var selections = new List<BoardGrid>();
+        if (CanCastling(true)) selections.Add(BoardGrid.GetSelection(location.x - 2, location.y));
+        if (CanCastling(false)) selections.Add(BoardGrid.GetSelection(location.x + 2, location.y));
 
         return selections;
     }
 
-    private List<Grid> CalculateMove()
+    private List<BoardGrid> CalculateMove()
     {
-        var selection = Grid.GetSelection(location);
+        var selection = BoardGrid.GetSelection(location);
 
         var collection = selection.Bevel(1, 1);
         collection.AddRange(selection.ForwardAndBack(1, 1));
@@ -47,7 +47,7 @@ public class King : Chess
         return collection;
     }
 
-    public override List<Grid> CalculateGrid()
+    public override List<BoardGrid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
         
@@ -85,7 +85,7 @@ public class King : Chess
         // 初始化存储王车之间棋子的列表
         castChessList.Clear();
         for (int i = 0; i < 8; i++) 
-            castChessList.Add(Grid.GetSelection(i, location.y).chessPiece);
+            castChessList.Add(BoardGrid.GetSelection(i, location.y).chessPiece);
     }
 
     private bool CanCastling(bool castlingType)

@@ -6,33 +6,33 @@ public class Knight : Chess
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
     
-    private List<Grid> MoveGrid() => 
+    private List<BoardGrid> MoveGrid() => 
         CalculateMove().Where(select => 
             select.occupyType == OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Grid> AttackGrid() => 
+    private List<BoardGrid> AttackGrid() => 
         CalculateMove().Where(select => 
             select.occupyType != (OccupyGridType)camp && 
             select.occupyType != OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Grid> CalculateMove()
+    private List<BoardGrid> CalculateMove()
     {
-        var selection = Grid.GetSelection(location);
-        var collection = new List<Grid>();
+        var selection = BoardGrid.GetSelection(location);
+        var collection = new List<BoardGrid>();
         int[] deltaX = {1, 1, -1, -1, 2, 2, -2, -2};
         int[] deltaY = {2, -2, 2, -2, 1, -1, 1, -1};
 
         for (int i = 0; i < deltaX.Length; i++)
         {
             int X = location.x + deltaX[i], Y = location.y + deltaY[i];
-            if (Grid.GetSelection(X, Y) != null)
-                collection.Add(Grid.GetSelection(X, Y));
+            if (BoardGrid.GetSelection(X, Y) != null)
+                collection.Add(BoardGrid.GetSelection(X, Y));
         }
 
         return collection;
     }
 
-    public override List<Grid> CalculateGrid()
+    public override List<BoardGrid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
 

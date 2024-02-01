@@ -148,8 +148,8 @@ public class GameStatus : MonoBehaviourPun
 
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
     {
-        var currentSelection = Grid.GetSelection(new Vector2Int((int)current.x, (int)current.y));
-        var targetSelection = Grid.GetSelection(new Vector2Int((int)target.x, (int)target.y));
+        var currentSelection = BoardGrid.GetSelection(new Vector2Int((int)current.x, (int)current.y));
+        var targetSelection = BoardGrid.GetSelection(new Vector2Int((int)target.x, (int)target.y));
         
         Chess chess = currentSelection.GetPiece();
         chess.MovePiece(targetSelection.location);

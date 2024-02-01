@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
-    private Grid _selectGrid;
+    private BoardGrid _selectGrid;
     private Camera _camera;
-    private List<Grid> _grids = new();
+    private List<BoardGrid> _grids = new();
     private RaycastHit _hit; 
-    private Grid _lastSelect;
+    private BoardGrid _lastSelect;
     private bool _selectStatus;
     
     private void OnEnable() => EventManager.OnSelectActionEvent += SelectPiece;
@@ -37,10 +37,7 @@ public class Selector : MonoBehaviour
                 // 判断移动类型
                 switch (select.gridType)
                 {
-                    case GridType.Attack:
-                        chess.EatPiece(select);
-                        break;
-                    case GridType.Normal:
+                    case GridType.Attack or GridType.Normal:
                         chess.EatPiece(select);
                         break;
                     case GridType.Special:
@@ -48,7 +45,8 @@ public class Selector : MonoBehaviour
                         var pawn = chess.GetComponent<Pawn>();
                         var king = chess.GetComponent<King>();
                         if (pawn)
-                            if (select.location.y is 0 or 7) pawn.Promotion();
+                            if (select.location.y is 0 or 7) 
+                                pawn.Promotion();
                             else pawn.En_Pass(select);
                         if (king) 
                             king.Castling(select.location.x == 2);
@@ -68,11 +66,16 @@ public class Selector : MonoBehaviour
             }
         }
 
+        SelectionGrid();
+    }
+
+    private void SelectionGrid()
+    {
         // Selection光标
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out _hit, 9999f, LayerMask.GetMask("Selection")))
         {
-            var hitSelection = _hit.collider.GetComponent<Grid>();
+            var hitSelection = _hit.collider.GetComponent<BoardGrid>();
             if (_selectGrid == hitSelection) return;
             if (_selectStatus)
             {
@@ -91,7 +94,8 @@ public class Selector : MonoBehaviour
             _selectGrid = null;
         }
     }
-    private void RaySelect(Grid hitGrid)
+
+    private void RaySelect(BoardGrid hitGrid)
     {
         if (_selectGrid) _selectGrid.Deselect();
         _selectGrid = hitGrid;

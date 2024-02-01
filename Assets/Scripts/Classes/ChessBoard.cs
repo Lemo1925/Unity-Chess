@@ -13,7 +13,7 @@ public class ChessBoard : MonoBehaviourPun
     public Dictionary<ChessType, List<GameObject>> chessGO;
     private Vector2 BoardSize = new Vector2(2.105f, 2.105f);
     private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
-    public readonly Grid[,] ChessSelections = new Grid[8, 8];
+    public readonly BoardGrid[,] ChessSelections = new BoardGrid[8, 8];
     
     private void Awake()
     {
@@ -55,7 +55,7 @@ public class ChessBoard : MonoBehaviourPun
             GameObject ChessBoardTile = Instantiate(GridPrefab, position, Quaternion.identity,SelectionCollection);
            
             ChessBoardGrids[i, j] = ChessBoardTile;
-            Grid grid = ChessBoardTile.GetComponent<Grid>();
+            BoardGrid grid = ChessBoardTile.GetComponent<BoardGrid>();
             ChessSelections[i, j] = grid;
             grid.location = new Vector2Int(i, j);
 

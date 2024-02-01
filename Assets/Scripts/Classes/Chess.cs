@@ -11,15 +11,15 @@ public abstract class Chess : MonoBehaviour
 
     public void Start()
     {
-        var selection = Grid.GetSelection(location);
+        var selection = BoardGrid.GetSelection(location);
         selection.chessPiece = this;
         selection.occupyType = (OccupyGridType)camp;
         selection.chessList.Add(this);
     }
 
-    public virtual List<Grid> CalculateGrid()
+    public virtual List<BoardGrid> CalculateGrid()
     {
-        var selections = new List<Grid> { Grid.GetSelection(location) };
+        var selections = new List<BoardGrid> { BoardGrid.GetSelection(location) };
         selections[0].MoveSelect();
         
         return selections;
@@ -42,14 +42,14 @@ public abstract class Chess : MonoBehaviour
     public void UpdateSelection(Vector2Int lastSelect, Vector2Int select)
     {
         // remove Chess Piece in Selection
-        var lastSelection = Grid.GetSelection(lastSelect);
+        var lastSelection = BoardGrid.GetSelection(lastSelect);
         if (lastSelection.chessList.Contains(this)) 
             lastSelection.chessList.Remove(this);
         lastSelection.chessPiece = null;
         lastSelection.occupyType = OccupyGridType.NoneOccupyGrid;
 
         // update Chess Piece in Selection
-        var newSelection = Grid.GetSelection(select);
+        var newSelection = BoardGrid.GetSelection(select);
         if (!newSelection.chessList.Contains(this))
             newSelection.chessList.Add(this);
         newSelection.chessPiece = this;
@@ -67,7 +67,7 @@ public abstract class Chess : MonoBehaviour
         MatchManager.CurrentChess = null;
     }
 
-    public void EatPiece(Grid select)
+    public void EatPiece(BoardGrid select)
     {
         for (var index = 0; index < select.chessList.Count; index++)
         {
@@ -86,7 +86,7 @@ public abstract class Chess : MonoBehaviour
 
     public virtual void DestroyPiece() => Destroy(gameObject);
 
-    protected void CallCheck(List<Grid> selections)
+    protected void CallCheck(List<BoardGrid> selections)
     {
         foreach (var selection in selections)
         {

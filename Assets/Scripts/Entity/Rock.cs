@@ -10,18 +10,18 @@ public class Rock : Chess
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
-    private List<Grid> MoveGrid() => 
+    private List<BoardGrid> MoveGrid() => 
         CalculateMove().Where(select => 
             select.occupyType == OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Grid> AttackGrid() => 
+    private List<BoardGrid> AttackGrid() => 
         CalculateMove().Where(select => 
             select.occupyType != (OccupyGridType)camp && 
             select.occupyType != OccupyGridType.NoneOccupyGrid).ToList();
 
-    private List<Grid> CalculateMove()
+    private List<BoardGrid> CalculateMove()
     {
-        var selection = Grid.GetSelection(location);
+        var selection = BoardGrid.GetSelection(location);
 
         var collection = selection.ForwardAndBack(7, 7);
         collection.AddRange(selection.LeftAndRight(7, 7));
@@ -29,7 +29,7 @@ public class Rock : Chess
         return collection;
     }
 
-    public override List<Grid> CalculateGrid()
+    public override List<BoardGrid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
 

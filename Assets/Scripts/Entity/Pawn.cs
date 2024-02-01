@@ -12,9 +12,9 @@ public class Pawn : Chess
     private void OnEnable() => EventManager.OnTurnEndEvent += Checkmate;
     private void OnDisable() => EventManager.OnTurnEndEvent -= Checkmate;
 
-    private List<Grid> MoveGrid()
+    private List<BoardGrid> MoveGrid()
     {
-        var selections = new List<Grid>();
+        var selections = new List<BoardGrid>();
         var selection = MatchManager.CurrentGrid;
 
         var collection = selection.ForwardAndBack(isFirstMove ? 2 : 1, 0);
@@ -28,10 +28,10 @@ public class Pawn : Chess
         return selections;
     }
 
-    private List<Grid> AttackGrid()
+    private List<BoardGrid> AttackGrid()
     {
-        var selections = new List<Grid>();
-        var selection = Grid.GetSelection(location);
+        var selections = new List<BoardGrid>();
+        var selection = BoardGrid.GetSelection(location);
 
         var collection = selection.Bevel(1, 0);
 
@@ -45,9 +45,9 @@ public class Pawn : Chess
         return selections;
     }
 
-    private List<Grid> EnPassGrid()
+    private List<BoardGrid> EnPassGrid()
     {
-        var selections = new List<Grid>();
+        var selections = new List<BoardGrid>();
         var selection = MatchManager.CurrentGrid;
 
         var collection = selection.LeftAndRight(1,1);
@@ -62,14 +62,14 @@ public class Pawn : Chess
             var pawn = select.chessPiece.GetComponent<Pawn>();
             if (pawn == null || pawn.moveTurn != GameStatus.Count - 1 || pawn.firstMoveStep != 2) continue;
             
-            var enPassSelection = Grid.GetSelection(pawn.location.x, pawn.location.y).ForwardAndBack(0,1)[0];
+            var enPassSelection = BoardGrid.GetSelection(pawn.location.x, pawn.location.y).ForwardAndBack(0,1)[0];
             selections.Add(enPassSelection);
         }
 
         return selections;
     }
 
-    public override List<Grid> CalculateGrid()
+    public override List<BoardGrid> CalculateGrid()
     {
         var selections = base.CalculateGrid();
 
@@ -114,8 +114,8 @@ public class Pawn : Chess
         var promotionPiece = chessGameObject.GetComponent<Chess>();
         promotionPiece.lastLocation = lastLocation;
 
-        Grid.GetSelection(location).chessList.Remove(this);
-        Grid.GetSelection(location).chessPiece = promotionPiece;
+        BoardGrid.GetSelection(location).chessList.Remove(this);
+        BoardGrid.GetSelection(location).chessPiece = promotionPiece;
         DestroyPiece();
 
         if (isRemote) return;
@@ -130,7 +130,7 @@ public class Pawn : Chess
         enPassSelect.occupyType = OccupyGridType.NoneOccupyGrid;
     }
     
-    public void En_Pass(Grid target)
+    public void En_Pass(BoardGrid target)
     {
         GameStatus.MoveType = "PassBy";
         target.chessPiece = this;
