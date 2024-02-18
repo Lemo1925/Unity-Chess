@@ -1,9 +1,10 @@
-﻿using Photon.Pun;
+﻿using Controller;
+using Photon.Pun;
 using UnityEngine;
+using Utils;
 
-public class GameStatus : MonoBehaviourPun
+public class GameStatus : SingletonMonoPun<GameStatus>
 {
-    public static GameStatus Instance;
     public GameObject chessboard;
     public static Camp RoundType;
 
@@ -13,12 +14,6 @@ public class GameStatus : MonoBehaviourPun
 
     public Chess selectChess;
     private Vector2 _current, _target;
-
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-    }
 
     private void Start()
     {
@@ -35,15 +30,15 @@ public class GameStatus : MonoBehaviourPun
     {
         if (GameManager.model == GameModel.Multiple)
         {
-            UIController.Instance.ReadyPanel();
+            UIController.Instance.readyPanel.Show();
             UIController.Instance.SetStatusMessage("Wait");
             if (GameManager.ready == 2)
             {
-                UIController.Instance.IsReady();
+                UIController.Instance.readyPanel.Hid();
                 GameManager.ready = 0;
                 Instantiate(chessboard, transform.localPosition, Quaternion.identity, transform);
-                UIController.Instance.InitCameraFlag(GameManager.GetPlayer());
-                UIController.Instance.ChangeCameraPos();
+                CameraController.Instance.InitCameraFlag(GameManager.GetPlayer());
+                CameraController.Instance.ChangeCameraPos();
                 GameController.State = GameState.StandBy;
             }
         }
@@ -67,7 +62,7 @@ public class GameStatus : MonoBehaviourPun
 
         if (GameManager.model == GameModel.Multiple)
         {
-            while (RoundType == Player.instance.camp)
+            while (RoundType == Player.Instance.camp)
             {
                 GameController.State = GameState.Action;
                 break;
@@ -77,7 +72,7 @@ public class GameStatus : MonoBehaviourPun
         {
             GameController.State = GameState.Action;
         }
-        Timer.instance.StartTimer(180.0f);
+        Timer.Instance.StartTimer();
     }
 
     public void Action(ref bool select, ref bool deselect)
@@ -90,14 +85,14 @@ public class GameStatus : MonoBehaviourPun
             _target =  new Vector2(selectChess.location.x, selectChess.location.y);
         }
         
-        if (GameManager.model == GameModel.Single) UIController.Instance.GamePause();
+        if (GameManager.model == GameModel.Single) UIController.Instance.pausePanel.GamePause();
         if (Chess.IsMoved) GameController.State = GameState.End;
     }
     
     public void End()
     {
         Count++;
-        Timer.instance.ResetTimer();
+        Timer.Instance.ResetTimer();
         Chess.IsMoved = false;
         MatchManager.Instance.Checkmate = -1;
         if (GameManager.model == GameModel.Single)
@@ -123,12 +118,11 @@ public class GameStatus : MonoBehaviourPun
         MatchManager.Instance.Checkmate = -1;
     }
 
-    public void OnceAgain() => 
-        photonView.RPC("Again", RpcTarget.All);
+    public void OnceAgain() => photonView.RPC("Again", RpcTarget.All);
 
     public void GameOver()
     {
-        Timer.instance.StopTimer();
+        Timer.Instance.StopTimer();
         UIController.Instance.SetStatusMessage("Over");
         Chess.IsMoved = false;
         IsOver = true;
@@ -137,14 +131,14 @@ public class GameStatus : MonoBehaviourPun
 
     public void DrawOver()
     {
-        Timer.instance.StopTimer();
+        Timer.Instance.StopTimer();
         UIController.Instance.SetStatusMessage("Draw Over");
         Chess.IsMoved = false;
         GameController.State = GameState.Draw;
         EventManager.CallOnGameOver("Rival Offline");
     }
 
-    public void GamePause() => UIController.Instance.GamePause();
+    public void GamePause() => UIController.Instance.pausePanel.GamePause();
 
     [PunRPC] public void SyncMove(Vector2 current, Vector2 target, string moveType)
     {
@@ -205,7 +199,7 @@ public class GameStatus : MonoBehaviourPun
                 break;
         }
         Count++;
-        Timer.instance.ResetTimer();
+        Timer.Instance.ResetTimer();
     }
    
     [PunRPC] public void Again()

@@ -41,10 +41,4 @@ public class GameController : MonoBehaviour
         _selectButtonListener = false;
         _deselectButtonListener = false;
     }
-
-    private void OnDestroy()
-    {
-        UIController.Instance = null;
-        GameStatus.Instance = null;
-    }
 }

@@ -17,16 +17,15 @@ public class Knight : Chess
 
     private List<BoardGrid> CalculateMove()
     {
-        var selection = BoardGrid.GetSelection(location);
         var collection = new List<BoardGrid>();
         int[] deltaX = {1, 1, -1, -1, 2, 2, -2, -2};
         int[] deltaY = {2, -2, 2, -2, 1, -1, 1, -1};
 
         for (int i = 0; i < deltaX.Length; i++)
         {
-            int X = location.x + deltaX[i], Y = location.y + deltaY[i];
-            if (BoardGrid.GetSelection(X, Y) != null)
-                collection.Add(BoardGrid.GetSelection(X, Y));
+            int x = location.x + deltaX[i], y = location.y + deltaY[i];
+            if (BoardGrid.GetSelection(x, y) != null)
+                collection.Add(BoardGrid.GetSelection(x, y));
         }
 
         return collection;

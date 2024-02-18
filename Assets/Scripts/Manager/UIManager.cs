@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
     private void MultiBtn_Click()
     {
         StartCoroutine(EffectTool.Instance.ScaleAnimation(multiple));
-        Launcher.LauncherON();
+        Launcher.LauncherOn();
     }
 
     private void ExitBtn_Click()

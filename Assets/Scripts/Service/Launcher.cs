@@ -12,7 +12,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public InputField roomName;
     
     
-    public static void  LauncherON() => PhotonNetwork.ConnectUsingSettings();
+    public static void  LauncherOn() => PhotonNetwork.ConnectUsingSettings();
 
     private void Awake()
     {

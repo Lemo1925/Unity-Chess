@@ -1,41 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
 
-public class Timer : MonoBehaviour
+public class Timer : SingletonMono<Timer>
 {
-    public static Timer instance;
-    
-    public Text timer;
+    [SerializeField]private Text timer;
 
-    private float totalTime;
-    private float elapsedTime;
-    private bool isRunning;
+    private const float TotalTime = 180.0f;
+    private float _elapsedTime;
+    private bool _isRunning;
 
-    private void Awake()
+    public void StartTimer()
     {
-        if (instance == null) instance = this;
-    }
-
-    public void StartTimer(float timeInSeconds)
-    {
-        if (!isRunning)
-        {
-            totalTime = timeInSeconds;
-            elapsedTime = 0f;
-            isRunning = true;
-        }
+        if (!_isRunning) _isRunning = true;
     }
 
     private void Update()
     {
-        if (isRunning)
+        if (_isRunning)
         {
-            elapsedTime += Time.deltaTime;
-            float remainingTime = Mathf.Clamp(totalTime - elapsedTime, 0f, totalTime);
+            _elapsedTime += Time.deltaTime;
+            float remainingTime = Mathf.Clamp(TotalTime - _elapsedTime, 0f, TotalTime);
             DisplayTime(remainingTime);
 
-            if (elapsedTime >= totalTime)
+            if (_elapsedTime >= TotalTime)
             {
                 StopTimer();
                 EventManager.CallOnGameOver(GameStatus.RoundType == Camp.Black ? "White Win" : "Black Win");
@@ -44,15 +33,15 @@ public class Timer : MonoBehaviour
         }
     }
 
-    public void StopTimer() => isRunning = false;
+    public void StopTimer() => _isRunning = false;
 
-    public void GoAhead() => isRunning = true;
+    public void GoAhead() => _isRunning = true;
 
     public void ResetTimer()
     {
-        elapsedTime = 0f;
-        isRunning = false;
-        DisplayTime(totalTime);
+        _elapsedTime = 0f;
+        _isRunning = false;
+        DisplayTime(TotalTime);
     }
 
     private void DisplayTime(float time)

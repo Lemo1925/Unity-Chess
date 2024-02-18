@@ -102,13 +102,13 @@ public class Pawn : Chess
     public void PromotionLogic(ChessType chessType, bool isRemote = false)
     {
         var chessGameObject = Instantiate(
-            ChessBoard.instance.ChessPrefab[Mathf.Abs((int)chessType) - 1],
+            ChessBoard.Instance.chessPrefab[Mathf.Abs((int)chessType) - 1],
             transform.position, transform.rotation);
         
         chessGameObject.GetComponentInChildren<Renderer>().material = (int)chessType > 0 ? 
-            ChessBoard.instance.materials[0] : ChessBoard.instance.materials[1];
+            ChessBoard.Instance.materials[0] : ChessBoard.Instance.materials[1];
 
-        ChessBoard.instance.chessGO[chessType].Add(chessGameObject);
+        ChessBoard.Instance.chessGo[chessType].Add(chessGameObject);
         ChessBoard.InitChessComponents(chessGameObject, (int)chessType, location);
         
         var promotionPiece = chessGameObject.GetComponent<Chess>();
@@ -146,7 +146,7 @@ public class Pawn : Chess
             MatchManager.CurrentChess.EatPiece(MatchManager.CurrentGrid);
         if (GameStatus.IsOver) return;
         GameStatus.IsPromotion = true;
-        EventManager.CallOnPromotion(this, true);
+        EventManager.CallOnPromotion(this);
     }
 
     private void Checkmate() => CallCheck(AttackGrid());

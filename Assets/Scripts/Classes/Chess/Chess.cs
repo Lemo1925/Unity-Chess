@@ -82,7 +82,7 @@ public abstract class Chess : MonoBehaviour
         transform.position = MatchManager.CurrentGrid.transform.position;
 
     public void MovePiece(Vector2Int loc) => 
-        transform.position = ChessBoard.instance.ChessSelections[loc.x, loc.y].transform.position;
+        transform.position = ChessBoard.Instance.ChessSelections[loc.x, loc.y].transform.position;
 
     public virtual void DestroyPiece() => Destroy(gameObject);
 

@@ -1,43 +1,40 @@
 using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
+using Utils;
 
-public class ChessBoard : MonoBehaviourPun
+public class ChessBoard : SingletonMonoPun<ChessBoard>
 {
-    public static ChessBoard instance;
-    public GameObject GridPrefab;
-    public Transform ChessCollection, SelectionCollection;
+    public GameObject gridPrefab;
+    public Transform chessCollection, selectionCollection;
     public List<Material> materials;
-    public List<GameObject> ChessPosition;
-    public List<GameObject> ChessPrefab;
-    public Dictionary<ChessType, List<GameObject>> chessGO;
-    private Vector2 BoardSize = new Vector2(2.105f, 2.105f);
-    private readonly GameObject[,] ChessBoardGrids = new GameObject[8, 8];
+    public List<GameObject> chessPosition;
+    public List<GameObject> chessPrefab;
+    public Dictionary<ChessType, List<GameObject>> chessGo;
+    private readonly Vector2 _boardSize = new(2.105f, 2.105f);
     public readonly BoardGrid[,] ChessSelections = new BoardGrid[8, 8];
     
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null) instance = this;
-
-        ChessCollection = GameObject.Find("ChessCollection").transform;
-        SelectionCollection = GameObject.Find("SelectionCollection").transform;
+        base.Awake();
+        chessCollection = GameObject.Find("ChessCollection").transform;
+        selectionCollection = GameObject.Find("SelectionCollection").transform;
         
     }
 
     private void Start()
     {
         
-        InitChessGO();
+        InitChessGo();
 
-        foreach (var PosGameObject in ChessPosition)
+        foreach (var posGameObject in chessPosition)
         {
-            foreach (var pair in chessGO)
+            foreach (var pair in chessGo)
             {
-                if(!PosGameObject.name.Contains(pair.Key.ToString())) continue;
+                if(!posGameObject.name.Contains(pair.Key.ToString())) continue;
 
                 GameObject chessInstance = Instantiate(
-                    ChessPrefab[Mathf.Abs((int)pair.Key) - 1], 
-                    PosGameObject.transform.position, PosGameObject.transform.rotation,ChessCollection);
+                    chessPrefab[Mathf.Abs((int)pair.Key) - 1], 
+                    posGameObject.transform.position, posGameObject.transform.rotation,chessCollection);
                 
                 chessInstance.GetComponentInChildren<Renderer>().material = 
                     (int)pair.Key > 0 ? materials[0] : materials[1];
@@ -45,28 +42,26 @@ public class ChessBoard : MonoBehaviourPun
             }
         }
 
-        float x = BoardSize.x, y = BoardSize.y;    
+        float x = _boardSize.x, y = _boardSize.y;    
         
         for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
         {
             Vector3 position = new Vector3(-7.37f + j * x, 0.001f, -7.37f + i * y);
             
-            GameObject ChessBoardTile = Instantiate(GridPrefab, position, Quaternion.identity,SelectionCollection);
+            GameObject chessBoardTile = Instantiate(gridPrefab, position, Quaternion.identity,selectionCollection);
            
-            ChessBoardGrids[i, j] = ChessBoardTile;
-            BoardGrid grid = ChessBoardTile.GetComponent<BoardGrid>();
+            BoardGrid grid = chessBoardTile.GetComponent<BoardGrid>();
             ChessSelections[i, j] = grid;
             grid.location = new Vector2Int(i, j);
-
         }
         
         
-        var LocationList = GetLocation();
+        var locationList = GetLocation();
         var index = 0;
-        foreach (var pair in chessGO)
+        foreach (var pair in chessGo)
         foreach (var go in pair.Value)
-            InitChessComponents(go, (int)pair.Key, LocationList[index++]);
+            InitChessComponents(go, (int)pair.Key, locationList[index++]);
 
     }
 
@@ -82,9 +77,9 @@ public class ChessBoard : MonoBehaviourPun
         return list;
     }
     
-    private void InitChessGO()
+    private void InitChessGo()
     {
-        chessGO = new Dictionary<ChessType, List<GameObject>>
+        chessGo = new Dictionary<ChessType, List<GameObject>>
         {
             { ChessType.WhiteRock, new List<GameObject>() },
             { ChessType.WhiteKnight, new List<GameObject>() },
@@ -101,7 +96,7 @@ public class ChessBoard : MonoBehaviourPun
         };
     }
 
-    public static void InitChessComponents(GameObject go, int index, Vector2Int Location)
+    public static void InitChessComponents(GameObject go, int index, Vector2Int location)
     {
         switch (Mathf.Abs(index))
         {
@@ -109,42 +104,42 @@ public class ChessBoard : MonoBehaviourPun
             {
                 Rock rock = go.AddComponent<Rock>();
                 rock.camp = index > 0 ? Camp.White : Camp.Black;
-                rock.location = Location;
+                rock.location = location;
                 break;
             }
             case 2:
             {
                 Knight knight = go.AddComponent<Knight>();
                 knight.camp = index > 0 ? Camp.White : Camp.Black;
-                knight.location = Location;
+                knight.location = location;
                 break;
             }
             case 3:
             {
                 Bishop bishop = go.AddComponent<Bishop>();
                 bishop.camp = index > 0 ? Camp.White : Camp.Black;
-                bishop.location = Location;
+                bishop.location = location;
                 break;
             }
             case 4:
             {
                 Queen queen = go.AddComponent<Queen>();
                 queen.camp = index > 0 ? Camp.White : Camp.Black;
-                queen.location = Location;
+                queen.location = location;
                 break;
             }
             case 5:
             {
                 King king = go.AddComponent<King>();
                 king.camp = index > 0 ? Camp.White : Camp.Black;
-                king.location = Location;
+                king.location = location;
                 break;
             }
             default:
             {
                 Pawn pawn = go.AddComponent<Pawn>();
                 pawn.camp = index > 0 ? Camp.White : Camp.Black;
-                pawn.location = Location;
+                pawn.location = location;
                 break;
             }
         }

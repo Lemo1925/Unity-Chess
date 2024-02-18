@@ -18,9 +18,9 @@ public static class EventManager
     
     public static void CallOnSelectAction(bool selectButton, bool deselectButton) => OnSelectActionEvent?.Invoke(selectButton,deselectButton);
     
-    public static event Action<Pawn, bool> OnPromotionEvent;
+    public static event Action<Pawn> OnPromotionEvent;
     
-    public static void CallOnPromotion(Pawn chess, bool visible) => OnPromotionEvent?.Invoke(chess, visible);
+    public static void CallOnPromotion(Pawn chess) => OnPromotionEvent?.Invoke(chess);
     
     public static event Action OnTurnEndEvent;
     

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             PhotonView view = gameObject.AddComponent<PhotonView>();
             view.ViewID = 1; 
-            if (!PhotonNetwork.IsMasterClient) SendMsg("New Player Comming");
+            if (!PhotonNetwork.IsMasterClient) SendMsg("New Player Coming");
         }
 
         if (model == GameModel.Single && PhotonView != null) Destroy(PhotonView);
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void SendMsg(string msg)
     {
-        photonView.RPC("ReciverMsg", RpcTarget.Others, msg);
+        photonView.RPC("ReceiverMsg", RpcTarget.Others, msg);
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
@@ -45,18 +45,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC] public void Ready()
     {
         ready += 1;
-        UIController.Instance.UpdateUI();
+        UIController.Instance.readyPanel.UpdateUI();
     }
 
     [PunRPC] public void SyncReady(int allReady)
     {
         ready = allReady;
-        UIController.Instance.UpdateUI();
+        UIController.Instance.readyPanel.UpdateUI();
     }
 
-    [PunRPC] public void ReciverMsg(string msg)
+    [PunRPC] public void ReceiverMsg(string msg)
     {
-        if(msg == "New Player Comming")
+        if(msg == "New Player Coming")
         {
             photonView.RPC("SyncReady", RpcTarget.All, ready);
         }

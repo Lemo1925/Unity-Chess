@@ -1,14 +1,13 @@
 ﻿using Photon.Pun;
+using Utils;
 
-public class Player : MonoBehaviourPun
+public class Player : SingletonMonoPun<Player>
 {
-    public static Player instance;
     public Camp camp;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null) instance = this;
-
+        base.Awake();
         camp = PhotonNetwork.IsMasterClient ? Camp.White : Camp.Black;
     }
 }

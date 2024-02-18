@@ -1,22 +1,22 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Utils;
 
-public class ScenesManager : MonoBehaviour
+public class ScenesManager : SingletonMono<ScenesManager>
 {
-    public static ScenesManager Instance;
     
     public CanvasGroup fadeGroup;
 
     public float fadeDuration = 0.5f;
     
-    private void Awake()
+    protected override void Awake()
     {
         Scene scene = SceneManager.GetActiveScene();
         if (!scene.isLoaded) 
             SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
-
-        if (Instance == null) Instance = this;
+        
+        base.Awake();
         fadeGroup = GameObject.Find("FadeCanvas").GetComponentInChildren<CanvasGroup>();
     }
 

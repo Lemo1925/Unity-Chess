@@ -39,7 +39,7 @@ public class BoardGrid : MonoBehaviour
     {
         BoardGrid grid = null;
         if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
-            grid = ChessBoard.instance.ChessSelections[x, y];
+            grid = ChessBoard.Instance.ChessSelections[x, y];
         return grid;
     }
     public static BoardGrid GetSelection(Vector2Int select)
@@ -47,7 +47,7 @@ public class BoardGrid : MonoBehaviour
         int x = select.x, y = select.y;
         BoardGrid grid = null;
         if (!OutOfRangeY(y) && !OutOfRangeX(x)) 
-            grid = ChessBoard.instance.ChessSelections[x, y];
+            grid = ChessBoard.Instance.ChessSelections[x, y];
         return grid;
     }
     private List<BoardGrid> Forward(int counts)
