@@ -19,7 +19,7 @@ namespace Controller.Panel
         public void Ready()
         {
             StartCoroutine(EffectTool.Instance.ScaleAnimation(readyButton));
-            text.text = "已准备";
+            readyButton.GetComponentInChildren<Text>().text = "已准备";
             readyButton.enabled = false;
             readyButton.interactable = false;
         }

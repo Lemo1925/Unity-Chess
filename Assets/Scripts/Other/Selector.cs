@@ -4,7 +4,6 @@ using UnityEngine;
 public class Selector : MonoBehaviour
 {
     private BoardGrid _selectGrid;
-    private Camera _camera;
     private List<BoardGrid> _grids = new();
     private RaycastHit _hit; 
     private BoardGrid _lastSelect;
@@ -12,8 +11,7 @@ public class Selector : MonoBehaviour
     
     private void OnEnable() => EventManager.OnSelectActionEvent += SelectPiece;
     private void OnDisable() => EventManager.OnSelectActionEvent -= SelectPiece;
-
-    private void Awake() => _camera = Camera.main;
+    
 
     private void SelectPiece(bool selectButtonClick, bool deselectButtonClick)
     {
@@ -47,9 +45,18 @@ public class Selector : MonoBehaviour
                         if (pawn)
                             if (select.location.y is 0 or 7) 
                                 pawn.Promotion();
-                            else pawn.En_Pass(select);
-                        if (king) 
+                            else
+                            {
+                                GameStatus.MoveType = "PassBy";
+                                pawn.En_Pass(select);
+                            }
+
+                        if (king)
+                        {
+                            GameStatus.MoveType = select.location.x == 2 ? "LongCast" : "ShortCast";
                             king.Castling(select.location.x == 2);
+                        }
+                            
                         break;
                     }
                 }
@@ -72,7 +79,7 @@ public class Selector : MonoBehaviour
     private void SelectionGrid()
     {
         // Selection光标
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out _hit, 9999f, LayerMask.GetMask("Selection")))
         {
             var hitSelection = _hit.collider.GetComponent<BoardGrid>();

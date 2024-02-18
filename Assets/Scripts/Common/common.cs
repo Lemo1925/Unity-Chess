@@ -16,13 +16,13 @@ public enum GameState
 public enum ChessType
 {
     // 棋子类型
-    WhiteRock = 1,
+    WhiteRook = 1,
     WhiteKnight = 2,
     WhiteBishop = 3,
     WhiteQueen = 4,
     WhiteKing = 5,
     WhitePawn = 6,
-    BlackRock = -1,
+    BlackRook = -1,
     BlackKnight = -2,
     BlackBishop = -3,
     BlackQueen = -4,

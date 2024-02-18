@@ -123,16 +123,15 @@ public class Pawn : Chess
         GameStatus.IsPromotion = false;
     }
 
-    public void En_Pass()
-    {
-        var enPassSelect = MatchManager.CurrentGrid.ForwardAndBack(0, 1)[0];
-        enPassSelect.chessPiece.DestroyPiece();
-        enPassSelect.occupyType = OccupyGridType.NoneOccupyGrid;
-    }
+    // public void En_Pass()
+    // {
+    //     var enPassSelect = MatchManager.CurrentGrid.ForwardAndBack(0, 1)[0];
+    //     enPassSelect.chessPiece.DestroyPiece();
+    //     enPassSelect.occupyType = OccupyGridType.NoneOccupyGrid;
+    // }
     
     public void En_Pass(BoardGrid target)
     {
-        GameStatus.MoveType = "PassBy";
         target.chessPiece = this;
         target.occupyType = (OccupyGridType)camp;
         // 吃掉对方的兵

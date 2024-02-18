@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +21,12 @@ public class ScenesManager : SingletonMono<ScenesManager>
         fadeGroup = GameObject.Find("FadeCanvas").GetComponentInChildren<CanvasGroup>();
     }
 
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(GameObject.Find("Fade").gameObject);
+    }
+
     public void Translate(string currentScene, string targetScene)
     {
         StartCoroutine( Transition(currentScene, targetScene) );
@@ -28,19 +35,17 @@ public class ScenesManager : SingletonMono<ScenesManager>
     private IEnumerator Transition(string currentScene, string targetScene)
     {
         yield return StartCoroutine(Fade(1));
-        //卸载旧场景
-        if (currentScene != string.Empty) yield return SceneManager.UnloadSceneAsync(currentScene);
-        
         yield return SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Additive);
-
         //等待新场景加载完成
         SceneManager.sceneLoaded += OnSceneLoaded;
+        //卸载旧场景
+        if (currentScene != string.Empty) 
+            yield return SceneManager.UnloadSceneAsync(currentScene);
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             //取消注册SceneManager.sceneLoaded事件
             SceneManager.sceneLoaded -= OnSceneLoaded;
-
             //设置新场景为活动场景
             SceneManager.SetActiveScene(scene);
         }
@@ -58,5 +63,6 @@ public class ScenesManager : SingletonMono<ScenesManager>
         LeanTween.alphaCanvas(fadeGroup, tar, fadeDuration);
         yield return new WaitForSeconds(fadeDuration);
     }
+    
     
 }

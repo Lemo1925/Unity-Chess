@@ -108,7 +108,6 @@ public class King : Chess
     public void Castling(bool castlingType) // true is long cast, false is short cast 
     {
         InitChessList();
-        GameStatus.MoveType = castlingType ? "LongCast" : "ShortCast";
         int index = castlingType ? 0 : 7, loc = castlingType ? 3 : 5;
         Vector2Int newLoc = new Vector2Int(loc, location.y);
         castChessList[index].UpdateSelection(castChessList[index].location, newLoc);

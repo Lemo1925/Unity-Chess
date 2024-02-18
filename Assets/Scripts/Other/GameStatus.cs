@@ -168,7 +168,7 @@ public class GameStatus : SingletonMonoPun<GameStatus>
             case "RookPromotion":
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);
                 chess.GetComponent<Pawn>().PromotionLogic(chess.camp == Camp.White ? 
-                    ChessType.WhiteRock : ChessType.BlackRock, true);
+                    ChessType.WhiteRook : ChessType.BlackRook, true);
                 break;
             case "KnightPromotion":
                 if (targetSelection.GetPiece() != null) chess.EatPiece(targetSelection);

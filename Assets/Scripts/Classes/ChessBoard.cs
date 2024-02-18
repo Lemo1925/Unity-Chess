@@ -81,13 +81,13 @@ public class ChessBoard : SingletonMonoPun<ChessBoard>
     {
         chessGo = new Dictionary<ChessType, List<GameObject>>
         {
-            { ChessType.WhiteRock, new List<GameObject>() },
+            { ChessType.WhiteRook, new List<GameObject>() },
             { ChessType.WhiteKnight, new List<GameObject>() },
             { ChessType.WhiteBishop, new List<GameObject>() },
             { ChessType.WhiteQueen, new List<GameObject>() },
             { ChessType.WhiteKing, new List<GameObject>() },
             { ChessType.WhitePawn, new List<GameObject>() },
-            { ChessType.BlackRock, new List<GameObject>() },
+            { ChessType.BlackRook, new List<GameObject>() },
             { ChessType.BlackKnight, new List<GameObject>() },
             { ChessType.BlackBishop, new List<GameObject>() },
             { ChessType.BlackQueen, new List<GameObject>() },

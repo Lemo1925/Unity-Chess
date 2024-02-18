@@ -21,7 +21,7 @@ namespace Controller.Panel
         {
             GameStatus.MoveType = "RookPromotion";
             StartCoroutine(EffectTool.Instance.ScaleAnimation(rook));
-            PromotionChess.PromotionLogic(PromotionChess.camp == Camp.White ? ChessType.WhiteRock : ChessType.BlackRock);
+            PromotionChess.PromotionLogic(PromotionChess.camp == Camp.White ? ChessType.WhiteRook : ChessType.BlackRook);
             Hid();
         }
 
